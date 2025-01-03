@@ -3,21 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Risk Management Dashboard</title>
+    <title>Risk Monitoring Dashboard</title>
     <link rel="stylesheet" href="../shared/css/styles.css">
     <link rel="stylesheet" href="css/risk-dashboard.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 </head>
 <body>
-    <!-- Loading overlay -->
-    <div id="loading-overlay" style="display: none;">
-        <div>Loading dashboard...</div>
-    </div>
-
     <header>
         <nav>
-            <h1>Risk Management Dashboard</h1>
+            <h1>Risk Monitoring Dashboard</h1>
             <div id="user-info">
                 <span id="username"></span>
                 <button id="login-btn">Login</button>
@@ -26,66 +20,72 @@
         </nav>
     </header>
 
-    <main>
-        <!-- Risk Overview -->
-        <section id="risk-overview">
-            <div class="metric-card">
-                <div class="metric-title">Total Exposure</div>
-                <div class="metric-value" id="total-exposure">$0.00</div>
-                <div class="metric-change positive" id="exposure-change">+0.00%</div>
+    <main class="dashboard-layout">
+        <!-- Summary Cards -->
+        <section class="summary-cards">
+            <div class="metric-card total-positions">
+                <h3>Total Open Positions</h3>
+                <div class="metric-value" id="total-positions">0</div>
             </div>
-            <div class="metric-card">
-                <div class="metric-title">Net P/L</div>
-                <div class="metric-value" id="net-pnl">$0.00</div>
-                <div class="metric-change negative" id="pnl-change">-0.00%</div>
+            <div class="metric-card total-exposure">
+                <h3>Total Exposure</h3>
+                <div class="metric-value" id="total-exposure">$0</div>
             </div>
-            <div class="metric-card">
-                <div class="metric-title">Active Positions</div>
-                <div class="metric-value" id="active-positions">0</div>
-                <div class="metric-change" id="positions-change">No change</div>
+            <div class="metric-card daily-pnl">
+                <h3>Daily P&L</h3>
+                <div class="metric-value" id="daily-pnl">$0</div>
             </div>
-            <div class="metric-card">
-                <div class="metric-title">Risk Score</div>
-                <div class="metric-value" id="risk-score">0</div>
-                <div class="metric-change" id="risk-status">Normal</div>
+            <div class="metric-card risk-level">
+                <h3>Risk Level</h3>
+                <div class="metric-value" id="risk-level">Low</div>
             </div>
         </section>
 
-        <!-- Charts -->
-        <section id="exposure-chart" class="dashboard-card">
-            <h2>Exposure Distribution</h2>
-            <canvas id="exposure-chart-canvas"></canvas>
+        <!-- Charts Section -->
+        <section class="charts-grid">
+            <div class="chart-container">
+                <h2>Position Distribution</h2>
+                <canvas id="position-distribution"></canvas>
+            </div>
+            <div class="chart-container">
+                <h2>P&L Trend</h2>
+                <canvas id="pnl-trend"></canvas>
+            </div>
+            <div class="chart-container">
+                <h2>Risk Exposure</h2>
+                <canvas id="risk-exposure"></canvas>
+            </div>
+            <div class="chart-container">
+                <h2>Trading Volume</h2>
+                <canvas id="trading-volume"></canvas>
+            </div>
         </section>
 
-        <section id="pnl-chart" class="dashboard-card">
-            <h2>P/L Trend</h2>
-            <canvas id="pnl-chart-canvas"></canvas>
-        </section>
-
-        <!-- Alerts -->
-        <section id="alerts-panel" class="dashboard-card">
-            <h2>Risk Alerts</h2>
-            <div id="alerts-list">
+        <!-- Active Alerts -->
+        <section class="alerts-panel">
+            <h2>Active Alerts</h2>
+            <div class="alerts-list" id="alerts-list">
                 <!-- Alerts will be dynamically added here -->
             </div>
         </section>
 
-        <!-- Positions Table -->
-        <section id="positions-table" class="dashboard-card">
-            <h2>Active Positions</h2>
-            <div class="table-container">
-                <table>
+        <!-- Position Details -->
+        <section class="positions-panel">
+            <h2>Position Details</h2>
+            <div class="positions-table-container">
+                <table class="positions-table">
                     <thead>
                         <tr>
                             <th>Index</th>
+                            <th>Side</th>
                             <th>Quantity</th>
                             <th>Entry Price</th>
                             <th>Current Price</th>
-                            <th>P/L</th>
+                            <th>P&L</th>
                             <th>Status</th>
                         </tr>
                     </thead>
-                    <tbody id="positions-list">
+                    <tbody id="positions-table-body">
                         <!-- Positions will be dynamically added here -->
                     </tbody>
                 </table>
@@ -93,9 +93,24 @@
         </section>
     </main>
 
+    <!-- Load Supabase -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    
+    <!-- Load application scripts -->
     <script src="../shared/js/supabase-client.js"></script>
     <script src="../shared/js/auth.js"></script>
     <script src="js/charts.js"></script>
     <script src="js/risk-dashboard.js"></script>
+
+    <script>
+        // Update loading status
+        window.addEventListener('supabaseReady', () => {
+            console.log('Supabase ready in dashboard');
+        });
+
+        window.addEventListener('authReady', () => {
+            console.log('Auth ready in dashboard');
+        });
+    </script>
 </body>
 </html>

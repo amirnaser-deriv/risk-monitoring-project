@@ -1,15 +1,11 @@
-// UI Elements
-const loadingOverlay = document.getElementById('loading-overlay');
-const totalExposure = document.getElementById('total-exposure');
-const exposureChange = document.getElementById('exposure-change');
-const netPnl = document.getElementById('net-pnl');
-const pnlChange = document.getElementById('pnl-change');
-const activePositions = document.getElementById('active-positions');
-const positionsChange = document.getElementById('positions-change');
-const riskScore = document.getElementById('risk-score');
-const riskStatus = document.getElementById('risk-status');
-const alertsList = document.getElementById('alerts-list');
-const positionsList = document.getElementById('positions-list');
+// Dashboard state
+let dashboardState = {
+    positions: [],
+    pnlHistory: [],
+    volumeHistory: [],
+    riskLevels: { low: 0, medium: 0, high: 0 },
+    alerts: []
+};
 
 // Format helpers
 function formatCurrency(number) {
@@ -28,269 +24,213 @@ function formatPercentage(number) {
     }).format(number / 100);
 }
 
-// Show/hide loading overlay
-function toggleLoading(show) {
-    loadingOverlay.style.display = show ? 'block' : 'none';
+// Update metrics
+function updateMetrics() {
+    // Update total positions
+    const totalPositions = dashboardState.positions.filter(p => p.status === 'open').length;
+    document.getElementById('total-positions').textContent = totalPositions;
+
+    // Calculate and update total exposure
+    const totalExposure = dashboardState.positions
+        .filter(p => p.status === 'open')
+        .reduce((sum, pos) => sum + (pos.quantity * pos.current_price), 0);
+    document.getElementById('total-exposure').textContent = formatCurrency(totalExposure);
+
+    // Calculate and update daily P&L
+    const dailyPnl = dashboardState.positions
+        .filter(p => p.status === 'open')
+        .reduce((sum, pos) => sum + (pos.pnl || 0), 0);
+    const dailyPnlElement = document.getElementById('daily-pnl');
+    dailyPnlElement.textContent = formatCurrency(dailyPnl);
+    dailyPnlElement.className = `metric-value ${dailyPnl >= 0 ? 'positive' : 'negative'}`;
+
+    // Update risk level
+    const riskLevel = calculateRiskLevel(totalExposure, dailyPnl, totalPositions);
+    const riskElement = document.getElementById('risk-level');
+    riskElement.textContent = riskLevel.toUpperCase();
+    riskElement.className = `metric-value ${riskLevel.toLowerCase()}`;
 }
 
-// Create alert card
-function createAlertCard(alert) {
-    const card = document.createElement('div');
-    card.className = 'alert-card';
+// Calculate risk level based on metrics
+function calculateRiskLevel(exposure, pnl, positions) {
+    // Example risk calculation logic
+    if (positions === 0) return 'low';
     
-    const timeAgo = new Date(alert.created_at).toLocaleString();
+    const exposureRisk = exposure > 1000000 ? 'high' : exposure > 500000 ? 'medium' : 'low';
+    const pnlRisk = pnl < -50000 ? 'high' : pnl < -10000 ? 'medium' : 'low';
+    const positionRisk = positions > 20 ? 'high' : positions > 10 ? 'medium' : 'low';
+
+    // Combine risk factors
+    const riskScores = {
+        'high': 3,
+        'medium': 2,
+        'low': 1
+    };
+
+    const avgRiskScore = (riskScores[exposureRisk] + riskScores[pnlRisk] + riskScores[positionRisk]) / 3;
     
-    card.innerHTML = `
-        <div class="alert-header">
-            <span class="alert-title">${alert.title}</span>
-            <span class="alert-time">${timeAgo}</span>
-        </div>
-        <div class="alert-message">${alert.message}</div>
-        <div class="alert-actions">
-            <button onclick="acknowledgeAlert('${alert.id}')" 
-                    style="background: var(--primary); color: white;">
-                Acknowledge
-            </button>
-            <button onclick="dismissAlert('${alert.id}')"
-                    style="background: var(--danger); color: white;">
-                Dismiss
-            </button>
-        </div>
-    `;
-    return card;
+    if (avgRiskScore > 2.5) return 'high';
+    if (avgRiskScore > 1.5) return 'medium';
+    return 'low';
 }
 
-// Create position row
-function createPositionRow(position) {
-    const tr = document.createElement('tr');
-    const pnl = position.unrealized_pnl;
-    const pnlClass = pnl >= 0 ? 'positive' : 'negative';
-    
-    tr.innerHTML = `
-        <td>${position.index_id}</td>
-        <td>${position.quantity}</td>
-        <td>${formatCurrency(position.avg_entry_price)}</td>
-        <td>${formatCurrency(position.current_price)}</td>
-        <td class="${pnlClass}">${formatCurrency(pnl)}</td>
-        <td>
-            <span class="position-status status-${position.status.toLowerCase()}">
-                ${position.status}
-            </span>
-        </td>
-    `;
-    return tr;
+// Update positions table
+function updatePositionsTable() {
+    const tbody = document.getElementById('positions-table-body');
+    tbody.innerHTML = '';
+
+    dashboardState.positions
+        .filter(pos => pos.status === 'open')
+        .forEach(position => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${position.index_id}</td>
+                <td>${position.side.toUpperCase()}</td>
+                <td>${position.quantity}</td>
+                <td>${formatCurrency(position.entry_price)}</td>
+                <td>${formatCurrency(position.current_price)}</td>
+                <td class="${position.pnl >= 0 ? 'positive' : 'negative'}">
+                    ${formatCurrency(position.pnl)}
+                </td>
+                <td>
+                    <span class="status-indicator ${position.status}">
+                        ${position.status.toUpperCase()}
+                    </span>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
 }
 
-// Update dashboard metrics
-async function updateMetrics() {
+// Update alerts
+function updateAlerts() {
+    const alertsList = document.getElementById('alerts-list');
+    alertsList.innerHTML = '';
+
+    dashboardState.alerts.forEach(alert => {
+        const alertElement = document.createElement('div');
+        alertElement.className = `alert-item ${alert.level}`;
+        alertElement.innerHTML = `
+            <div class="alert-header">
+                <strong>${alert.title}</strong>
+                <span>${new Date(alert.timestamp).toLocaleTimeString()}</span>
+            </div>
+            <div class="alert-message">${alert.message}</div>
+        `;
+        alertsList.appendChild(alertElement);
+    });
+}
+
+// Check for new alerts
+function checkAlerts() {
+    const alerts = [];
+    const openPositions = dashboardState.positions.filter(p => p.status === 'open');
+    
+    // Check total exposure
+    const totalExposure = openPositions.reduce((sum, pos) => sum + (pos.quantity * pos.current_price), 0);
+    if (totalExposure > 1000000) {
+        alerts.push({
+            level: 'high',
+            title: 'High Exposure Alert',
+            message: `Total exposure exceeds $1M: ${formatCurrency(totalExposure)}`,
+            timestamp: new Date()
+        });
+    }
+
+    // Check large losses
+    const totalPnl = openPositions.reduce((sum, pos) => sum + (pos.pnl || 0), 0);
+    if (totalPnl < -50000) {
+        alerts.push({
+            level: 'high',
+            title: 'Significant Loss Alert',
+            message: `Current P&L below -$50K: ${formatCurrency(totalPnl)}`,
+            timestamp: new Date()
+        });
+    }
+
+    // Check position concentration
+    if (openPositions.length > 20) {
+        alerts.push({
+            level: 'medium',
+            title: 'Position Concentration Alert',
+            message: `High number of open positions: ${openPositions.length}`,
+            timestamp: new Date()
+        });
+    }
+
+    // Update dashboard state with new alerts
+    dashboardState.alerts = alerts;
+    updateAlerts();
+}
+
+// Fetch and update dashboard data
+async function updateDashboard() {
     try {
-        const { data: positions, error: positionsError } = await supabaseClient.client
+        // Fetch open positions
+        const { data: positions, error: posError } = await window.supabaseClient.client
             .from('positions')
-            .select('*')
-            .eq('status', 'active');
+            .select('*');
+        
+        if (posError) throw posError;
 
-        if (positionsError) throw positionsError;
+        // Update dashboard state
+        dashboardState.positions = positions;
 
-        // Calculate metrics
-        const exposure = positions.reduce((sum, pos) => sum + (pos.quantity * pos.current_price), 0);
-        const pnl = positions.reduce((sum, pos) => sum + pos.unrealized_pnl, 0);
-        const count = positions.length;
+        // Calculate historical data (last 7 days)
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+        // Simulate P&L history (replace with actual data)
+        dashboardState.pnlHistory = Array.from({ length: 7 }, (_, i) => ({
+            date: new Date(sevenDaysAgo.getTime() + (i * 86400000)).toLocaleDateString(),
+            value: positions.reduce((sum, pos) => sum + (pos.pnl || 0), 0)
+        }));
 
         // Update UI
-        totalExposure.textContent = formatCurrency(exposure);
-        netPnl.textContent = formatCurrency(pnl);
-        activePositions.textContent = count;
-
-        // Update risk score (simple calculation for demo)
-        const score = Math.min(100, Math.round((exposure / 1000000) * 100));
-        riskScore.textContent = score;
-        
-        // Update risk status
-        if (score < 30) {
-            riskStatus.textContent = 'Low Risk';
-            riskStatus.className = 'metric-change positive';
-        } else if (score < 70) {
-            riskStatus.textContent = 'Moderate Risk';
-            riskStatus.className = 'metric-change';
-        } else {
-            riskStatus.textContent = 'High Risk';
-            riskStatus.className = 'metric-change negative';
-        }
+        updateMetrics();
+        updatePositionsTable();
+        checkAlerts();
 
         // Update charts
-        const exposureData = positions.reduce((acc, pos) => {
-            const value = pos.quantity * pos.current_price;
-            const existing = acc.find(item => item.label === pos.index_id);
-            if (existing) {
-                existing.value += value;
-            } else {
-                acc.push({ label: pos.index_id, value });
-            }
-            return acc;
-        }, []);
-
-        window.charts.updateExposureChart(exposureData);
-
-        // Update P/L trend data
-        const today = new Date();
-        const pnlData = Array.from({ length: 30 }, (_, i) => {
-            const date = new Date(today);
-            date.setDate(date.getDate() - (29 - i));
-            return {
-                date: date.toLocaleDateString(),
-                value: Math.random() * 10000 - 5000 // Mock data for demo
-            };
-        });
-        window.charts.updatePnlChart(pnlData);
-
-    } catch (error) {
-        console.error('Error updating metrics:', error);
-        showError('Failed to update dashboard metrics');
-    }
-}
-
-// Load positions table
-async function loadPositions() {
-    try {
-        const { data: positions, error } = await supabaseClient.client
-            .from('positions')
-            .select('*')
-            .eq('status', 'active')
-            .order('created_at', { ascending: false });
-
-        if (error) throw error;
-
-        positionsList.innerHTML = '';
-        positions.forEach(position => {
-            const row = createPositionRow(position);
-            positionsList.appendChild(row);
-        });
-
-    } catch (error) {
-        console.error('Error loading positions:', error);
-        showError('Failed to load positions');
-    }
-}
-
-// Load alerts
-async function loadAlerts() {
-    try {
-        const { data: alerts, error } = await supabaseClient.client
-            .from('alerts')
-            .select('*')
-            .eq('status', 'active')
-            .order('created_at', { ascending: false });
-
-        if (error) throw error;
-
-        alertsList.innerHTML = '';
-        if (alerts && alerts.length > 0) {
-            alerts.forEach(alert => {
-                const card = createAlertCard(alert);
-                alertsList.appendChild(card);
-            });
-        } else {
-            alertsList.innerHTML = `
-                <div style="text-align: center; color: var(--text-light); padding: 1rem;">
-                    No active alerts
-                </div>
-            `;
+        if (window.dashboardCharts) {
+            window.dashboardCharts.updateCharts(dashboardState);
         }
 
     } catch (error) {
-        console.error('Error loading alerts:', error);
-        showError('Failed to load alerts');
+        console.error('Error updating dashboard:', error);
+        if (window.auth?.showError) {
+            window.auth.showError('Failed to update dashboard');
+        }
     }
-}
-
-// Handle alert actions
-async function acknowledgeAlert(alertId) {
-    try {
-        const { error } = await supabaseClient.client
-            .from('alerts')
-            .update({ status: 'acknowledged' })
-            .eq('id', alertId);
-
-        if (error) throw error;
-        await loadAlerts();
-        showSuccess('Alert acknowledged');
-    } catch (error) {
-        console.error('Error acknowledging alert:', error);
-        showError('Failed to acknowledge alert');
-    }
-}
-
-async function dismissAlert(alertId) {
-    try {
-        const { error } = await supabaseClient.client
-            .from('alerts')
-            .update({ status: 'dismissed' })
-            .eq('id', alertId);
-
-        if (error) throw error;
-        await loadAlerts();
-        showSuccess('Alert dismissed');
-    } catch (error) {
-        console.error('Error dismissing alert:', error);
-        showError('Failed to dismiss alert');
-    }
-}
-
-// Subscribe to real-time updates
-function subscribeToUpdates() {
-    // Subscribe to position updates
-    supabaseClient.subscribeToChannel('positions-channel', 'positions', (payload) => {
-        updateMetrics();
-        loadPositions();
-    });
-
-    // Subscribe to alert updates
-    supabaseClient.subscribeToChannel('alerts-channel', 'alerts', (payload) => {
-        loadAlerts();
-    });
 }
 
 // Initialize dashboard
-window.addEventListener('supabaseReady', async () => {
-    if (supabaseClient.ready) {
-        toggleLoading(true);
-        try {
-            await updateMetrics();
-            await loadPositions();
-            await loadAlerts();
-            subscribeToUpdates();
-        } catch (error) {
-            console.error('Error initializing dashboard:', error);
-            showError('Failed to initialize dashboard');
-        } finally {
-            toggleLoading(false);
+async function initializeDashboard() {
+    try {
+        // Initial data fetch
+        await updateDashboard();
+
+        // Set up real-time updates
+        setInterval(updateDashboard, 5000); // Update every 5 seconds
+
+    } catch (error) {
+        console.error('Error initializing dashboard:', error);
+        if (window.auth?.showError) {
+            window.auth.showError('Failed to initialize dashboard');
         }
     }
+}
+
+// Initialize when both Supabase and Auth are ready
+let isSupabaseReady = false;
+let isAuthReady = false;
+
+window.addEventListener('supabaseReady', () => {
+    isSupabaseReady = true;
+    if (isAuthReady) initializeDashboard();
 });
 
-// Handle auth state changes
-window.addEventListener('authStateChange', async ({ detail }) => {
-    if (detail.user) {
-        if (detail.role === 'risk_manager' || detail.role === 'admin') {
-            await updateMetrics();
-            await loadPositions();
-            await loadAlerts();
-        } else {
-            showError('Access denied. Risk manager role required.');
-            setTimeout(() => {
-                window.location.href = '../trading-site/index.html';
-            }, 2000);
-        }
-    } else {
-        // Clear dashboard data
-        totalExposure.textContent = '$0.00';
-        netPnl.textContent = '$0.00';
-        activePositions.textContent = '0';
-        riskScore.textContent = '0';
-        positionsList.innerHTML = '';
-        alertsList.innerHTML = '';
-    }
+window.addEventListener('authReady', () => {
+    isAuthReady = true;
+    if (isSupabaseReady) initializeDashboard();
 });
-
-// Auto-refresh metrics every minute
-setInterval(updateMetrics, 60000);
