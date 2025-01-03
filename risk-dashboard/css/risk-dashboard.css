@@ -1,0 +1,210 @@
+/* Dashboard layout */
+main {
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1.5rem;
+}
+
+/* Card styles */
+.dashboard-card {
+    background: var(--surface);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+}
+
+/* Risk overview section */
+#risk-overview {
+    grid-column: span 12;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+
+.metric-card {
+    background: var(--background);
+    padding: 1.25rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--border);
+}
+
+.metric-title {
+    font-size: 0.875rem;
+    color: var(--text-light);
+    margin-bottom: 0.5rem;
+}
+
+.metric-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.25rem;
+}
+
+.metric-change {
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.metric-change.positive {
+    color: var(--success);
+}
+
+.metric-change.negative {
+    color: var(--danger);
+}
+
+/* Charts section */
+#exposure-chart {
+    grid-column: span 8;
+}
+
+#pnl-chart {
+    grid-column: span 4;
+}
+
+/* Alerts section */
+#alerts-panel {
+    grid-column: span 4;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.alert-card {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 0.75rem;
+    border: 1px solid var(--border);
+    background: var(--background);
+}
+
+.alert-card:last-child {
+    margin-bottom: 0;
+}
+
+.alert-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.alert-title {
+    font-weight: 600;
+    color: var(--text);
+}
+
+.alert-time {
+    font-size: 0.75rem;
+    color: var(--text-light);
+}
+
+.alert-message {
+    font-size: 0.875rem;
+    color: var(--text-light);
+    margin-bottom: 0.5rem;
+}
+
+.alert-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.alert-actions button {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+}
+
+/* Positions table */
+#positions-table {
+    grid-column: span 8;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    text-align: left;
+    padding: 1rem;
+    font-weight: 500;
+    color: var(--text-light);
+    border-bottom: 1px solid var(--border);
+}
+
+td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+.position-status {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.status-active {
+    background: rgba(22, 163, 74, 0.1);
+    color: var(--success);
+}
+
+.status-closed {
+    background: rgba(71, 85, 105, 0.1);
+    color: var(--secondary);
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+    #risk-overview {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    #exposure-chart {
+        grid-column: span 12;
+    }
+
+    #pnl-chart {
+        grid-column: span 12;
+    }
+
+    #alerts-panel {
+        grid-column: span 12;
+        max-height: none;
+    }
+
+    #positions-table {
+        grid-column: span 12;
+    }
+}
+
+@media (max-width: 640px) {
+    #risk-overview {
+        grid-template-columns: 1fr;
+    }
+
+    .table-container {
+        margin: 0 -1rem;
+    }
+
+    table {
+        font-size: 0.875rem;
+    }
+
+    th, td {
+        padding: 0.75rem;
+    }
+}

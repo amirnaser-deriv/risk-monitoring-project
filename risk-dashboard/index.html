@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Risk Management Dashboard</title>
+    <link rel="stylesheet" href="../shared/css/styles.css">
+    <link rel="stylesheet" href="css/risk-dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <!-- Loading overlay -->
+    <div id="loading-overlay" style="display: none;">
+        <div>Loading dashboard...</div>
+    </div>
+
+    <header>
+        <nav>
+            <h1>Risk Management Dashboard</h1>
+            <div id="user-info">
+                <span id="username"></span>
+                <button id="login-btn">Login</button>
+                <button id="logout-btn" style="display: none;">Logout</button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Risk Overview -->
+        <section id="risk-overview">
+            <div class="metric-card">
+                <div class="metric-title">Total Exposure</div>
+                <div class="metric-value" id="total-exposure">$0.00</div>
+                <div class="metric-change positive" id="exposure-change">+0.00%</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-title">Net P/L</div>
+                <div class="metric-value" id="net-pnl">$0.00</div>
+                <div class="metric-change negative" id="pnl-change">-0.00%</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-title">Active Positions</div>
+                <div class="metric-value" id="active-positions">0</div>
+                <div class="metric-change" id="positions-change">No change</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-title">Risk Score</div>
+                <div class="metric-value" id="risk-score">0</div>
+                <div class="metric-change" id="risk-status">Normal</div>
+            </div>
+        </section>
+
+        <!-- Charts -->
+        <section id="exposure-chart" class="dashboard-card">
+            <h2>Exposure Distribution</h2>
+            <canvas id="exposure-chart-canvas"></canvas>
+        </section>
+
+        <section id="pnl-chart" class="dashboard-card">
+            <h2>P/L Trend</h2>
+            <canvas id="pnl-chart-canvas"></canvas>
+        </section>
+
+        <!-- Alerts -->
+        <section id="alerts-panel" class="dashboard-card">
+            <h2>Risk Alerts</h2>
+            <div id="alerts-list">
+                <!-- Alerts will be dynamically added here -->
+            </div>
+        </section>
+
+        <!-- Positions Table -->
+        <section id="positions-table" class="dashboard-card">
+            <h2>Active Positions</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Index</th>
+                            <th>Quantity</th>
+                            <th>Entry Price</th>
+                            <th>Current Price</th>
+                            <th>P/L</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="positions-list">
+                        <!-- Positions will be dynamically added here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script src="../shared/js/supabase-client.js"></script>
+    <script src="../shared/js/auth.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/risk-dashboard.js"></script>
+</body>
+</html>
