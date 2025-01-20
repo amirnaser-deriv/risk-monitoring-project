@@ -1,409 +1,442 @@
-console.log('Loading trading site module...');
+// Trading site functionality
+const tradingSite = {
+    isInitialized: false,
+    currentPrices: new Map(),
 
-// UI Elements
-const loadingOverlay = document.getElementById('loading-overlay');
-const loadingMessage = document.getElementById('loading-message');
-const indicesList = document.getElementById('indices-list');
-const indexSelect = document.getElementById('index-select');
-const positionsList = document.getElementById('positions-list');
-const ordersList = document.getElementById('orders-list');
-const tradeForm = document.getElementById('trade-form');
-
-// Mock data for development (Prices will change every second)
-let mockIndices = [
-    { id: 'TACTICAL_INDEX_1', name: 'Tactical Index 1', price: 1250.75, change: 2.5 },
-    { id: 'TACTICAL_INDEX_2', name: 'Tactical Index 2', price: 980.25, change: -1.8 },
-    { id: 'TACTICAL_INDEX_3', name: 'Tactical Index 3', price: 1100.50, change: 0.5 }
-];
-
-// Random price update interval (in ms)
-const PRICE_UPDATE_INTERVAL = 1000; // 1 second
-
-// Format helpers
-function formatCurrency(number) {
-    return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD'
-    }).format(number);
-}
-
-function formatPercentage(number) {
-    return new Intl.NumberFormat('en-US', {
-        style: 'percent',
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-        signDisplay: 'always'
-    }).format(number / 100);
-}
-
-// Calculate PnL for a position
-function calculatePnL(position, currentPrice) {
-    const quantity = position.quantity;
-    const entryPrice = position.entry_price;
-    if (position.side === 'buy') {
-        return quantity * (currentPrice - entryPrice);
-    } else {
-        return quantity * (entryPrice - currentPrice);
-    }
-}
-
-// Initialize select options (only once)
-function initializeSelectOptions() {
-    indexSelect.innerHTML = '<option value="">Choose an index...</option>';
-    mockIndices.forEach(index => {
-        const option = document.createElement('option');
-        option.value = index.id;
-        option.textContent = index.name;
-        indexSelect.appendChild(option);
-    });
-}
-
-// Update only the price displays
-function updatePriceDisplays() {
-    const cards = indicesList.querySelectorAll('.index-card');
-    cards.forEach((card, index) => {
-        const priceElement = card.querySelector('.index-price');
-        const changeElement = card.querySelector('.price-change');
-        const currentIndex = mockIndices[index];
-        
-        if (priceElement && changeElement) {
-            priceElement.textContent = formatCurrency(currentIndex.price);
-            changeElement.textContent = formatPercentage(currentIndex.change);
-            changeElement.className = `price-change ${currentIndex.change >= 0 ? 'positive' : 'negative'}`;
+    async initialize() {
+        if (this.isInitialized) {
+            return;
         }
-    });
 
-    // Update current prices and PnL for open positions
-    updateOpenPositions();
-}
+        try {
+            console.log('Trading Site: Initializing...');
+            updateStatus('app', 'pending', '⏳ App: Initializing...');
 
-// Update open positions with current prices
-async function updateOpenPositions() {
-    try {
-        const { data: positions, error } = await window.supabaseClient.client
-            .from('positions')
-            .select('*')
-            .eq('status', 'open');
+            // Initialize in sequence
+            await this.initializeServices();
 
-        if (error) throw error;
+            // Initialize UI components
+            this.initializeUI();
 
-        // Update each position's current price and PnL
-        for (const position of positions) {
-            const currentIndex = mockIndices.find(idx => idx.id === position.index_id);
-            if (currentIndex) {
-                const currentPrice = currentIndex.price;
-                const pnl = calculatePnL(position, currentPrice);
+            // Wait for price updates to be ready
+            if (!window.PriceUpdates.isInitialized) {
+                console.log('Trading Site: Waiting for price updates...');
+                await new Promise((resolve) => {
+                    window.addEventListener('priceUpdatesReady', resolve, { once: true });
+                });
+            }
 
-                const { error: updateError } = await window.supabaseClient.client
-                    .from('positions')
-                    .update({
-                        current_price: currentPrice,
-                        pnl: pnl,
-                        updated_at: new Date().toISOString()
-                    })
-                    .eq('id', position.id);
+            // Subscribe to price updates
+            console.log('Trading Site: Subscribing to price updates');
+            window.PriceUpdates.subscribe(update => {
+                console.log('Trading Site: Received price update:', update);
+                this.handlePriceUpdate(update);
+            });
 
-                if (updateError) console.error('Error updating position:', updateError);
+            // Wait for position updates to be ready
+            if (!window.PositionUpdates.isInitialized) {
+                console.log('Trading Site: Waiting for position updates...');
+                await new Promise((resolve) => {
+                    window.addEventListener('positionUpdatesReady', resolve, { once: true });
+                });
+            }
+
+            // Subscribe to position updates
+            console.log('Trading Site: Subscribing to position updates');
+            window.PositionUpdates.subscribe(positions => {
+                console.log('Trading Site: Received positions update:', positions);
+                this.updatePositionsDisplay(positions);
+            });
+
+            // Subscribe to auth state changes
+            window.addEventListener('authStateChange', ({ detail }) => {
+                this.handleAuthStateChange(detail);
+            });
+
+            this.isInitialized = true;
+            console.log('Trading Site: Initialized successfully');
+            updateStatus('app', 'done', '✅ App: Ready');
+
+            // Hide loading overlay
+            document.getElementById('loading-overlay').style.display = 'none';
+
+        } catch (error) {
+            console.error('Trading Site initialization error:', error);
+            updateStatus('app', 'error', '❌ App: Error');
+            throw error;
+        }
+    },
+
+    async initializeServices() {
+        // Initialize services in sequence
+        console.log('Initializing services in sequence...');
+
+        let hasErrors = false;
+
+        try {
+            // 1. Initialize Supabase
+            try {
+                await window.supabaseClient.initialize();
+                console.log('Supabase initialized');
+            } catch (error) {
+                console.error('Supabase initialization error:', error);
+                hasErrors = true;
+                // Continue with other services
+            }
+
+            // 2. Initialize Auth
+            try {
+                await window.auth.initialize();
+                console.log('Auth initialized');
+            } catch (error) {
+                console.error('Auth initialization error:', error);
+                hasErrors = true;
+                // Continue with other services
+            }
+
+            // 3. Initialize Price Updates
+            try {
+                await window.PriceUpdates.initialize();
+                console.log('Price Updates initialized');
+            } catch (error) {
+                console.error('Price Updates initialization error:', error);
+                hasErrors = true;
+                // Continue with other services
+            }
+
+            // 4. Initialize Position Updates
+            try {
+                await window.PositionUpdates.initialize();
+                console.log('Position Updates initialized');
+            } catch (error) {
+                console.error('Position Updates initialization error:', error);
+                hasErrors = true;
+                // Continue with other services
+            }
+
+            // Mark as initialized
+            this.isInitialized = true;
+
+            // Update status based on initialization results
+            if (hasErrors) {
+                console.log('Trading Site: Initialized with limited functionality');
+                updateStatus('app', 'error', '❌ App: Limited Functionality');
+            } else {
+                console.log('Trading Site: Initialized successfully');
+                updateStatus('app', 'done', '✅ App: Ready');
+            }
+
+            // Hide loading overlay
+            document.getElementById('loading-overlay').style.display = 'none';
+
+        } catch (error) {
+            console.error('Fatal initialization error:', error);
+            updateStatus('app', 'error', '❌ App: Error');
+            // Continue with very limited functionality
+            this.isInitialized = true;
+            document.getElementById('loading-overlay').style.display = 'none';
+        }
+    },
+
+    initializeUI() {
+        // Initialize trade form
+        const tradeForm = document.getElementById('trade-form');
+        if (tradeForm) {
+            tradeForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.handleTradeSubmit();
+            });
+        }
+
+        // Initialize login button
+        const loginBtn = document.getElementById('login-btn');
+        if (loginBtn) {
+            loginBtn.addEventListener('click', () => {
+                console.log('Login button clicked');
+                window.AuthModal.show();
+            });
+        }
+
+        // Initialize logout button
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => {
+                window.auth.signOut();
+            });
+        }
+
+        // Initialize index select when indices are ready
+        if (window.PriceUpdates.indicesReady) {
+            this.updateIndexSelect();
+        }
+        
+        // Listen for indices ready event
+        window.addEventListener('indicesReady', () => {
+            console.log('Indices ready event received');
+            this.updateIndexSelect();
+        });
+
+        // Also update on price updates ready (backup)
+        window.addEventListener('priceUpdatesReady', () => {
+            console.log('Price updates ready event received');
+            if (window.PriceUpdates.indicesReady) {
+                this.updateIndexSelect();
+            }
+        });
+    },
+
+    updateIndexSelect() {
+        const indexSelect = document.getElementById('index-select');
+        if (!indexSelect) {
+            console.error('Index select element not found');
+            return;
+        }
+
+        // Clear existing options except the first one
+        while (indexSelect.options.length > 1) {
+            indexSelect.remove(1);
+        }
+
+        // Add new options
+        const indices = window.PriceUpdates.getIndices();
+        console.log('Updating index select with indices:', indices);
+        
+        indices.forEach(index => {
+            const option = document.createElement('option');
+            option.value = index.id;
+            option.textContent = index.name;
+            indexSelect.appendChild(option);
+        });
+
+        console.log('Index select updated, now contains', indexSelect.options.length, 'options');
+    },
+
+    handlePriceUpdate(update) {
+        // Update current prices map
+        this.currentPrices.set(update.index_id, update.price);
+
+        // Update indices list display
+        const indicesList = document.getElementById('indices-list');
+        if (!indicesList) return;
+
+        let indexCard = document.getElementById(`index-${update.index_id}`);
+        if (!indexCard) {
+            indexCard = document.createElement('div');
+            indexCard.id = `index-${update.index_id}`;
+            indexCard.className = 'index-card';
+            indicesList.appendChild(indexCard);
+        }
+
+        // Get previous price to determine change
+        const previousPrice = parseFloat(indexCard.dataset.price) || update.price;
+        const priceChange = ((update.price - previousPrice) / previousPrice) * 100;
+        
+        indexCard.dataset.price = update.price;
+        indexCard.innerHTML = `
+            <div>
+                <div class="index-name">${update.name || update.index_id}</div>
+                <div class="index-price">$${update.price.toFixed(2)}</div>
+            </div>
+            <div class="price-change ${priceChange >= 0 ? 'positive' : 'negative'}">
+                ${priceChange >= 0 ? '+' : ''}${priceChange.toFixed(2)}%
+            </div>
+        `;
+
+        // Update positions display to reflect new prices
+        const positions = window.PositionUpdates.getAllPositions();
+        this.updatePositionsDisplay(positions);
+    },
+
+    updatePositionsDisplay(positions) {
+        console.log('Trading Site: Updating positions display with:', positions);
+        const positionsList = document.getElementById('positions-list');
+        if (!positionsList) {
+            console.error('Trading Site: Positions list element not found');
+            return;
+        }
+
+        // Filter positions for current user
+        const userPositions = positions.filter(p => {
+            const isCurrentUser = p.user_id === window.auth?.user?.id;
+            const isOpen = p.status === 'open';
+            console.log('Trading Site: Position filter check:', {
+                position: p,
+                isCurrentUser,
+                isOpen,
+                currentUserId: window.auth?.user?.id
+            });
+            return isCurrentUser && isOpen;
+        });
+
+        console.log('Trading Site: Filtered user positions:', userPositions);
+
+        if (userPositions.length === 0) {
+            positionsList.innerHTML = '<div class="empty-state">No open positions</div>';
+            return;
+        }
+
+        const positionsHtml = userPositions.map(position => {
+            console.log('Trading Site: Rendering position:', {
+                id: position.id,
+                index: position.index_id,
+                currentPrice: window.PriceUpdates.getCurrentPrice(position.index_id),
+                pnl: window.PositionUpdates.calculatePnL(position)
+            });
+            
+            return `
+                <div class="position-card" data-position-id="${position.id}">
+                    <div class="position-header">
+                        <div class="position-title">${position.index_id}</div>
+                        <div class="position-pnl ${window.PositionUpdates.calculatePnL(position) >= 0 ? 'positive' : 'negative'}">
+                            ${window.PositionUpdates.calculatePnL(position) >= 0 ? '+' : ''}$${Math.abs(window.PositionUpdates.calculatePnL(position) || 0).toFixed(2)}
+                        </div>
+                    </div>
+                    <div class="position-details">
+                        <div>Side: ${position.side.toUpperCase()}</div>
+                        <div>Quantity: ${position.quantity}</div>
+                        <div>Entry: $${position.entry_price.toFixed(2)}</div>
+                        <div>Current: ${(() => {
+                            const currentPrice = window.PriceUpdates.getCurrentPrice(position.index_id);
+                            return currentPrice ? `$${currentPrice.toFixed(2)}` : '<span class="loading">Loading...</span>';
+                        })()}</div>
+                    </div>
+                    <div class="button-group">
+                        <button class="close-pos-btn" onclick="tradingSite.closePosition('${position.id}')">
+                            Close Position
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        console.log('Trading Site: Setting positions HTML');
+        positionsList.innerHTML = positionsHtml;
+    },
+
+    async handleTradeSubmit() {
+        try {
+            if (!window.auth.user) {
+                window.AuthModal.show();
+                return;
+            }
+
+            const indexId = document.getElementById('index-select').value;
+            const side = document.getElementById('order-type').value;
+            const quantity = parseInt(document.getElementById('quantity').value, 10);
+
+            if (!indexId || !side || !quantity) {
+                throw new Error('Please fill in all fields');
+            }
+
+            if (quantity <= 0) {
+                throw new Error('Quantity must be positive');
+            }
+
+            const position = await window.PositionUpdates.createPosition(
+                indexId,
+                side,
+                quantity
+            );
+
+            // Show success message
+            const successDiv = document.createElement('div');
+            successDiv.className = 'alert alert-success';
+            successDiv.textContent = `Successfully opened ${side} position for ${quantity} ${indexId}`;
+            document.body.appendChild(successDiv);
+            setTimeout(() => successDiv.remove(), 5000);
+
+            // Reset form
+            document.getElementById('trade-form').reset();
+
+        } catch (error) {
+            console.error('Trade submission error:', error);
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'alert alert-danger';
+            errorDiv.textContent = error.message;
+            document.body.appendChild(errorDiv);
+            setTimeout(() => errorDiv.remove(), 5000);
+        }
+    },
+
+    async closePosition(positionId) {
+        try {
+            await window.PositionUpdates.closePosition(positionId);
+            
+            const successDiv = document.createElement('div');
+            successDiv.className = 'alert alert-success';
+            successDiv.textContent = 'Position closed successfully';
+            document.body.appendChild(successDiv);
+            setTimeout(() => successDiv.remove(), 5000);
+
+        } catch (error) {
+            console.error('Close position error:', error);
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'alert alert-danger';
+            errorDiv.textContent = error.message;
+            document.body.appendChild(errorDiv);
+            setTimeout(() => errorDiv.remove(), 5000);
+        }
+    },
+
+    handleAuthStateChange(detail) {
+        const loginBtn = document.getElementById('login-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const riskDashboardBtn = document.getElementById('risk-dashboard-btn');
+        const username = document.getElementById('username');
+        const tradeForm = document.getElementById('trade-form');
+
+        if (detail.user) {
+            if (loginBtn) loginBtn.style.display = 'none';
+            if (logoutBtn) logoutBtn.style.display = 'block';
+            if (username) username.textContent = detail.user.email;
+            
+            // Show Risk Dashboard button for admins and risk managers
+            if (riskDashboardBtn) {
+                console.log('Checking dashboard access for role:', detail.role);
+                const hasRiskManagerAccess = window.auth.hasRole('risk_manager');
+                const hasAdminAccess = window.auth.hasRole('admin');
+                const hasAccess = hasRiskManagerAccess || hasAdminAccess;
+                
+                console.log('Dashboard access check:', {
+                    userRole: window.auth.user.role,
+                    roleFromSession: sessionStorage.getItem('userRole'),
+                    hasRiskManagerAccess,
+                    hasAdminAccess,
+                    hasAccess
+                });
+                
+                riskDashboardBtn.style.display = hasAccess ? 'block' : 'none';
+            }
+            
+            if (tradeForm) {
+                const submitButton = tradeForm.querySelector('button[type="submit"]');
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Place Order';
+                }
+            }
+        } else {
+            if (loginBtn) loginBtn.style.display = 'block';
+            if (logoutBtn) logoutBtn.style.display = 'none';
+            if (riskDashboardBtn) riskDashboardBtn.style.display = 'none';
+            if (username) username.textContent = '';
+            if (tradeForm) {
+                const submitButton = tradeForm.querySelector('button[type="submit"]');
+                if (submitButton) {
+                    submitButton.disabled = true;
+                    submitButton.textContent = 'Login to Trade';
+                }
             }
         }
-
-        // Refresh positions display
-        await loadPositions();
-    } catch (error) {
-        console.error('Error updating open positions:', error);
     }
-}
+};
 
-// Simulate price fluctuation
-function randomizePrices() {
-    mockIndices = mockIndices.map(index => {
-        const changeFactor = (Math.random() * 2 - 1) * 0.01;
-        const oldPrice = index.price;
-        const newPrice = oldPrice * (1 + changeFactor);
-        const percentChange = ((newPrice - oldPrice) / oldPrice) * 100;
-
-        return {
-            ...index,
-            price: parseFloat(newPrice.toFixed(2)),
-            change: parseFloat(percentChange.toFixed(2))
-        };
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    tradingSite.initialize().catch(error => {
+        console.error('Failed to initialize trading site:', error);
     });
-    updatePriceDisplays();
-}
-
-// Initialize market overview (only called once)
-function initMarketOverview() {
-    // Create initial cards
-    indicesList.innerHTML = '';
-    mockIndices.forEach(index => {
-        const card = document.createElement('div');
-        card.className = 'index-card';
-        card.innerHTML = `
-            <div>
-                <div class="index-name">${index.name}</div>
-                <div class="price-change ${index.change >= 0 ? 'positive' : 'negative'}">
-                    ${formatPercentage(index.change)}
-                </div>
-            </div>
-            <div class="index-price">${formatCurrency(index.price)}</div>
-        `;
-        indicesList.appendChild(card);
-    });
-
-    // Initialize select options
-    initializeSelectOptions();
-
-    // Start price updates
-    setInterval(randomizePrices, PRICE_UPDATE_INTERVAL);
-}
-
-// Initialize app
-async function initializeApp() {
-    try {
-        initMarketOverview();
-        const { data: { session } } = await window.supabaseClient.client.auth.getSession();
-        if (session) {
-            await Promise.all([
-                loadPositions(),
-                loadOrders()
-            ]);
-        }
-        if (loadingOverlay) loadingOverlay.style.display = 'none';
-    } catch (error) {
-        console.error('Error initializing app:', error);
-        if (window.auth?.showError) {
-            window.auth.showError('Failed to initialize application');
-        }
-    }
-}
-
-// Load positions (only "open" ones)
-async function loadPositions() {
-    try {
-        const { data: positions, error } = await window.supabaseClient.client
-            .from('positions')
-            .select('*')
-            .eq('status', 'open');
-
-        if (error) throw error;
-
-        positionsList.innerHTML = '';
-        positions.forEach(position => {
-            const card = document.createElement('div');
-            card.className = 'position-card';
-            const pnl = position.pnl || 0;
-            
-            card.innerHTML = `
-                <div class="position-header">
-                    <span class="position-title">${position.index_id} (${position.side.toUpperCase()})</span>
-                    <span class="position-pnl ${pnl >= 0 ? 'positive' : 'negative'}">
-                        ${formatCurrency(pnl)}
-                    </span>
-                </div>
-                <div class="position-details">
-                    <div>Quantity: ${position.quantity}</div>
-                    <div>Entry Price: ${formatCurrency(position.entry_price)}</div>
-                    <div>Current Price: ${formatCurrency(position.current_price)}</div>
-                    <div>Status: ${position.status}</div>
-                </div>
-                <div class="button-group">
-                    <button data-posid="${position.id}" class="close-pos-btn">Close Position</button>
-                </div>
-            `;
-            positionsList.appendChild(card);
-        });
-
-        const closeButtons = document.querySelectorAll('.close-pos-btn');
-        closeButtons.forEach(btn => {
-            btn.addEventListener('click', closePosition);
-        });
-
-    } catch (error) {
-        console.error('Error loading positions:', error);
-        if (window.auth?.showError) {
-            window.auth.showError('Failed to load positions');
-        }
-    }
-}
-
-// Close position
-async function closePosition(e) {
-    const posId = e.target.dataset.posid;
-    if (!posId) return;
-    
-    try {
-        // Get position details first
-        const { data: position, error: posError } = await window.supabaseClient.client
-            .from('positions')
-            .select('*')
-            .eq('id', posId)
-            .single();
-
-        if (posError) throw posError;
-
-        // Get current price for the index
-        const currentIndex = mockIndices.find(idx => idx.id === position.index_id);
-        if (!currentIndex) throw new Error('Index not found');
-
-        const exitPrice = currentIndex.price;
-        const finalPnL = calculatePnL(position, exitPrice);
-
-        // Update position with exit price and final PnL
-        const { error } = await window.supabaseClient.client
-            .from('positions')
-            .update({
-                status: 'closed',
-                exit_price: exitPrice,
-                current_price: exitPrice,
-                pnl: finalPnL,
-                updated_at: new Date().toISOString()
-            })
-            .eq('id', posId);
-
-        if (error) throw error;
-
-        await loadPositions();
-        if (window.auth?.showSuccess) {
-            window.auth.showSuccess(`Position closed with P&L: ${formatCurrency(finalPnL)}`);
-        }
-    } catch (error) {
-        console.error('Error closing position:', error);
-        if (window.auth?.showError) {
-            window.auth.showError('Failed to close position');
-        }
-    }
-}
-
-// Load orders
-async function loadOrders() {
-    try {
-        const { data: orders, error } = await window.supabaseClient.client
-            .from('orders')
-            .select('*')
-            .order('created_at', { ascending: false })
-            .limit(10);
-
-        if (error) throw error;
-
-        ordersList.innerHTML = '';
-        orders.forEach(order => {
-            const card = document.createElement('div');
-            card.className = 'order-card';
-            card.innerHTML = `
-                <div class="order-header">
-                    <span class="order-title">${order.index_id}</span>
-                    <span>${formatCurrency(order.total_value)}</span>
-                </div>
-                <div class="order-details">
-                    <div>${order.order_type.toUpperCase()}</div>
-                    <div>Qty: ${order.quantity}</div>
-                    <div>Price: ${formatCurrency(order.price)}</div>
-                    <div>Status: ${order.status}</div>
-                    <div>Date: ${new Date(order.created_at).toLocaleString()}</div>
-                </div>
-            `;
-            ordersList.appendChild(card);
-        });
-    } catch (error) {
-        console.error('Error loading orders:', error);
-        if (window.auth?.showError) {
-            window.auth.showError('Failed to load orders');
-        }
-    }
-}
-
-// Handle trade form submission
-tradeForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    try {
-        const { data: { session } } = await window.supabaseClient.client.auth.getSession();
-        if (!session) {
-            throw new Error('Please log in to place orders');
-        }
-
-        const formData = {
-            index_id: indexSelect.value,
-            order_type: document.getElementById('order-type').value,
-            quantity: parseInt(document.getElementById('quantity').value)
-        };
-
-        const chosenIndex = mockIndices.find(idx => idx.id === formData.index_id);
-        if (!chosenIndex) {
-            throw new Error('Index not found. Please select a valid index.');
-        }
-        const currentPrice = chosenIndex.price;
-        const totalValue = formData.quantity * currentPrice;
-
-        const { data: orderResult, error: orderError } = await window.supabaseClient.client
-            .from('orders')
-            .insert([{
-                ...formData,
-                user_id: session.user.id,
-                price: currentPrice,
-                total_value: totalValue,
-                status: 'completed',
-                created_at: new Date().toISOString()
-            }])
-            .select();
-        if (orderError) throw orderError;
-
-        const { error: newPosErr } = await window.supabaseClient.client
-            .from('positions')
-            .insert([{
-                user_id: session.user.id,
-                index_id: formData.index_id,
-                side: formData.order_type,
-                quantity: formData.quantity,
-                entry_price: currentPrice,
-                current_price: currentPrice,
-                pnl: 0,
-                status: 'open',
-                created_at: new Date().toISOString()
-            }]);
-        if (newPosErr) throw newPosErr;
-
-        if (window.auth?.showSuccess) {
-            window.auth.showSuccess('Order placed and position opened');
-        }
-
-        tradeForm.reset();
-        await Promise.all([
-            loadOrders(),
-            loadPositions()
-        ]);
-
-    } catch (error) {
-        console.error('Error placing order:', error);
-        if (window.auth?.showError) {
-            window.auth.showError(error.message || 'Failed to place order');
-        }
-    }
 });
 
-// Initialize when both Supabase and Auth are ready
-let isSupabaseReady = false;
-let isAuthReady = false;
-
-window.addEventListener('supabaseReady', () => {
-    isSupabaseReady = true;
-    if (isAuthReady) initializeApp();
-});
-
-window.addEventListener('authReady', () => {
-    isAuthReady = true;
-    if (isSupabaseReady) initializeApp();
-});
-
-// Handle auth state changes
-window.addEventListener('authStateChange', async ({ detail }) => {
-    if (detail.user) {
-        await Promise.all([
-            loadPositions(),
-            loadOrders()
-        ]);
-    } else {
-        positionsList.innerHTML = '';
-        ordersList.innerHTML = '';
-    }
-});
+// Export for use in other scripts
+window.tradingSite = tradingSite;

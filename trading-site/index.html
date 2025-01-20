@@ -3,28 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tactical Indices Trading</title>
-    <link rel="stylesheet" href="../shared/css/styles.css">
-    <link rel="stylesheet" href="css/trading-site.css">
+    <title>Trading Site</title>
+    <link rel="stylesheet" href="/shared/css/styles.css">
+    <link rel="stylesheet" href="/trading-site/css/trading-site.css">
+    <!-- Load Supabase with realtime support -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.2/dist/umd/supabase.min.js"></script>
+    <!-- Initialize status tracking -->
+    <script>
+        window.initStatus = {
+            supabase: false,
+            auth: false,
+            price: false,
+            position: false
+        };
+
+        function updateStatus(component, status, message) {
+            const el = document.getElementById(`status-${component}`);
+            if (el) {
+                el.className = `status-item ${status}`;
+                el.textContent = message;
+            }
+            
+            if (status === 'done') {
+                window.initStatus[component] = true;
+            } else if (status === 'error') {
+                // Mark as initialized even on error
+                window.initStatus[component] = true;
+                // Don't show error for position updates in guest mode
+                if (component === 'position' && !window.auth?.user) {
+                    window.initStatus[component] = true;
+                    el.className = 'status-item done';
+                    el.textContent = '✅ Position Updates: Ready (Guest)';
+                }
+            }
+            
+            // Check if all components are initialized (either success or error)
+            if (Object.values(window.initStatus).every(status => status)) {
+                // Check if any component has error
+                const hasError = document.querySelector('.status-item.error');
+                if (hasError) {
+                    updateStatus('app', 'error', '❌ App: Limited Functionality');
+                } else {
+                    updateStatus('app', 'done', '✅ App: Ready');
+                }
+                document.getElementById('loading-overlay').style.display = 'none';
+            }
+        }
+
+        window.addEventListener('supabaseReady', () => {
+            console.log('Supabase ready event received');
+            updateStatus('supabase', 'done', '✅ Supabase: Connected');
+        });
+
+        window.addEventListener('authReady', () => {
+            console.log('Auth ready event received');
+            updateStatus('auth', 'done', '✅ Auth: Ready');
+        });
+
+        window.addEventListener('priceUpdatesReady', () => {
+            console.log('Price updates ready event received');
+            updateStatus('price', 'done', '✅ Price Updates: Ready');
+        });
+
+        window.addEventListener('positionUpdatesReady', () => {
+            console.log('Position updates ready event received');
+            updateStatus('position', 'done', '✅ Position Updates: Ready');
+        });
+
+        window.addEventListener('error', (event) => {
+            console.error('Global error:', event.error);
+            updateStatus('app', 'error', '❌ App: Error - Check Console');
+        });
+    </script>
 </head>
 <body>
-    <!-- Loading indicator -->
-    <div id="loading-overlay" style="display: block; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 9999;">
-        <div class="loading-content" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-            <div class="spinner"></div>
-            <div id="loading-message" class="loading-message">Initializing application...</div>
-            <div id="loading-status" class="loading-status">
-                <div id="supabase-status" class="loading-status waiting">Supabase: Connecting...</div>
-                <div id="auth-status" class="loading-status waiting">Auth: Initializing...</div>
-            </div>
-        </div>
-    </div>
-
     <header>
         <nav>
-            <h1>Tactical Indices Trading</h1>
+            <h1>Trading Site</h1>
             <div id="user-info">
                 <span id="username"></span>
+                <button id="risk-dashboard-btn" style="display: none;" onclick="window.location.href='/risk-dashboard/'">Risk Dashboard</button>
                 <button id="login-btn">Login</button>
                 <button id="logout-btn" style="display: none;">Logout</button>
             </div>
@@ -32,12 +90,12 @@
     </header>
 
     <main>
-        <section id="trading-panel">
-            <div class="market-overview">
-                <h2>Market Overview</h2>
-                <div id="indices-list"></div>
-            </div>
+        <section class="market-overview">
+            <h2>Market Overview</h2>
+            <div id="indices-list"></div>
+        </section>
 
+        <section class="trading-panel">
             <div class="order-form">
                 <h2>Place Order</h2>
                 <form id="trade-form">
@@ -47,7 +105,6 @@
                             <option value="">Choose an index...</option>
                         </select>
                     </div>
-
                     <div class="form-group">
                         <label for="order-type">Order Type</label>
                         <select id="order-type" required>
@@ -55,99 +112,45 @@
                             <option value="sell">Sell</option>
                         </select>
                     </div>
-
                     <div class="form-group">
                         <label for="quantity">Quantity</label>
                         <input type="number" id="quantity" min="1" required>
                     </div>
-
-                    <!-- Price field removed, replaced by an auto-calculated value in JavaScript -->
-
                     <button type="submit">Place Order</button>
                 </form>
             </div>
-        </section>
 
-        <section id="positions-panel">
-            <h2>Your Positions</h2>
-            <div id="positions-list"></div>
-        </section>
+            <div class="positions">
+                <h2>Open Positions</h2>
+                <div id="positions-list"></div>
+            </div>
 
-        <section id="orders-panel">
-            <h2>Order History</h2>
-            <div id="orders-list"></div>
+            <div class="orders">
+                <h2>Recent Orders</h2>
+                <div id="orders-list"></div>
+            </div>
         </section>
     </main>
 
-    <style>
-        .spinner {
-            width: 40px;
-            height: 40px;
-            margin: 0 auto 1rem;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #007bff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
+    <div id="loading-overlay">
+        <div id="loading-message">Initializing application...</div>
+    </div>
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+    <!-- Initialization Status Display -->
+    <div id="init-status">
+        <div class="status-item pending" id="status-supabase">⏳ Supabase: Loading...</div>
+        <div class="status-item pending" id="status-auth">⏳ Auth: Waiting...</div>
+        <div class="status-item pending" id="status-price">⏳ Price Updates: Waiting...</div>
+        <div class="status-item pending" id="status-position">⏳ Position Updates: Waiting...</div>
+        <div class="status-item pending" id="status-app">⏳ App: Waiting...</div>
+    </div>
 
-        .loading-content {
-            text-align: center;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 2rem;
-            border-radius: 8px;
-        }
-
-        .loading-message {
-            color: white;
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
-        }
-
-        .loading-status {
-            color: #aaa;
-            font-size: 0.9rem;
-        }
-
-        .loading-status.ready {
-            color: #28a745;
-        }
-
-        .loading-status.waiting {
-            color: #ffc107;
-        }
-    </style>
-
-    <!-- Load Supabase -->
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-    
-    <!-- Load application scripts -->
-    <script src="../shared/js/supabase-client.js"></script>
-    <script src="../shared/js/auth.js"></script>
-    <script src="js/trading-site.js"></script>
-
-    <script>
-        // Update loading status
-        const supabaseStatus = document.getElementById('supabase-status');
-        const authStatus = document.getElementById('auth-status');
-        const loadingOverlay = document.getElementById('loading-overlay');
-
-        window.addEventListener('supabaseReady', () => {
-            supabaseStatus.textContent = 'Supabase: Connected';
-            supabaseStatus.classList.remove('waiting');
-            supabaseStatus.classList.add('ready');
-        });
-
-        window.addEventListener('authReady', () => {
-            authStatus.textContent = 'Auth: Ready';
-            authStatus.classList.remove('waiting');
-            authStatus.classList.add('ready');
-            loadingOverlay.style.display = 'none';
-        });
-    </script>
+    <!-- Load shared modules -->
+    <script src="/shared/js/supabase-client.js"></script>
+    <script src="/shared/js/auth.js"></script>
+    <script src="/shared/js/auth-modal.js"></script>
+    <script src="/shared/js/price-updates.js"></script>
+    <script src="/shared/js/position-updates.js"></script>
+    <script src="/trading-site/js/trading-site.js"></script>
 </body>
 </html>

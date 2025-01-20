@@ -1,214 +1,221 @@
-// Chart.js configurations and setup
-const chartConfigs = {
-    // Common options for all charts
-    commonOptions: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                position: 'bottom',
-                labels: {
-                    padding: 20,
-                    usePointStyle: true
-                }
-            }
-        }
-    },
-
-    // Position Distribution Chart (Pie)
-    positionDistribution: {
-        type: 'pie',
-        data: {
-            labels: ['Buy', 'Sell'],
-            datasets: [{
-                data: [0, 0],
-                backgroundColor: ['#3498db', '#e74c3c'],
-                borderWidth: 0
-            }]
-        },
-        options: {
-            ...this?.commonOptions,
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                },
-                title: {
-                    display: true,
-                    text: 'Position Distribution'
-                }
-            }
-        }
-    },
-
-    // P&L Trend Chart (Line)
-    pnlTrend: {
-        type: 'line',
-        data: {
-            labels: [],
-            datasets: [{
-                label: 'P&L',
-                data: [],
-                borderColor: '#2ecc71',
-                borderWidth: 2,
-                fill: true,
-                backgroundColor: 'rgba(46, 204, 113, 0.1)',
-                tension: 0.4
-            }]
-        },
-        options: {
-            ...this?.commonOptions,
-            scales: {
-                x: {
-                    grid: {
-                        display: false
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        color: 'rgba(0, 0, 0, 0.1)'
-                    }
-                }
-            }
-        }
-    },
-
-    // Risk Exposure Chart (Bar)
-    riskExposure: {
-        type: 'bar',
-        data: {
-            labels: ['Low', 'Medium', 'High'],
-            datasets: [{
-                label: 'Risk Level',
-                data: [0, 0, 0],
-                backgroundColor: [
-                    'rgba(46, 204, 113, 0.6)',
-                    'rgba(241, 196, 15, 0.6)',
-                    'rgba(231, 76, 60, 0.6)'
-                ],
-                borderColor: [
-                    'rgb(46, 204, 113)',
-                    'rgb(241, 196, 15)',
-                    'rgb(231, 76, 60)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            ...this?.commonOptions,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    },
-
-    // Trading Volume Chart (Line)
-    tradingVolume: {
-        type: 'line',
-        data: {
-            labels: [],
-            datasets: [{
-                label: 'Volume',
-                data: [],
-                borderColor: '#9b59b6',
-                borderWidth: 2,
-                fill: true,
-                backgroundColor: 'rgba(155, 89, 182, 0.1)',
-                tension: 0.4
-            }]
-        },
-        options: {
-            ...this?.commonOptions,
-            scales: {
-                x: {
-                    grid: {
-                        display: false
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        color: 'rgba(0, 0, 0, 0.1)'
-                    }
-                }
-            }
-        }
-    }
-};
-
-// Initialize charts
-let charts = {};
-
-function initializeCharts() {
-    // Position Distribution
-    const positionCtx = document.getElementById('position-distribution').getContext('2d');
-    charts.positionDistribution = new Chart(positionCtx, chartConfigs.positionDistribution);
-
-    // P&L Trend
-    const pnlCtx = document.getElementById('pnl-trend').getContext('2d');
-    charts.pnlTrend = new Chart(pnlCtx, chartConfigs.pnlTrend);
-
-    // Risk Exposure
-    const riskCtx = document.getElementById('risk-exposure').getContext('2d');
-    charts.riskExposure = new Chart(riskCtx, chartConfigs.riskExposure);
-
-    // Trading Volume
-    const volumeCtx = document.getElementById('trading-volume').getContext('2d');
-    charts.tradingVolume = new Chart(volumeCtx, chartConfigs.tradingVolume);
-}
-
-// Update chart data
-function updateCharts(data) {
-    // Update Position Distribution
-    if (data.positions) {
-        const buyCount = data.positions.filter(p => p.side === 'buy').length;
-        const sellCount = data.positions.filter(p => p.side === 'sell').length;
-        charts.positionDistribution.data.datasets[0].data = [buyCount, sellCount];
-        charts.positionDistribution.update();
-    }
-
-    // Update P&L Trend
-    if (data.pnlHistory) {
-        charts.pnlTrend.data.labels = data.pnlHistory.map(p => p.date);
-        charts.pnlTrend.data.datasets[0].data = data.pnlHistory.map(p => p.value);
-        charts.pnlTrend.update();
-    }
-
-    // Update Risk Exposure
-    if (data.riskLevels) {
-        charts.riskExposure.data.datasets[0].data = [
-            data.riskLevels.low,
-            data.riskLevels.medium,
-            data.riskLevels.high
-        ];
-        charts.riskExposure.update();
-    }
-
-    // Update Trading Volume
-    if (data.volumeHistory) {
-        charts.tradingVolume.data.labels = data.volumeHistory.map(v => v.date);
-        charts.tradingVolume.data.datasets[0].data = data.volumeHistory.map(v => v.value);
-        charts.tradingVolume.update();
-    }
-}
-
-// Handle window resize
-function handleResize() {
-    Object.values(charts).forEach(chart => {
-        if (chart) {
-            chart.resize();
-        }
-    });
-}
-
-// Event Listeners
-window.addEventListener('resize', handleResize);
-window.addEventListener('load', initializeCharts);
-
-// Export functions for use in risk-dashboard.js
+// Dashboard charts configuration
 window.dashboardCharts = {
-    charts,
-    updateCharts
+    charts: null,
+    isInitialized: false,
+
+    initialize() {
+        if (this.isInitialized) {
+            return;
+        }
+
+        try {
+            console.log('Charts: Initializing...');
+            updateStatus('charts', 'pending', '⏳ Charts: Initializing...');
+
+            this.charts = {
+                positionDistribution: this.createPositionDistributionChart(),
+                riskExposure: this.createRiskExposureChart(),
+                pnlTrend: this.createPnLTrendChart(),
+                tradingVolume: this.createTradingVolumeChart()
+            };
+
+            this.isInitialized = true;
+            console.log('Charts: Initialized successfully');
+            updateStatus('charts', 'done', '✅ Charts: Ready');
+            window.dispatchEvent(new Event('chartsReady'));
+
+        } catch (error) {
+            console.error('Charts initialization error:', error);
+            updateStatus('charts', 'error', '❌ Charts: Error');
+            this.isInitialized = true;
+            window.dispatchEvent(new Event('chartsReady'));
+        }
+    },
+
+    createPositionDistributionChart() {
+        const ctx = document.getElementById('position-distribution');
+        if (!ctx) return null;
+
+        return new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Buy', 'Sell'],
+                datasets: [{
+                    data: [0, 0],
+                    backgroundColor: [
+                        'rgba(46, 204, 113, 0.8)',  // Green for Buy
+                        'rgba(231, 76, 60, 0.8)'    // Red for Sell
+                    ],
+                    borderColor: [
+                        'rgba(46, 204, 113, 1)',
+                        'rgba(231, 76, 60, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Position Distribution'
+                    }
+                }
+            }
+        });
+    },
+
+    createRiskExposureChart() {
+        const ctx = document.getElementById('risk-exposure');
+        if (!ctx) return null;
+
+        return new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Low', 'Medium', 'High'],
+                datasets: [{
+                    label: 'Positions by Risk Level',
+                    data: [0, 0, 0],
+                    backgroundColor: [
+                        'rgba(46, 204, 113, 0.8)',  // Green for Low
+                        'rgba(241, 196, 15, 0.8)',  // Yellow for Medium
+                        'rgba(231, 76, 60, 0.8)'    // Red for High
+                    ],
+                    borderColor: [
+                        'rgba(46, 204, 113, 1)',
+                        'rgba(241, 196, 15, 1)',
+                        'rgba(231, 76, 60, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        display: true,
+                        text: 'Risk Exposure Distribution'
+                    }
+                }
+            }
+        });
+    },
+
+    createPnLTrendChart() {
+        const ctx = document.getElementById('pnl-trend');
+        if (!ctx) return null;
+
+        return new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'P&L',
+                    data: [],
+                    borderColor: 'rgba(52, 152, 219, 1)',
+                    backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        ticks: {
+                            callback: function(value) {
+                                return new Intl.NumberFormat('en-US', {
+                                    style: 'currency',
+                                    currency: 'USD'
+                                }).format(value);
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        display: true,
+                        text: 'P&L Trend'
+                    }
+                }
+            }
+        });
+    },
+
+    createTradingVolumeChart() {
+        const ctx = document.getElementById('trading-volume');
+        if (!ctx) return null;
+
+        return new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Volume',
+                    data: [],
+                    backgroundColor: 'rgba(155, 89, 182, 0.8)',
+                    borderColor: 'rgba(155, 89, 182, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return new Intl.NumberFormat('en-US', {
+                                    style: 'currency',
+                                    currency: 'USD',
+                                    notation: 'compact'
+                                }).format(value);
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        display: true,
+                        text: 'Trading Volume by Index'
+                    }
+                }
+            }
+        });
+    }
 };
+
+// Initialize charts when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    window.dashboardCharts.initialize();
+});
+
+// Helper function to update initialization status
+function updateStatus(component, status, message) {
+    const el = document.getElementById(`status-${component}`);
+    if (el) {
+        el.className = `status-item ${status}`;
+        el.textContent = message;
+    }
+}

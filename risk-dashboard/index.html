@@ -3,15 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Risk Monitoring Dashboard</title>
-    <link rel="stylesheet" href="../shared/css/styles.css">
-    <link rel="stylesheet" href="css/risk-dashboard.css">
+    <title>Risk Dashboard</title>
+    <link rel="stylesheet" href="/shared/css/styles.css">
+    <link rel="stylesheet" href="/risk-dashboard/css/risk-dashboard.css">
+    <!-- Load Supabase with realtime support -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.2/dist/umd/supabase.min.js"></script>
+    <!-- Load Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Initialize status tracking -->
+    <script>
+        window.initStatus = {
+            supabase: false,
+            auth: false,
+            price: false,
+            position: false,
+            charts: false
+        };
+
+        function updateStatus(component, status, message) {
+            const el = document.getElementById(`status-${component}`);
+            if (el) {
+                el.className = `status-item ${status}`;
+                el.textContent = message;
+            }
+            
+            if (status === 'done') {
+                window.initStatus[component] = true;
+            }
+            
+            if (Object.values(window.initStatus).every(status => status)) {
+                updateStatus('app', 'done', '✅ App: Ready');
+                document.getElementById('loading-overlay').style.display = 'none';
+            }
+        }
+
+        window.addEventListener('supabaseReady', () => {
+            console.log('Supabase ready event received');
+            updateStatus('supabase', 'done', '✅ Supabase: Connected');
+        });
+
+        window.addEventListener('authReady', () => {
+            console.log('Auth ready event received');
+            updateStatus('auth', 'done', '✅ Auth: Ready');
+        });
+
+        window.addEventListener('priceUpdatesReady', () => {
+            console.log('Price updates ready event received');
+            updateStatus('price', 'done', '✅ Price Updates: Ready');
+        });
+
+        window.addEventListener('positionUpdatesReady', () => {
+            console.log('Position updates ready event received');
+            updateStatus('position', 'done', '✅ Position Updates: Ready');
+        });
+
+        window.addEventListener('chartsReady', () => {
+            console.log('Charts ready event received');
+            updateStatus('charts', 'done', '✅ Charts: Ready');
+        });
+
+        window.addEventListener('error', (event) => {
+            console.error('Global error:', event.error);
+            updateStatus('app', 'error', '❌ App: Error - Check Console');
+        });
+    </script>
 </head>
 <body>
     <header>
         <nav>
-            <h1>Risk Monitoring Dashboard</h1>
+            <h1>Risk Dashboard</h1>
             <div id="user-info">
                 <span id="username"></span>
                 <button id="login-btn">Login</button>
@@ -20,97 +80,100 @@
         </nav>
     </header>
 
-    <main class="dashboard-layout">
-        <!-- Summary Cards -->
-        <section class="summary-cards">
-            <div class="metric-card total-positions">
-                <h3>Total Open Positions</h3>
-                <div class="metric-value" id="total-positions">0</div>
+    <main>
+        <section class="metrics-overview">
+            <div class="metric-card">
+                <h3>Total Positions</h3>
+                <div id="total-positions" class="metric-value">0</div>
+                <div id="positions-trend" class="metric-trend">No change</div>
             </div>
-            <div class="metric-card total-exposure">
+            <div class="metric-card">
                 <h3>Total Exposure</h3>
-                <div class="metric-value" id="total-exposure">$0</div>
+                <div id="total-exposure" class="metric-value currency">0.00</div>
+                <div id="exposure-trend" class="metric-trend">No change</div>
             </div>
-            <div class="metric-card daily-pnl">
+            <div class="metric-card">
                 <h3>Daily P&L</h3>
-                <div class="metric-value" id="daily-pnl">$0</div>
+                <div id="daily-pnl" class="metric-value currency">0.00</div>
+                <div id="pnl-trend" class="metric-trend">No change</div>
             </div>
-            <div class="metric-card risk-level">
+            <div class="metric-card">
                 <h3>Risk Level</h3>
-                <div class="metric-value" id="risk-level">Low</div>
+                <div id="risk-level" class="metric-value low">LOW</div>
+                <div id="risk-trend" class="metric-trend">Stable</div>
             </div>
         </section>
 
-        <!-- Charts Section -->
         <section class="charts-grid">
-            <div class="chart-container">
-                <h2>Position Distribution</h2>
+            <div class="chart-card">
+                <h3>Position Distribution</h3>
                 <canvas id="position-distribution"></canvas>
             </div>
-            <div class="chart-container">
-                <h2>P&L Trend</h2>
-                <canvas id="pnl-trend"></canvas>
-            </div>
-            <div class="chart-container">
-                <h2>Risk Exposure</h2>
+            <div class="chart-card">
+                <h3>Risk Exposure</h3>
                 <canvas id="risk-exposure"></canvas>
             </div>
-            <div class="chart-container">
-                <h2>Trading Volume</h2>
+            <div class="chart-card">
+                <h3>P&L Trend</h3>
+                <canvas id="pnl-trend"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3>Trading Volume</h3>
                 <canvas id="trading-volume"></canvas>
             </div>
         </section>
 
-        <!-- Active Alerts -->
-        <section class="alerts-panel">
-            <h2>Active Alerts</h2>
-            <div class="alerts-list" id="alerts-list">
-                <!-- Alerts will be dynamically added here -->
-            </div>
+        <section class="positions-table">
+            <h2>Open Positions</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Index</th>
+                        <th>Side</th>
+                        <th>Quantity</th>
+                        <th>Entry Price</th>
+                        <th>Current Price</th>
+                        <th>P&L</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="positions-table-body">
+                    <tr>
+                        <td colspan="7" class="empty-state">No open positions</td>
+                    </tr>
+                </tbody>
+            </table>
         </section>
 
-        <!-- Position Details -->
-        <section class="positions-panel">
-            <h2>Position Details</h2>
-            <div class="positions-table-container">
-                <table class="positions-table">
-                    <thead>
-                        <tr>
-                            <th>Index</th>
-                            <th>Side</th>
-                            <th>Quantity</th>
-                            <th>Entry Price</th>
-                            <th>Current Price</th>
-                            <th>P&L</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="positions-table-body">
-                        <!-- Positions will be dynamically added here -->
-                    </tbody>
-                </table>
+        <section class="alerts">
+            <h2>Active Alerts</h2>
+            <div id="alerts-list">
+                <div class="empty-state">No active alerts</div>
             </div>
         </section>
     </main>
 
-    <!-- Load Supabase -->
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-    
-    <!-- Load application scripts -->
-    <script src="../shared/js/supabase-client.js"></script>
-    <script src="../shared/js/auth.js"></script>
-    <script src="js/charts.js"></script>
-    <script src="js/risk-dashboard.js"></script>
+    <div id="loading-overlay">
+        <div id="loading-message">Initializing application...</div>
+    </div>
 
-    <script>
-        // Update loading status
-        window.addEventListener('supabaseReady', () => {
-            console.log('Supabase ready in dashboard');
-        });
+    <!-- Initialization Status Display -->
+    <div id="init-status">
+        <div class="status-item pending" id="status-supabase">⏳ Supabase: Loading...</div>
+        <div class="status-item pending" id="status-auth">⏳ Auth: Waiting...</div>
+        <div class="status-item pending" id="status-price">⏳ Price Updates: Waiting...</div>
+        <div class="status-item pending" id="status-position">⏳ Position Updates: Waiting...</div>
+        <div class="status-item pending" id="status-charts">⏳ Charts: Waiting...</div>
+        <div class="status-item pending" id="status-app">⏳ App: Waiting...</div>
+    </div>
 
-        window.addEventListener('authReady', () => {
-            console.log('Auth ready in dashboard');
-        });
-    </script>
+    <!-- Load shared modules -->
+    <script src="/shared/js/supabase-client.js"></script>
+    <script src="/shared/js/auth.js"></script>
+    <script src="/shared/js/auth-modal.js"></script>
+    <script src="/shared/js/price-updates.js"></script>
+    <script src="/shared/js/position-updates.js"></script>
+    <script src="/risk-dashboard/js/charts.js"></script>
+    <script src="/risk-dashboard/js/risk-dashboard.js"></script>
 </body>
 </html>
