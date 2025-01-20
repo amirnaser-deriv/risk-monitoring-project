@@ -13,6 +13,14 @@ window.PositionUpdates = {
             console.log('Position Updates: Initializing...');
             updateStatus('position', 'pending', '⏳ Position Updates: Initializing...');
 
+            // Wait for auth to be ready
+            if (!window.auth?.isInitialized) {
+                console.log('Position Updates: Waiting for auth...');
+                await new Promise((resolve) => {
+                    window.addEventListener('authReady', resolve, { once: true });
+                });
+            }
+
             // Initialize in guest mode if no user
             if (!window.auth?.user) {
                 console.log('Position Updates: Initializing in guest mode');
@@ -24,7 +32,7 @@ window.PositionUpdates = {
                 return;
             }
 
-            // Wait for dependencies
+            // Wait for Supabase to be ready
             if (!window.supabaseClient?.client) {
                 console.log('Position Updates: Waiting for Supabase...');
                 await new Promise((resolve) => {
@@ -32,10 +40,21 @@ window.PositionUpdates = {
                 });
             }
 
+            // Load initial positions
+            console.log('Loading initial positions...');
+            try {
+                await this.loadPositions();
+            } catch (error) {
+                console.error('Failed to load initial positions:', error);
+                // Continue with empty positions
+                this.positions.clear();
+                this.notifySubscribers();
+            }
+
             // Set up subscription for real-time updates
-            const channelName = `positions_${Date.now()}`;
-            const channel = window.supabaseClient.client
-                .channel(channelName)
+            this.channelName = `positions_${Date.now()}`;
+            this.channel = window.supabaseClient.client
+                .channel(this.channelName)
                 .on('postgres_changes', {
                     event: '*',
                     schema: 'public',
@@ -87,23 +106,86 @@ window.PositionUpdates = {
 
             // Then subscribe to channel
             try {
-                const status = await channel.subscribe();
+                const status = await this.channel.subscribe();
                 console.log('Position channel status:', status);
             } catch (error) {
                 console.error('Channel subscription error:', error);
                 // Continue without real-time updates
             }
 
-            // Then load initial positions
-            console.log('Loading initial positions...');
-            try {
-                await this.loadPositions();
-            } catch (error) {
-                console.error('Failed to load initial positions:', error);
-                // Continue with empty positions
-                this.positions.clear();
-                this.notifySubscribers();
-            }
+            // Handle auth state changes
+            window.addEventListener('authStateChange', async ({ detail }) => {
+                if (detail.event === 'SIGNED_IN' || detail.event === 'INITIAL_SESSION') {
+                    console.log('Auth state changed, reinitializing position updates');
+                    try {
+                        // Unsubscribe from old channel if it exists
+                        if (this.channel) {
+                            await this.channel.unsubscribe();
+                        }
+
+                        // Create new channel with current user
+                        this.channelName = `positions_${Date.now()}`;
+                        this.channel = window.supabaseClient.client
+                            .channel(this.channelName)
+                            .on('postgres_changes', {
+                                event: '*',
+                                schema: 'public',
+                                table: 'positions',
+                                filter: `user_id=eq.${window.auth.user.id},status=eq.open`
+                            }, async payload => {
+                                console.log('Position change:', payload);
+                                try {
+                                    const handlePosition = (position) => {
+                                        return position;
+                                    };
+
+                                    switch (payload.eventType) {
+                                        case 'INSERT':
+                                            const newPosition = handlePosition(payload.new);
+                                            this.positions.set(newPosition.id, newPosition);
+                                            this.notifySubscribers();
+                                            break;
+                                            
+                                        case 'UPDATE':
+                                            if (payload.new?.status === 'closed') {
+                                                this.positions.delete(payload.new.id);
+                                            } else {
+                                                const updatedPosition = handlePosition(payload.new);
+                                                this.positions.set(updatedPosition.id, updatedPosition);
+                                            }
+                                            this.notifySubscribers();
+                                            break;
+                                            
+                                        case 'DELETE':
+                                            if (payload.old) {
+                                                this.positions.delete(payload.old.id);
+                                                this.notifySubscribers();
+                                            }
+                                            break;
+                                    }
+                                } catch (error) {
+                                    console.error('Error handling position change:', error);
+                                }
+                            });
+
+                        await this.channel.subscribe();
+                        console.log('Resubscribed to position updates');
+
+                        // Load positions after resubscribing
+                        await this.loadPositions();
+                        console.log('Positions reloaded after auth change');
+                    } catch (error) {
+                        console.error('Error reinitializing position updates:', error);
+                    }
+                } else if (detail.event === 'SIGNED_OUT') {
+                    console.log('User signed out, cleaning up position updates');
+                    if (this.channel) {
+                        await this.channel.unsubscribe();
+                    }
+                    this.positions.clear();
+                    this.notifySubscribers();
+                }
+            });
 
             this.isInitialized = true;
             console.log('Position Updates: Initialized successfully');
@@ -132,6 +214,7 @@ window.PositionUpdates = {
 
             console.log('Loading positions for user:', window.auth.user.id);
 
+            // Load all open positions for the user
             const { data, error } = await window.supabaseClient.client
                 .from('positions')
                 .select(`
@@ -145,7 +228,8 @@ window.PositionUpdates = {
                     created_at
                 `)
                 .eq('status', 'open')
-                .eq('user_id', window.auth.user.id);
+                .eq('user_id', window.auth.user.id)
+                .order('created_at', { ascending: false });
 
             if (error) {
                 console.warn('Error loading positions:', error);
@@ -364,6 +448,9 @@ window.PositionUpdates = {
     cleanup() {
         this.positions.clear();
         this.subscribers = [];
+        if (this.channel) {
+            this.channel.unsubscribe().catch(console.error);
+        }
     }
 };
 

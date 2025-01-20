@@ -270,6 +270,15 @@ const tradingSite = {
 
         console.log('Trading Site: Filtered user positions:', userPositions);
 
+        // Update positions count in header
+        const positionsHeader = document.querySelector('.positions h2');
+        if (positionsHeader) {
+            positionsHeader.innerHTML = `
+                Open Positions
+                <span class="position-count">${userPositions.length} position${userPositions.length !== 1 ? 's' : ''}</span>
+            `;
+        }
+
         if (userPositions.length === 0) {
             positionsList.innerHTML = '<div class="empty-state">No open positions</div>';
             return;

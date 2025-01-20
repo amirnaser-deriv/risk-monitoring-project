@@ -45,6 +45,14 @@ const auth = {
 
             if (session) {
                 await this.loadUserProfile(session.user);
+                // Trigger auth state change for initial session
+                window.dispatchEvent(new CustomEvent('authStateChange', {
+                    detail: {
+                        user: this.user,
+                        event: 'INITIAL_SESSION',
+                        role: this.user?.role || sessionStorage.getItem('userRole') || 'client'
+                    }
+                }));
             }
 
             // Set up auth state change listener
