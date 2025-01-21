@@ -1,5 +1,153 @@
 /* Risk dashboard specific styles */
 
+/* Open Positions Section */
+.open-positions {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.open-positions h2 {
+    color: #2c3e50;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.open-positions h2 .position-count {
+    font-size: 0.875rem;
+    color: #7f8c8d;
+    font-weight: normal;
+}
+
+.positions-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.position-card {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 1.25rem;
+    border: 1px solid #e9ecef;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.position-card:hover {
+    transform: translateX(4px);
+    box-shadow: -4px 4px 12px rgba(0,0,0,0.1);
+}
+
+.position-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.position-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.position-pnl {
+    font-weight: 600;
+    padding: 0.375rem 0.75rem;
+    border-radius: 6px;
+}
+
+.position-pnl.positive {
+    background-color: rgba(39, 174, 96, 0.1);
+    color: #27ae60;
+}
+
+.position-pnl.negative {
+    background-color: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
+}
+
+.position-details {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.position-detail {
+    flex: 1;
+    min-width: 150px;
+}
+
+.position-detail {
+    display: flex;
+    flex-direction: column;
+}
+
+.detail-label {
+    font-size: 0.75rem;
+    color: #7f8c8d;
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.detail-value {
+    font-size: 0.9375rem;
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+.position-side {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.position-side.buy {
+    background-color: rgba(39, 174, 96, 0.1);
+    color: #27ae60;
+}
+
+.position-side.sell {
+    background-color: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
+}
+
+.loading {
+    animation: pulse 1.5s infinite;
+    color: #7f8c8d;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #7f8c8d;
+    font-style: italic;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px dashed #dee2e6;
+}
+
 /* Access denied message */
 .access-denied {
     text-align: center;

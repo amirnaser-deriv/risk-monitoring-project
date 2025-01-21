@@ -292,39 +292,71 @@ const riskDashboard = {
 
     updatePositionsTable() {
         const positions = Array.from(this.positions.values());
-        const tbody = document.getElementById('positions-table-body');
+        const grid = document.getElementById('positions-grid');
+        const countElement = document.querySelector('.position-count');
         
-        if (!tbody) return;
+        if (!grid) return;
+
+        // Update position count
+        countElement.textContent = `${positions.length} position${positions.length !== 1 ? 's' : ''}`;
 
         if (positions.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No open positions</td></tr>';
+            grid.innerHTML = '<div class="empty-state">No open positions</div>';
             return;
         }
 
-        tbody.innerHTML = positions.map(position => `
-            <tr>
-                <td>${position.index_id}</td>
-                <td>${position.side.toUpperCase()}</td>
-                <td>${position.quantity}</td>
-                <td>${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
-                    .format(position.entry_price)}</td>
-                <td>${(() => {
-                    const currentPrice = window.PriceUpdates.getCurrentPrice(position.index_id);
-                    return currentPrice 
-                        ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(currentPrice)
-                        : 'Loading...';
-                })()}</td>
-                <td class="${window.PositionUpdates.calculatePnL(position) >= 0 ? 'positive' : 'negative'}">
-                    ${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', signDisplay: 'always' })
-                        .format(window.PositionUpdates.calculatePnL(position))}
-                </td>
-                <td>
-                    <span class="status-indicator ${position.status}">
-                        ${position.status.toUpperCase()}
-                    </span>
-                </td>
-            </tr>
-        `).join('');
+        grid.innerHTML = positions.map(position => {
+            const currentPrice = window.PriceUpdates.getCurrentPrice(position.index_id);
+            const pnl = window.PositionUpdates.calculatePnL(position);
+            const pnlClass = pnl >= 0 ? 'positive' : 'negative';
+
+            return `
+                <div class="position-card">
+                    <div class="position-header">
+                        <span class="position-title">${position.index_id}</span>
+                        <span class="position-pnl ${pnlClass}">
+                            ${new Intl.NumberFormat('en-US', { 
+                                style: 'currency', 
+                                currency: 'USD',
+                                signDisplay: 'always'
+                            }).format(pnl)}
+                        </span>
+                    </div>
+                    <div class="position-details">
+                        <div class="position-detail">
+                            <span class="detail-label">Side</span>
+                            <span class="position-side ${position.side.toLowerCase()}">
+                                ${position.side.toUpperCase()}
+                            </span>
+                        </div>
+                        <div class="position-detail">
+                            <span class="detail-label">Quantity</span>
+                            <span class="detail-value">${position.quantity}</span>
+                        </div>
+                        <div class="position-detail">
+                            <span class="detail-label">Entry Price</span>
+                            <span class="detail-value">
+                                ${new Intl.NumberFormat('en-US', { 
+                                    style: 'currency', 
+                                    currency: 'USD' 
+                                }).format(position.entry_price)}
+                            </span>
+                        </div>
+                        <div class="position-detail">
+                            <span class="detail-label">Current Price</span>
+                            <span class="detail-value">
+                                ${currentPrice 
+                                    ? new Intl.NumberFormat('en-US', { 
+                                        style: 'currency', 
+                                        currency: 'USD' 
+                                    }).format(currentPrice)
+                                    : '<span class="loading">Loading...</span>'}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
     },
 
     updateCharts() {
