@@ -59,7 +59,7 @@ window.PositionUpdates = {
                     event: '*',
                     schema: 'public',
                     table: 'positions',
-                    filter: `user_id=eq.${window.auth.user.id},status=eq.open`
+                    filter: `user_id=eq.${window.auth.user.id},status=eq.open`  // Only user's positions
                 }, async payload => {
                     console.log('Position change:', payload);
                     
@@ -131,7 +131,7 @@ window.PositionUpdates = {
                                 event: '*',
                                 schema: 'public',
                                 table: 'positions',
-                                filter: `user_id=eq.${window.auth.user.id},status=eq.open`
+                                filter: `user_id=eq.${window.auth.user.id},status=eq.open`  // Only user's positions
                             }, async payload => {
                                 console.log('Position change:', payload);
                                 try {
@@ -214,19 +214,10 @@ window.PositionUpdates = {
 
             console.log('Loading positions for user:', window.auth.user.id);
 
-            // Load all open positions for the user
+            // Load user's positions
             const { data, error } = await window.supabaseClient.client
                 .from('positions')
-                .select(`
-                    id,
-                    user_id,
-                    index_id,
-                    side,
-                    quantity,
-                    entry_price,
-                    status,
-                    created_at
-                `)
+                .select('*')
                 .eq('status', 'open')
                 .eq('user_id', window.auth.user.id)
                 .order('created_at', { ascending: false });
@@ -362,16 +353,7 @@ window.PositionUpdates = {
                     status: 'open',
                     created_at: new Date().toISOString()
                 }])
-                .select(`
-                    id,
-                    user_id,
-                    index_id,
-                    side,
-                    quantity,
-                    entry_price,
-                    status,
-                    created_at
-                `)
+                .select('*')
                 .single();
 
             if (error) {
@@ -418,18 +400,7 @@ window.PositionUpdates = {
                     final_pnl: this.calculatePnL(position)
                 })
                 .eq('id', id)
-                .select(`
-                    id,
-                    user_id,
-                    index_id,
-                    side,
-                    quantity,
-                    entry_price,
-                    status,
-                    created_at,
-                    closed_at,
-                    final_pnl
-                `)
+                .select('*')
                 .single();
 
             if (error) throw error;

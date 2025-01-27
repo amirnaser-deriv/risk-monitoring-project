@@ -1,5 +1,38 @@
 /* Risk dashboard specific styles */
 
+/* Header and Navigation */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.nav-button {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: var(--primary-color, #3498db);
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.nav-button:hover {
+    background-color: var(--primary-dark-color, #2980b9);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
 /* Open Positions Section */
 .open-positions {
     background: white;
@@ -49,16 +82,28 @@
 .position-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 1rem;
     padding-bottom: 0.75rem;
     border-bottom: 1px solid #e9ecef;
+}
+
+.position-header-main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
 }
 
 .position-title {
     font-size: 1.125rem;
     font-weight: 600;
     color: #2c3e50;
+}
+
+.client-email {
+    font-size: 0.875rem;
+    color: #7f8c8d;
+    font-style: italic;
 }
 
 .position-pnl {
@@ -477,6 +522,24 @@ td.negative {
 
     .metric-value {
         font-size: 1.5rem;
+    }
+
+    nav {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .nav-left {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+        width: 100%;
+    }
+
+    .nav-button {
+        width: 100%;
+        text-align: center;
     }
 }
 

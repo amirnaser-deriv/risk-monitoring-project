@@ -14,6 +14,10 @@ const riskDashboard = {
         positions: {
             high: 20,
             medium: 10
+        },
+        concentration: {
+            high: 0.4,  // 40% of total exposure in single index
+            medium: 0.25 // 25% of total exposure in single index
         }
     },
 
@@ -23,17 +27,20 @@ const riskDashboard = {
         }
 
         try {
-            console.log('Risk Dashboard: Initializing...');
+            console.log('Risk Dashboard: Starting initialization...');
             updateStatus('app', 'pending', '⏳ App: Initializing...');
 
             // Initialize services in sequence
             await this.initializeServices();
 
             // Check authentication and role
+            const { data: sessionData } = await window.supabaseClient.client.auth.getSession();
             console.log('Checking auth state:', {
                 user: window.auth?.user,
                 role: window.auth?.user?.role,
-                sessionRole: sessionStorage.getItem('userRole')
+                sessionRole: sessionStorage.getItem('userRole'),
+                isInitialized: window.auth?.isInitialized,
+                hasSession: !!sessionData?.session
             });
 
             if (!window.auth?.user) {
@@ -85,8 +92,24 @@ const riskDashboard = {
 
             console.log('Access granted, proceeding with dashboard initialization');
 
-            // Subscribe to position updates
-            window.PositionUpdates.subscribe(positions => {
+            // Wait for RiskPositionManager to be ready
+            if (!window.RiskPositionManager?.isInitialized) {
+                console.log('Waiting for RiskPositionManager...');
+                await new Promise((resolve) => {
+                    window.addEventListener('riskPositionManagerReady', resolve, { once: true });
+                });
+            }
+
+            // Force initial positions load
+            console.log('Loading initial positions...');
+            const initialPositions = window.RiskPositionManager.getAllPositions();
+            console.log('Initial positions loaded:', initialPositions);
+            this.handlePositionUpdates(initialPositions);
+
+            // Subscribe to position updates using RiskPositionManager
+            console.log('Subscribing to RiskPositionManager...');
+            window.RiskPositionManager.subscribe(positions => {
+                console.log('Received positions update:', positions);
                 this.handlePositionUpdates(positions);
             });
 
@@ -113,28 +136,38 @@ const riskDashboard = {
         // Initialize services in sequence
         console.log('Initializing services in sequence...');
 
-        // 1. Initialize Supabase
-        await window.supabaseClient.initialize();
-        console.log('Supabase initialized');
-
-        // 2. Initialize Auth
+        // 1. Initialize Auth first
+        console.log('1. Initializing Auth...');
         await window.auth.initialize();
-        console.log('Auth initialized');
+        const { data: sessionData } = await window.supabaseClient.client.auth.getSession();
+        console.log('Auth initialized, session:', sessionData?.session);
+
+        // 2. Initialize Supabase after Auth
+        console.log('2. Initializing Supabase...');
+        await window.supabaseClient.initialize();
+        console.log('Supabase initialized, headers:', window.supabaseClient?.client?.rest?.headers);
 
         // 3. Initialize Price Updates
+        console.log('3. Initializing Price Updates...');
         await window.PriceUpdates.initialize();
         console.log('Price Updates initialized');
 
-        // 4. Initialize Position Updates
-        await window.PositionUpdates.initialize();
-        console.log('Position Updates initialized');
+        // 4. Initialize Risk Position Manager after Supabase
+        console.log('4. Initializing Risk Position Manager...');
+        await window.RiskPositionManager.initialize();
+        console.log('Risk Position Manager initialized, positions:', window.RiskPositionManager.getAllPositions());
 
-        // 5. Initialize Charts
+        // 5. Initialize Charts last
+        console.log('5. Initializing Charts...');
         await window.dashboardCharts.initialize();
         console.log('Charts initialized');
+
+        console.log('All services initialized successfully');
     },
 
     handlePositionUpdates(positions) {
+        console.log('Handling position updates:', positions);
+        
         // Update positions map
         this.positions.clear();
         positions.forEach(position => {
@@ -149,8 +182,12 @@ const riskDashboard = {
         // Update positions table
         this.updatePositionsTable();
 
-        // Update charts
-        this.updateCharts();
+            // Update charts if initialized
+            if (window.dashboardCharts?.isInitialized) {
+                window.dashboardCharts.updateCharts(positions);
+            } else {
+                console.log('Charts not yet initialized, skipping update');
+            }
 
         // Check for alerts
         this.checkAlerts();
@@ -160,7 +197,11 @@ const riskDashboard = {
         // Just update displays since PnL is calculated using current prices
         this.updateMetrics();
         this.updatePositionsTable();
-        this.updateCharts();
+            if (window.dashboardCharts?.isInitialized) {
+                window.dashboardCharts.updateCharts(Array.from(this.positions.values()));
+            } else {
+                console.log('Charts not yet initialized, skipping update');
+            }
         this.checkAlerts();
     },
 
@@ -173,6 +214,7 @@ const riskDashboard = {
 
     updateMetrics() {
         const positions = Array.from(this.positions.values());
+        console.log('Updating metrics with positions:', positions);
         
         // Update total positions with trend
         const positionsCount = positions.length;
@@ -213,7 +255,7 @@ const riskDashboard = {
 
         // Calculate and update daily P&L with trend
         const totalPnl = positions.reduce((sum, pos) => 
-            sum + window.PositionUpdates.calculatePnL(pos), 0);
+            sum + window.RiskPositionManager.calculatePnL(pos), 0);
         this.updateMetricWithTrend('daily-pnl',
             totalPnl,
             this.previousMetrics.pnl,
@@ -240,18 +282,22 @@ const riskDashboard = {
         const riskElement = document.getElementById('risk-level');
         const previousRisk = this.previousMetrics.riskLevel;
         
-        riskElement.textContent = riskLevel.toUpperCase();
-        riskElement.className = `metric-value ${riskLevel.toLowerCase()}`;
+        if (riskElement) {
+            riskElement.textContent = riskLevel.toUpperCase();
+            riskElement.className = `metric-value ${riskLevel.toLowerCase()}`;
+        }
         
         const riskTrendElement = document.getElementById('risk-trend');
-        if (riskLevel === previousRisk) {
-            riskTrendElement.textContent = 'Stable';
-            riskTrendElement.className = 'metric-trend';
-        } else {
-            const riskLevels = { low: 1, medium: 2, high: 3 };
-            const isIncreasing = riskLevels[riskLevel] > riskLevels[previousRisk];
-            riskTrendElement.textContent = isIncreasing ? 'Deteriorating' : 'Improving';
-            riskTrendElement.className = `metric-trend ${isIncreasing ? 'down' : 'up'}`;
+        if (riskTrendElement) {
+            if (riskLevel === previousRisk) {
+                riskTrendElement.textContent = 'Stable';
+                riskTrendElement.className = 'metric-trend';
+            } else {
+                const riskLevels = { low: 1, medium: 2, high: 3 };
+                const isIncreasing = riskLevels[riskLevel] > riskLevels[previousRisk];
+                riskTrendElement.textContent = isIncreasing ? 'Deteriorating' : 'Improving';
+                riskTrendElement.className = `metric-trend ${isIncreasing ? 'down' : 'up'}`;
+            }
         }
         this.previousMetrics.riskLevel = riskLevel;
     },
@@ -259,6 +305,11 @@ const riskDashboard = {
     updateMetricWithTrend(valueId, currentValue, previousValue, formatValue, trendId, getTrendText) {
         const element = document.getElementById(valueId);
         const trendElement = document.getElementById(trendId);
+        
+        if (!element || !trendElement) {
+            console.error(`Metric elements not found: ${valueId}, ${trendId}`);
+            return;
+        }
         
         // Update value
         element.textContent = formatValue(currentValue);
@@ -295,32 +346,69 @@ const riskDashboard = {
         const grid = document.getElementById('positions-grid');
         const countElement = document.querySelector('.position-count');
         
-        if (!grid) return;
+        if (!grid) {
+            console.error('Positions grid element not found');
+            return;
+        }
+
+        console.log('Updating positions table with:', positions);
 
         // Update position count
-        countElement.textContent = `${positions.length} position${positions.length !== 1 ? 's' : ''}`;
+        if (countElement) {
+            countElement.textContent = `${positions.length} position${positions.length !== 1 ? 's' : ''}`;
+        }
 
         if (positions.length === 0) {
             grid.innerHTML = '<div class="empty-state">No open positions</div>';
             return;
         }
 
-        grid.innerHTML = positions.map(position => {
+        try {
+            grid.innerHTML = positions.map(position => this.renderPositionCard(position)).join('');
+        } catch (error) {
+            console.error('Error rendering positions:', error);
+            grid.innerHTML = '<div class="error-state">Error displaying positions</div>';
+        }
+    },
+
+    renderPositionCard(position) {
+        try {
             const currentPrice = window.PriceUpdates.getCurrentPrice(position.index_id);
-            const pnl = window.PositionUpdates.calculatePnL(position);
+            const pnl = window.RiskPositionManager.calculatePnL(position);
             const pnlClass = pnl >= 0 ? 'positive' : 'negative';
+            const exposure = position.quantity * (currentPrice || position.entry_price);
+            const totalExposure = Array.from(this.positions.values()).reduce((sum, pos) => {
+                const price = window.PriceUpdates.getCurrentPrice(pos.index_id) || pos.entry_price;
+                return sum + (pos.quantity * price);
+            }, 0);
+            const exposurePercentage = totalExposure ? (exposure / totalExposure * 100).toFixed(1) : 0;
 
             return `
                 <div class="position-card">
                     <div class="position-header">
-                        <span class="position-title">${position.index_id}</span>
-                        <span class="position-pnl ${pnlClass}">
-                            ${new Intl.NumberFormat('en-US', { 
-                                style: 'currency', 
-                                currency: 'USD',
-                                signDisplay: 'always'
-                            }).format(pnl)}
-                        </span>
+                        <div class="position-header-main">
+                            <span class="position-title">${position.index_id}</span>
+                        </div>
+                        <div class="position-metrics">
+                            <span class="position-side ${position.side.toLowerCase()}">
+                                ${position.side.toUpperCase()}
+                            </span>
+                            <span class="position-exposure">
+                                ${new Intl.NumberFormat('en-US', { 
+                                    style: 'currency', 
+                                    currency: 'USD',
+                                    maximumFractionDigits: 0
+                                }).format(exposure)}
+                                <small>(${exposurePercentage}% of total)</small>
+                            </span>
+                            <span class="position-pnl ${pnlClass}">
+                                ${new Intl.NumberFormat('en-US', { 
+                                    style: 'currency', 
+                                    currency: 'USD',
+                                    signDisplay: 'always'
+                                }).format(pnl)}
+                            </span>
+                        </div>
                     </div>
                     <div class="position-details">
                         <div class="position-detail">
@@ -356,132 +444,100 @@ const riskDashboard = {
                     </div>
                 </div>
             `;
-        }).join('');
-    },
-
-    updateCharts() {
-        const positions = Array.from(this.positions.values());
-        
-        if (!window.dashboardCharts?.charts) {
-            console.warn('Charts not initialized');
-            return;
-        }
-
-        try {
-            // Update position distribution
-            const buyCount = positions.filter(p => p.side === 'buy').length;
-            const sellCount = positions.filter(p => p.side === 'sell').length;
-            window.dashboardCharts.charts.positionDistribution.data.datasets[0].data = [buyCount, sellCount];
-            window.dashboardCharts.charts.positionDistribution.update('none');
-
-            // Update risk exposure
-            const riskCounts = positions.reduce((acc, pos) => {
-                const currentPrice = window.PriceUpdates.getCurrentPrice(pos.index_id);
-                const exposure = pos.quantity * (currentPrice || pos.entry_price);
-                if (exposure > this.riskLevels.exposure.high) acc.high++;
-                else if (exposure > this.riskLevels.exposure.medium) acc.medium++;
-                else acc.low++;
-                return acc;
-            }, { low: 0, medium: 0, high: 0 });
-
-            window.dashboardCharts.charts.riskExposure.data.datasets[0].data = [
-                riskCounts.low,
-                riskCounts.medium,
-                riskCounts.high
-            ];
-            window.dashboardCharts.charts.riskExposure.update('none');
-
-            // Update P&L trend
-            const pnlData = positions.map(p => window.PositionUpdates.calculatePnL(p));
-            window.dashboardCharts.charts.pnlTrend.data.labels = positions.map(p => p.index_id);
-            window.dashboardCharts.charts.pnlTrend.data.datasets[0].data = pnlData;
-            window.dashboardCharts.charts.pnlTrend.update('none');
-
-            // Update trading volume
-            const volumeData = positions.map(p => {
-                const currentPrice = window.PriceUpdates.getCurrentPrice(p.index_id);
-                return p.quantity * (currentPrice || p.entry_price);
-            });
-            window.dashboardCharts.charts.tradingVolume.data.labels = positions.map(p => p.index_id);
-            window.dashboardCharts.charts.tradingVolume.data.datasets[0].data = volumeData;
-            window.dashboardCharts.charts.tradingVolume.update('none');
-
         } catch (error) {
-            console.error('Error updating charts:', error);
+            console.error('Error rendering position card:', error);
+            return `
+                <div class="position-card error">
+                    <div class="error-message">Error displaying position: ${error.message}</div>
+                </div>
+            `;
         }
     },
 
     checkAlerts() {
         const positions = Array.from(this.positions.values());
+        const alertsList = document.getElementById('alerts-list');
+        if (!alertsList) return;
+
         const alerts = [];
 
-        // Check total exposure
+        // Calculate total exposure and P&L
         const totalExposure = positions.reduce((sum, pos) => {
             const currentPrice = window.PriceUpdates.getCurrentPrice(pos.index_id);
             return sum + (pos.quantity * (currentPrice || pos.entry_price));
         }, 0);
-        
+
+        const totalPnl = positions.reduce((sum, pos) => 
+            sum + window.RiskPositionManager.calculatePnL(pos), 0);
+
+        // Check exposure threshold
         if (totalExposure > this.riskLevels.exposure.high) {
             alerts.push({
-                level: 'high',
-                title: 'High Exposure Alert',
-                message: `Total exposure exceeds ${new Intl.NumberFormat('en-US', { 
+                type: 'high',
+                message: `High exposure alert: ${new Intl.NumberFormat('en-US', { 
                     style: 'currency', 
-                    currency: 'USD' 
-                }).format(this.riskLevels.exposure.high)}: ${new Intl.NumberFormat('en-US', { 
+                    currency: 'USD',
+                    maximumFractionDigits: 0
+                }).format(totalExposure)}`
+            });
+        } else if (totalExposure > this.riskLevels.exposure.medium) {
+            alerts.push({
+                type: 'medium',
+                message: `Medium exposure alert: ${new Intl.NumberFormat('en-US', { 
                     style: 'currency', 
-                    currency: 'USD' 
-                }).format(totalExposure)}`,
-                timestamp: new Date()
+                    currency: 'USD',
+                    maximumFractionDigits: 0
+                }).format(totalExposure)}`
             });
         }
 
-        // Check large losses
-        const totalPnl = positions.reduce((sum, pos) => 
-            sum + window.PositionUpdates.calculatePnL(pos), 0);
+        // Check P&L threshold
         if (totalPnl < this.riskLevels.pnl.high) {
             alerts.push({
-                level: 'high',
-                title: 'Significant Loss Alert',
-                message: `Current P&L below ${new Intl.NumberFormat('en-US', { 
+                type: 'high',
+                message: `High P&L loss alert: ${new Intl.NumberFormat('en-US', { 
                     style: 'currency', 
-                    currency: 'USD' 
-                }).format(this.riskLevels.pnl.high)}: ${new Intl.NumberFormat('en-US', { 
+                    currency: 'USD',
+                    maximumFractionDigits: 0,
+                    signDisplay: 'always'
+                }).format(totalPnl)}`
+            });
+        } else if (totalPnl < this.riskLevels.pnl.medium) {
+            alerts.push({
+                type: 'medium',
+                message: `Medium P&L loss alert: ${new Intl.NumberFormat('en-US', { 
                     style: 'currency', 
-                    currency: 'USD' 
-                }).format(totalPnl)}`,
-                timestamp: new Date()
+                    currency: 'USD',
+                    maximumFractionDigits: 0,
+                    signDisplay: 'always'
+                }).format(totalPnl)}`
             });
         }
 
-        // Check position concentration
+        // Check position count threshold
         if (positions.length > this.riskLevels.positions.high) {
             alerts.push({
-                level: 'medium',
-                title: 'Position Concentration Alert',
-                message: `High number of open positions: ${positions.length}`,
-                timestamp: new Date()
+                type: 'high',
+                message: `High position count alert: ${positions.length} open positions`
+            });
+        } else if (positions.length > this.riskLevels.positions.medium) {
+            alerts.push({
+                type: 'medium',
+                message: `Medium position count alert: ${positions.length} open positions`
             });
         }
 
         // Update alerts display
-        const alertsList = document.getElementById('alerts-list');
-        if (!alertsList) return;
-
         if (alerts.length === 0) {
             alertsList.innerHTML = '<div class="empty-state">No active alerts</div>';
-            return;
-        }
-
-        alertsList.innerHTML = alerts.map(alert => `
-            <div class="alert-item ${alert.level}">
-                <div class="alert-header">
-                    <strong>${alert.title}</strong>
-                    <span>${alert.timestamp.toLocaleTimeString()}</span>
+        } else {
+            alertsList.innerHTML = alerts.map(alert => `
+                <div class="alert-item ${alert.type}">
+                    <span class="alert-icon">⚠️</span>
+                    <span class="alert-message">${alert.message}</span>
                 </div>
-                <div class="alert-message">${alert.message}</div>
-            </div>
-        `).join('');
+            `).join('');
+        }
     }
 };
 

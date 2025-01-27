@@ -1,6 +1,38 @@
 /* Trading site specific styles */
 
-/* Navigation and user info */
+/* Header and Navigation */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.nav-button {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: var(--primary-color, #3498db);
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.nav-button:hover {
+    background-color: var(--primary-dark-color, #2980b9);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
 #user-info {
     display: flex;
     align-items: center;
@@ -15,26 +47,10 @@
 
 #risk-dashboard-btn {
     background-color: #27ae60;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.875rem;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
 }
 
 #risk-dashboard-btn:hover {
     background-color: #219a52;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-#risk-dashboard-btn:active {
-    transform: translateY(0);
 }
 
 #login-btn,
@@ -46,12 +62,14 @@
     border-radius: 4px;
     cursor: pointer;
     font-size: 0.875rem;
-    transition: background-color 0.2s;
+    transition: all 0.2s ease;
 }
 
 #login-btn:hover,
 #logout-btn:hover {
     background-color: #2980b9;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 #logout-btn {
@@ -174,11 +192,13 @@
     border-radius: 4px;
     font-size: 1rem;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all 0.2s ease;
 }
 
 #trade-form button:hover {
     background-color: #2980b9;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 #trade-form button:disabled {
@@ -273,6 +293,7 @@
 .close-pos-btn:hover {
     background-color: #c0392b;
     transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .close-pos-btn:active {
@@ -297,4 +318,35 @@
     padding: 2rem;
     color: #7f8c8d;
     font-style: italic;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .nav-left {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+        width: 100%;
+    }
+
+    .nav-button {
+        width: 100%;
+        text-align: center;
+    }
+
+    #user-info {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    #login-btn,
+    #logout-btn {
+        width: 100%;
+    }
 }

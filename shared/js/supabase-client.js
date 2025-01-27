@@ -14,13 +14,31 @@ const supabaseClient = {
             supabaseInstance = supabase.createClient(supabaseUrl, supabaseAnonKey, {
                 auth: {
                     autoRefreshToken: true,
-                    persistSession: true, // Persist session in sessionStorage
+                    persistSession: true,
                     detectSessionInUrl: false,
                     storage: {
-                        // Use sessionStorage instead of localStorage
-                        getItem: (key) => sessionStorage.getItem(key),
-                        setItem: (key, value) => sessionStorage.setItem(key, value),
-                        removeItem: (key) => sessionStorage.removeItem(key)
+                        getItem: (key) => {
+                            try {
+                                return window.sessionStorage.getItem(key);
+                            } catch (e) {
+                                console.warn('Session storage access error:', e);
+                                return null;
+                            }
+                        },
+                        setItem: (key, value) => {
+                            try {
+                                window.sessionStorage.setItem(key, value);
+                            } catch (e) {
+                                console.warn('Session storage access error:', e);
+                            }
+                        },
+                        removeItem: (key) => {
+                            try {
+                                window.sessionStorage.removeItem(key);
+                            } catch (e) {
+                                console.warn('Session storage access error:', e);
+                            }
+                        }
                     }
                 },
                 realtime: {
@@ -28,11 +46,25 @@ const supabaseClient = {
                         eventsPerSecond: 10
                     }
                 },
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'apikey': supabaseAnonKey,
-                    'Authorization': `Bearer ${supabaseAnonKey}`
+                global: {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                }
+            });
+
+            // Set up auth state change listener to update headers
+            supabaseInstance.auth.onAuthStateChange((event, session) => {
+                if (session) {
+                    supabaseInstance.rest.headers = {
+                        'Authorization': `Bearer ${session.access_token}`,
+                        'apikey': supabaseAnonKey
+                    };
+                } else {
+                    supabaseInstance.rest.headers = {
+                        'apikey': supabaseAnonKey
+                    };
                 }
             });
         }
@@ -57,17 +89,22 @@ const supabaseClient = {
             console.log('Supabase: Creating client with URL:', supabaseUrl);
             this.client = this.getClient();
 
-            // Get initial session
-            const { data: { session }, error: sessionError } = await this.client.auth.getSession();
+            // Get initial session and set headers
+            const { data: sessionData, error: sessionError } = await this.client.auth.getSession();
+            const session = sessionData?.session;
             if (sessionError) {
                 console.warn('No active session:', sessionError.message);
             } else if (session) {
-                console.log('Active session found:', session.user.email);
+                console.log('Active session found:', session?.user?.email);
+                this.client.rest.headers = {
+                    'Authorization': `Bearer ${session?.access_token}`,
+                    'apikey': supabaseAnonKey
+                };
             }
             
             // Test connection with a simple query
             console.log('Supabase: Testing connection...');
-            const { data, error } = await this.client
+            const { data: testData, error } = await this.client
                 .from('indices')
                 .select('id')
                 .limit(1)
@@ -79,7 +116,7 @@ const supabaseClient = {
                 throw error;
             }
 
-            console.log('Supabase: Connection test successful, data:', data);
+            console.log('Supabase: Connection test successful, data:', testData);
             
             // Set up real-time subscriptions
             console.log('Supabase: Setting up subscriptions...');

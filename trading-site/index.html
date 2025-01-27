@@ -79,10 +79,12 @@
 <body>
     <header>
         <nav>
-            <h1>Trading Site</h1>
+            <div class="nav-left">
+                <h1>Trading Site</h1>
+                <a href="/risk-dashboard/" id="risk-dashboard-btn" class="nav-button" style="display: none;">Risk Dashboard</a>
+            </div>
             <div id="user-info">
                 <span id="username"></span>
-                <button id="risk-dashboard-btn" style="display: none;" onclick="window.location.href='/risk-dashboard/'">Risk Dashboard</button>
                 <button id="login-btn">Login</button>
                 <button id="logout-btn" style="display: none;">Logout</button>
             </div>

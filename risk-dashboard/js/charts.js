@@ -61,7 +61,7 @@ window.dashboardCharts = {
                     },
                     title: {
                         display: true,
-                        text: 'Position Distribution'
+                        text: 'Exposure Distribution by Side'
                     }
                 }
             }
@@ -98,7 +98,13 @@ window.dashboardCharts = {
                     y: {
                         beginAtZero: true,
                         ticks: {
-                            stepSize: 1
+                            callback: function(value) {
+                                return new Intl.NumberFormat('en-US', {
+                                    style: 'currency',
+                                    currency: 'USD',
+                                    notation: 'compact'
+                                }).format(value);
+                            }
                         }
                     }
                 },
@@ -108,7 +114,7 @@ window.dashboardCharts = {
                     },
                     title: {
                         display: true,
-                        text: 'Risk Exposure Distribution'
+                        text: 'Risk Level Exposure Distribution'
                     }
                 }
             }
@@ -198,11 +204,161 @@ window.dashboardCharts = {
                     },
                     title: {
                         display: true,
-                        text: 'Trading Volume by Index'
+                        text: 'Exposure by Index'
                     }
                 }
             }
         });
+    },
+
+    updateCharts(positions) {
+        if (!this.isInitialized || !this.charts) {
+            console.warn('Charts not initialized, skipping update');
+            return;
+        }
+
+        try {
+            // Calculate total exposure for percentage calculations
+            const totalExposure = positions.reduce((sum, pos) => {
+                const currentPrice = window.PriceUpdates.getCurrentPrice(pos.index_id) || pos.entry_price;
+                return sum + (pos.quantity * currentPrice);
+            }, 0);
+
+            // Update Position Distribution Chart (now showing exposure by side)
+            if (this.charts.positionDistribution) {
+                const buyExposure = positions
+                    .filter(p => p.side === 'buy')
+                    .reduce((sum, p) => {
+                        const currentPrice = window.PriceUpdates.getCurrentPrice(p.index_id) || p.entry_price;
+                        return sum + (p.quantity * currentPrice);
+                    }, 0);
+                const sellExposure = positions
+                    .filter(p => p.side === 'sell')
+                    .reduce((sum, p) => {
+                        const currentPrice = window.PriceUpdates.getCurrentPrice(p.index_id) || p.entry_price;
+                        return sum + (p.quantity * currentPrice);
+                    }, 0);
+                
+                this.charts.positionDistribution.data.datasets[0].data = [buyExposure, sellExposure];
+                this.charts.positionDistribution.options.plugins.tooltip = {
+                    callbacks: {
+                        label: function(context) {
+                            const value = context.raw;
+                            const percentage = ((value / totalExposure) * 100).toFixed(1);
+                            return `${context.label}: ${new Intl.NumberFormat('en-US', {
+                                style: 'currency',
+                                currency: 'USD',
+                                maximumFractionDigits: 0
+                            }).format(value)} (${percentage}%)`;
+                        }
+                    }
+                };
+                this.charts.positionDistribution.update();
+            }
+
+            // Update Risk Exposure Chart (now showing exposure amounts)
+            if (this.charts.riskExposure) {
+                const riskLevels = {
+                    low: positions
+                        .filter(p => {
+                            const exposure = p.quantity * (window.PriceUpdates.getCurrentPrice(p.index_id) || p.entry_price);
+                            return exposure <= 500000;
+                        })
+                        .reduce((sum, p) => sum + (p.quantity * (window.PriceUpdates.getCurrentPrice(p.index_id) || p.entry_price)), 0),
+                    medium: positions
+                        .filter(p => {
+                            const exposure = p.quantity * (window.PriceUpdates.getCurrentPrice(p.index_id) || p.entry_price);
+                            return exposure > 500000 && exposure <= 1000000;
+                        })
+                        .reduce((sum, p) => sum + (p.quantity * (window.PriceUpdates.getCurrentPrice(p.index_id) || p.entry_price)), 0),
+                    high: positions
+                        .filter(p => {
+                            const exposure = p.quantity * (window.PriceUpdates.getCurrentPrice(p.index_id) || p.entry_price);
+                            return exposure > 1000000;
+                        })
+                        .reduce((sum, p) => sum + (p.quantity * (window.PriceUpdates.getCurrentPrice(p.index_id) || p.entry_price)), 0)
+                };
+
+                this.charts.riskExposure.data.datasets[0].data = [
+                    riskLevels.low,
+                    riskLevels.medium,
+                    riskLevels.high
+                ];
+                this.charts.riskExposure.options.plugins.tooltip = {
+                    callbacks: {
+                        label: function(context) {
+                            const value = context.raw;
+                            const percentage = ((value / totalExposure) * 100).toFixed(1);
+                            return `${context.label}: ${new Intl.NumberFormat('en-US', {
+                                style: 'currency',
+                                currency: 'USD',
+                                maximumFractionDigits: 0
+                            }).format(value)} (${percentage}%)`;
+                        }
+                    }
+                };
+                this.charts.riskExposure.update();
+            }
+
+            // Update P&L Trend Chart
+            if (this.charts.pnlTrend) {
+                const totalPnl = positions.reduce((sum, pos) => 
+                    sum + window.RiskPositionManager.calculatePnL(pos), 0);
+                
+                // Add new data point with current timestamp
+                const now = new Date();
+                this.charts.pnlTrend.data.labels.push(
+                    now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                );
+                this.charts.pnlTrend.data.datasets[0].data.push(totalPnl);
+
+                // Keep only last 20 data points
+                if (this.charts.pnlTrend.data.labels.length > 20) {
+                    this.charts.pnlTrend.data.labels.shift();
+                    this.charts.pnlTrend.data.datasets[0].data.shift();
+                }
+
+                this.charts.pnlTrend.update();
+            }
+
+            // Update Trading Volume Chart (now showing exposure by index)
+            if (this.charts.tradingVolume) {
+                const exposureByIndex = positions.reduce((acc, pos) => {
+                    const exposure = pos.quantity * (window.PriceUpdates.getCurrentPrice(pos.index_id) || pos.entry_price);
+                    acc[pos.index_id] = (acc[pos.index_id] || 0) + exposure;
+                    return acc;
+                }, {});
+
+                // Sort by exposure amount
+                const sortedIndices = Object.entries(exposureByIndex)
+                    .sort(([,a], [,b]) => b - a)
+                    .reduce((acc, [key, value]) => {
+                        acc.labels.push(key);
+                        acc.data.push(value);
+                        return acc;
+                    }, { labels: [], data: [] });
+
+                this.charts.tradingVolume.data.labels = sortedIndices.labels;
+                this.charts.tradingVolume.data.datasets[0].data = sortedIndices.data;
+                this.charts.tradingVolume.options.plugins.tooltip = {
+                    callbacks: {
+                        label: function(context) {
+                            const value = context.raw;
+                            const percentage = ((value / totalExposure) * 100).toFixed(1);
+                            return `Exposure: ${new Intl.NumberFormat('en-US', {
+                                style: 'currency',
+                                currency: 'USD',
+                                maximumFractionDigits: 0
+                            }).format(value)} (${percentage}%)`;
+                        }
+                    }
+                };
+                this.charts.tradingVolume.update();
+            }
+
+        } catch (error) {
+            console.error('Error updating charts:', error);
+        }
     }
 };
 
