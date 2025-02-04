@@ -10,29 +10,76 @@ from datetime import datetime, UTC
 from typing import Set, Dict
 import logging
 
-# Set up logging
+"""
+Reworked feed-engine.py to aggregate data from:
+ 1) Gold Price (random walk, like gold_price.py)
+ 2) RSI_Gold_mtm (RSI with momentum strategy) – here we now incorporate an actual portfolio reference to the 'Gold' price
+ 3) RSI_Gold_ctn (RSI with contrarian strategy) – similarly referencing the actual 'Gold' price
+
+Each starts with $7,000 in cash and $3,000 worth of gold (fractional positions).
+We push these three items as 'Gold', 'RSI_Gold_mtm', and 'RSI_Gold_ctn' to Supabase and broadcast them
+to connected WebSocket clients. The portfolio value for RSI-based items is now influenced by the real gold price.
+
+All previous database, positions, logs, etc. remain intact. The 'indices' table in Supabase
+will have 'Gold', 'RSI_Gold_mtm', and 'RSI_Gold_ctn'.
+"""
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
 
-# Define indices with their price ranges
-INDICES = {
-    'TACTICAL_INDEX_1': {'min': 95.00, 'max': 105.00, 'current': 100.00},
-    'TACTICAL_INDEX_2': {'min': 145.00, 'max': 155.00, 'current': 150.00},
-    'TACTICAL_INDEX_3': {'min': 195.00, 'max': 205.00, 'current': 200.00}
+# ---------------------------
+#  Configuration & Constants
+# ---------------------------
+GOLD_MIN = 1700.0
+GOLD_MAX = 2100.0
+
+RSI_MIN = 0.0
+RSI_MAX = 100.0
+
+UPPER_RSI_THRESHOLD = 65
+LOWER_RSI_THRESHOLD = 35
+
+# We'll keep track of 1 "unit" as 1 ounce or 1 share, etc.  
+# RSI modes will buy/sell 1 unit at a time if there's enough cash or positions.
+
+# Starting portfolio conditions: $7,000 in cash + $3,000 in gold
+INITIAL_GOLD_PRICE = 1900.0  # used at initialization
+INITIAL_CASH = 7000.0
+INITIAL_GOLD_INVESTMENT = 3000.0
+INITIAL_GOLD_POSITIONS = INITIAL_GOLD_INVESTMENT / INITIAL_GOLD_PRICE
+
+# We'll hold a small structure for each of the three aggregated items.
+AGGREGATED_DATA = {
+    'Gold': {
+        'min': GOLD_MIN,
+        'max': GOLD_MAX,
+        'current': INITIAL_GOLD_PRICE
+    },
+
+    'RSI_Gold_mtm': {
+        'rsi': 50.0,
+        'cash_balance': INITIAL_CASH,             # 7k
+        'gold_positions': INITIAL_GOLD_POSITIONS, # 3000 / 1900
+        'current': 0.0
+    },
+
+    'RSI_Gold_ctn': {
+        'rsi': 50.0,
+        'cash_balance': INITIAL_CASH,
+        'gold_positions': INITIAL_GOLD_POSITIONS,
+        'current': 0.0
+    }
 }
 
-# Initialize Supabase client with service role key
+# For storing to Supabase
 from supabase.lib.client_options import ClientOptions
 
 options = ClientOptions(
     schema='public',
-    headers={
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-    },
+    headers={'Content-Type': 'application/json','Accept': 'application/json'},
     auto_refresh_token=True,
     persist_session=True
 )
@@ -43,58 +90,59 @@ supabase: Client = create_client(
     options=options
 )
 
-# Test Supabase connection and create indices table if needed
 try:
-    # Test connection
     response = supabase.table('indices').select('id').limit(1).execute()
     logger.info("Successfully connected to Supabase")
-    
-    # Ensure indices table exists with initial data
-    for index_id, data in INDICES.items():
-        supabase.table('indices').upsert({
-            'id': index_id,
-            'name': f'Tactical Index {index_id[-1]}',
-            'current_price': data['current'],
-            'updated_at': datetime.now(UTC).isoformat()
-        }).execute()
-    logger.info("Initialized indices table")
 except Exception as e:
     logger.error(f"Error connecting to Supabase: {e}")
     sys.exit(1)
 
-# Store connected WebSocket clients
+# We'll produce an INDICES dict to store current broadcast values to mirror AGGREGATED_DATA.
+
+INDICES = {
+    'Gold':  {'min': GOLD_MIN, 'max': GOLD_MAX, 'current': AGGREGATED_DATA['Gold']['current']},
+    'RSI_Gold_mtm': {'min': 0.0, 'max': 999999.0, 'current': 0.0},
+    'RSI_Gold_ctn': {'min': 0.0, 'max': 999999.0, 'current': 0.0}
+}
+
+# Initialize them in the DB
+for idx_id, data in INDICES.items():
+    supabase.table('indices').upsert({
+        'id': idx_id,
+        'name': idx_id,
+        'current_price': data['current'],
+        'updated_at': datetime.now(UTC).isoformat()
+    }).execute()
+logger.info("Initialized indices table with Gold, RSI_Gold_mtm, RSI_Gold_ctn")
+
 connected_clients: Set[websockets.WebSocketServerProtocol] = set()
 
 async def register_client(websocket: websockets.WebSocketServerProtocol):
-    """Register a new WebSocket client."""
     connected_clients.add(websocket)
     logger.info(f"Client connected. Total clients: {len(connected_clients)}")
     try:
-        # Send current prices immediately upon connection
         current_prices = {
-            index_id: {
+            idx_id: {
                 'price': data['current'],
                 'timestamp': datetime.now(UTC).isoformat()
             }
-            for index_id, data in INDICES.items()
+            for idx_id, data in INDICES.items()
         }
         try:
             await websocket.send(json.dumps({
                 'type': 'snapshot',
                 'data': current_prices
             }))
-            logger.info(f"Sent initial snapshot to client")
+            logger.info("Sent initial snapshot to client")
         except websockets.ConnectionClosed:
-            logger.warning(f"Client disconnected before receiving snapshot")
+            logger.warning("Client disconnected before receiving snapshot")
             return
         except Exception as e:
             logger.error(f"Error sending snapshot: {e}")
             return
-        
-        # Keep connection alive and handle ping/pong
+
         while True:
             try:
-                # Wait for client message or connection close
                 message = await websocket.recv()
                 if message == "ping":
                     await websocket.send("pong")
@@ -108,10 +156,8 @@ async def register_client(websocket: websockets.WebSocketServerProtocol):
         logger.info(f"Client disconnected. Total clients: {len(connected_clients)}")
 
 async def broadcast_price_update(index_id: str, price: float):
-    """Broadcast price update to all connected clients."""
     if not connected_clients:
         return
-    
     message = json.dumps({
         'type': 'price_update',
         'data': {
@@ -120,29 +166,24 @@ async def broadcast_price_update(index_id: str, price: float):
             'timestamp': datetime.now(UTC).isoformat()
         }
     })
-    
-    # Broadcast to all connected clients
     dead_clients = set()
-    for websocket in connected_clients:
+    for ws in connected_clients:
         try:
-            await websocket.send(message)
+            await ws.send(message)
         except websockets.ConnectionClosed:
-            dead_clients.add(websocket)
+            dead_clients.add(ws)
         except Exception as e:
             logger.error(f"Error sending to client: {e}")
-            dead_clients.add(websocket)
-    
-    # Clean up dead clients
-    for websocket in dead_clients:
-        connected_clients.remove(websocket)
+            dead_clients.add(ws)
+    for ws in dead_clients:
+        connected_clients.remove(ws)
         logger.info(f"Removed dead client. Total clients: {len(connected_clients)}")
 
 async def store_price_update(index_id: str, price: float):
-    """Store price update in Supabase for historical data."""
     try:
         data = {
             'id': index_id,
-            'name': f'Tactical Index {index_id[-1]}',
+            'name': index_id,
             'current_price': price,
             'updated_at': datetime.now(UTC).isoformat()
         }
@@ -153,7 +194,6 @@ async def store_price_update(index_id: str, price: float):
         return True
     except Exception as e:
         logger.error(f"Error storing price in Supabase: {str(e)}")
-        # Try to reconnect to Supabase
         try:
             supabase.auth.refresh_session()
             logger.info("Reconnected to Supabase")
@@ -161,61 +201,122 @@ async def store_price_update(index_id: str, price: float):
             logger.error(f"Failed to reconnect to Supabase: {str(re)}")
         return False
 
-async def update_price(index_id: str, data: dict):
-    """Generate and handle a new price update."""
-    try:
-        # Random walk
-        change = (random.random() - 0.5) * 2
-        new_price = data['current'] + change
+# ---------------------------
+#   Random Walk + RSI Logic
+# ---------------------------
+def update_gold_price():
+    """Mimic gold_price for 'Gold'."""
+    data = AGGREGATED_DATA['Gold']
+    change = random.uniform(-2.0, 2.0)
+    new_price = data['current'] + change
+    new_price = max(GOLD_MIN, min(GOLD_MAX, new_price))
+    data['current'] = new_price
+    return new_price
 
-        # Keep price within bounds
-        new_price = max(data['min'], min(data['max'], new_price))
-        data['current'] = new_price
+def random_walk_rsi(rsi_val: float) -> float:
+    """Random walk RSI in [-3, +3], clamp [0..100]."""
+    fluctuation = random.uniform(-3, 3)
+    new_rsi = rsi_val + fluctuation
+    return max(RSI_MIN, min(RSI_MAX, new_rsi))
 
-        # Broadcast to WebSocket clients
-        await broadcast_price_update(index_id, new_price)
-        
-        # Store in Supabase
-        await store_price_update(index_id, new_price)
+def rsi_momentum_logic(data):
+    """Update RSI, then buy/sell gold positions if thresholds crossed, then compute new portfolio value."""
+    # data has keys: rsi, cash_balance, gold_positions
+    # 1) Update RSI
+    new_rsi = random_walk_rsi(data['rsi'])
+    data['rsi'] = new_rsi
 
-        logger.info(f"Updated {index_id}: {new_price:.2f}")
-        return True
+    # 2) Momentum logic
+    gold_price = AGGREGATED_DATA['Gold']['current']
+    # if RSI > 65 => buy 1 gold
+    if new_rsi > UPPER_RSI_THRESHOLD:
+        if data['cash_balance'] >= gold_price:
+            data['cash_balance'] -= gold_price
+            data['gold_positions'] += 1.0
+    # if RSI < 35 => sell 1 gold
+    elif new_rsi < LOWER_RSI_THRESHOLD:
+        if data['gold_positions'] > 0:
+            data['gold_positions'] -= 1.0
+            data['cash_balance'] += gold_price
 
-    except Exception as e:
-        logger.error(f"Error updating {index_id}: {e}")
-        return False
+    # 3) Recompute portfolio
+    portfolio_val = data['cash_balance'] + data['gold_positions'] * gold_price
+    data['current'] = portfolio_val
+    return portfolio_val
+
+def rsi_contrarian_logic(data):
+    """RSI contrarian logic => if RSI>65 => sell gold, if RSI<35 => buy gold, then portfolio = cash + (positions * price)."""
+    new_rsi = random_walk_rsi(data['rsi'])
+    data['rsi'] = new_rsi
+
+    gold_price = AGGREGATED_DATA['Gold']['current']
+    if new_rsi > UPPER_RSI_THRESHOLD:
+        # sell 1 gold
+        if data['gold_positions'] > 0:
+            data['gold_positions'] -= 1.0
+            data['cash_balance'] += gold_price
+    elif new_rsi < LOWER_RSI_THRESHOLD:
+        # buy 1 gold
+        if data['cash_balance'] >= gold_price:
+            data['cash_balance'] -= gold_price
+            data['gold_positions'] += 1.0
+
+    portfolio_val = data['cash_balance'] + data['gold_positions'] * gold_price
+    data['current'] = portfolio_val
+    return portfolio_val
+
+async def aggregator_update():
+    """Update 'Gold' price, then update momentum RSI, contrarian RSI, broadcast & store each."""
+    # 1) Update Gold
+    gold_new = update_gold_price()
+    INDICES['Gold']['current'] = gold_new
+    await broadcast_price_update('Gold', gold_new)
+    await store_price_update('Gold', gold_new)
+    logger.info(f"Updated Gold => {gold_new:.2f}")
+
+    # 2) RSI_Gold_mtm
+    mtm_data = AGGREGATED_DATA['RSI_Gold_mtm']
+    val_mtm = rsi_momentum_logic(mtm_data)
+    INDICES['RSI_Gold_mtm']['current'] = val_mtm
+    await broadcast_price_update('RSI_Gold_mtm', val_mtm)
+    await store_price_update('RSI_Gold_mtm', val_mtm)
+    logger.info(f"Updated RSI_Gold_mtm => {val_mtm:.2f}")
+
+    # 3) RSI_Gold_ctn
+    ctn_data = AGGREGATED_DATA['RSI_Gold_ctn']
+    val_ctn = rsi_contrarian_logic(ctn_data)
+    INDICES['RSI_Gold_ctn']['current'] = val_ctn
+    await broadcast_price_update('RSI_Gold_ctn', val_ctn)
+    await store_price_update('RSI_Gold_ctn', val_ctn)
+    logger.info(f"Updated RSI_Gold_ctn => {val_ctn:.2f}")
 
 async def price_generator():
-    """Generate price updates for all indices."""
+    """Called in a loop to update aggregator every 1 second."""
     while True:
         try:
-            # Update each index
-            for index_id, data in INDICES.items():
-                await update_price(index_id, data)
-
-            # Wait before next update
-            await asyncio.sleep(2)  # Update every 2 seconds
-
+            await aggregator_update()
+            await asyncio.sleep(1)
         except Exception as e:
-            logger.error(f"Error in price generator: {e}")
-            await asyncio.sleep(5)  # Wait longer on error
+            logger.error(f"Error in aggregator logic: {e}")
+            await asyncio.sleep(5)
 
 async def health_check():
-    """Monitor WebSocket connections and clean up stale ones."""
     while True:
         try:
-            for websocket in connected_clients.copy():
-                if not websocket.open:
-                    connected_clients.remove(websocket)
-            await asyncio.sleep(30)  # Check every 30 seconds
+            for ws in connected_clients.copy():
+                if not ws.open:
+                    connected_clients.remove(ws)
+            await asyncio.sleep(30)
         except Exception as e:
             logger.error(f"Error in health check: {e}")
             await asyncio.sleep(30)
 
 async def main():
-    logger.info("Starting feed engine...")
-    
-    # Start WebSocket server
+    logger.info("Starting feed engine aggregator with real gold-based RSI portfolios...")
+
+    # Perform an immediate aggregator update so initial RSI + portfolio reflect gold
+    await aggregator_update()
+
     websocket_server = await serve(
         register_client,
         "localhost",
@@ -224,11 +325,9 @@ async def main():
         ping_timeout=30
     )
     logger.info("WebSocket server running on ws://localhost:8765")
-    logger.info("Pushing updates to indices table in Supabase")
     logger.info("Press Ctrl+C to stop")
-    
+
     try:
-        # Run price generator and health check concurrently
         await asyncio.gather(
             price_generator(),
             health_check(),
@@ -241,9 +340,8 @@ async def main():
     except Exception as e:
         logger.error(f"Unexpected error: {e}")
     finally:
-        # Clean up
-        for websocket in connected_clients.copy():
-            await websocket.close()
+        for ws in connected_clients.copy():
+            await ws.close()
 
 if __name__ == "__main__":
     asyncio.run(main())
