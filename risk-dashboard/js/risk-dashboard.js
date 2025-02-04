@@ -231,27 +231,65 @@ const riskDashboard = {
         );
         this.previousMetrics.positions = positionsCount;
 
-        // Calculate and update total exposure with trend
-        const totalExposure = positions.reduce((sum, pos) => {
-            const currentPrice = window.PriceUpdates.getCurrentPrice(pos.index_id);
-            return sum + (pos.quantity * (currentPrice || pos.entry_price));
-        }, 0);
-        this.updateMetricWithTrend('total-exposure',
-            totalExposure,
-            this.previousMetrics.exposure,
-            value => new Intl.NumberFormat('en-US', { 
-                style: 'currency', 
-                currency: 'USD',
-                maximumFractionDigits: 0
-            }).format(value).replace('$', ''),
-            'exposure-trend',
-            (current, previous) => {
-                if (current === previous) return 'No change';
-                const percentChange = ((current - previous) / previous * 100).toFixed(1);
-                return `${Math.abs(percentChange)}% ${current > previous ? 'increase' : 'decrease'}`;
+        /*
+          For each position whose index_id includes "gold" (e.g. 'Gold', 'RSI_Gold_mtm', etc.),
+          treat its quantity * currentPrice as total dollars. Then convert those dollars into
+          an equivalent "gold units" by dividing by the aggregator's 'Gold' price. This way,
+          indices like RSI_Gold_mtm (which might be worth $10k each) will properly reflect how
+          many ounces/units of gold they represent in total.
+
+          netGoldUnits = Σ( (pos.quantity * currentPrice) / goldPrice ) [for buy positions],
+          minus the same for sells.
+
+          netGoldExposure = netGoldUnits * goldPrice
+        */
+        let netGoldUnits = 0;
+        const goldPrice = window.PriceUpdates.getCurrentPrice('Gold') || 1900;
+
+        positions.forEach(pos => {
+            if (pos.index_id.toLowerCase().includes('gold')) {
+                const currentPrice = window.PriceUpdates.getCurrentPrice(pos.index_id) || pos.entry_price;
+                const effectiveUnits = (pos.quantity * currentPrice) / goldPrice;
+                if (pos.side.toLowerCase() === 'buy') {
+                    netGoldUnits += effectiveUnits;
+                } else {
+                    netGoldUnits -= effectiveUnits;
+                }
             }
-        );
-        this.previousMetrics.exposure = totalExposure;
+        });
+
+        const netGoldExposure = netGoldUnits * goldPrice;
+        const goldUnits = netGoldUnits;
+
+        const goldExpElem = document.getElementById('total-gold-exposure');
+        const goldExpTrendElem = document.getElementById('gold-exposure-trend');
+        
+        // Determine Long or Short label
+        if (goldUnits > 0) {
+            goldExpElem.style.color = '#27ae60';
+            goldExpElem.textContent = goldUnits.toFixed(2) + ' Gold Long';
+        } else if (goldUnits < 0) {
+            goldExpElem.style.color = '#e74c3c';
+            goldExpElem.textContent = Math.abs(goldUnits).toFixed(2) + ' Gold Short';
+        } else {
+            goldExpElem.style.color = '#7f8c8d';
+            goldExpElem.textContent = '0 Gold';
+        }
+
+        // Show net exposure in smaller text
+        goldExpTrendElem.className = 'metric-trend';
+        if (netGoldExposure > 0) {
+            goldExpTrendElem.style.color = '#27ae60';
+        } else if (netGoldExposure < 0) {
+            goldExpTrendElem.style.color = '#e74c3c';
+        } else {
+            goldExpTrendElem.style.color = '#7f8c8d';
+        }
+        goldExpTrendElem.textContent = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            maximumFractionDigits: 0
+        }).format(netGoldExposure);
 
         // Calculate and update daily P&L with trend
         const totalPnl = positions.reduce((sum, pos) => 
@@ -278,7 +316,7 @@ const riskDashboard = {
         this.previousMetrics.pnl = totalPnl;
 
         // Update risk level with trend
-        const riskLevel = this.calculateRiskLevel(totalExposure, totalPnl, positions.length);
+        const riskLevel = this.calculateRiskLevel(netGoldExposure, totalPnl, positions.length);
         const riskElement = document.getElementById('risk-level');
         const previousRisk = this.previousMetrics.riskLevel;
         
