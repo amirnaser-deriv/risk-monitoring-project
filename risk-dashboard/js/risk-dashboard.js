@@ -92,6 +92,14 @@ const riskDashboard = {
 
             console.log('Access granted, proceeding with dashboard initialization');
 
+            // Wait for GoldPositionUpdates to be ready
+            if (!window.GoldPositionUpdates?.isInitialized) {
+                console.log('Waiting for GoldPositionUpdates...');
+                await new Promise((resolve) => {
+                    window.addEventListener('goldPositionUpdatesReady', resolve, { once: true });
+                });
+            }
+
             // Wait for RiskPositionManager to be ready
             if (!window.RiskPositionManager?.isInitialized) {
                 console.log('Waiting for RiskPositionManager...');
@@ -152,13 +160,18 @@ const riskDashboard = {
         await window.PriceUpdates.initialize();
         console.log('Price Updates initialized');
 
-        // 4. Initialize Risk Position Manager after Supabase
-        console.log('4. Initializing Risk Position Manager...');
+        // 4. Initialize Gold Position Updates after Price Updates
+        console.log('4. Initializing Gold Position Updates...');
+        await window.GoldPositionUpdates.initialize();
+        console.log('Gold Position Updates initialized');
+
+        // 5. Initialize Risk Position Manager after Supabase
+        console.log('5. Initializing Risk Position Manager...');
         await window.RiskPositionManager.initialize();
         console.log('Risk Position Manager initialized, positions:', window.RiskPositionManager.getAllPositions());
 
-        // 5. Initialize Charts last
-        console.log('5. Initializing Charts...');
+        // 6. Initialize Charts last
+        console.log('6. Initializing Charts...');
         await window.dashboardCharts.initialize();
         console.log('Charts initialized');
 
@@ -231,23 +244,66 @@ const riskDashboard = {
         );
         this.previousMetrics.positions = positionsCount;
 
-        /*
-          For each position whose index_id includes "gold" (e.g. 'Gold', 'RSI_Gold_mtm', etc.),
-          treat its quantity * currentPrice as total dollars. Then convert those dollars into
-          an equivalent "gold units" by dividing by the aggregator's 'Gold' price. This way,
-          indices like RSI_Gold_mtm (which might be worth $10k each) will properly reflect how
-          many ounces/units of gold they represent in total.
-
-          netGoldUnits = Σ( (pos.quantity * currentPrice) / goldPrice ) [for buy positions],
-          minus the same for sells.
-
-          netGoldExposure = netGoldUnits * goldPrice
-        */
+        // Get direct gold positions from feed engine
         let netGoldUnits = 0;
         const goldPrice = window.PriceUpdates.getCurrentPrice('Gold') || 1900;
 
+        // Get current RSI gold positions
+        const mtmPosition = window.GoldPositionUpdates?.getCurrentPosition('RSI_Gold_mtm');
+        const ctnPosition = window.GoldPositionUpdates?.getCurrentPosition('RSI_Gold_ctn');
+
+        // Log RSI states
+        console.log('Current RSI states:', {
+            mtm: mtmPosition,
+            ctn: ctnPosition
+        });
+
+        // Calculate exposure from positions in RSI indices
         positions.forEach(pos => {
-            if (pos.index_id.toLowerCase().includes('gold')) {
+            if (pos.index_id === 'RSI_Gold_mtm' && mtmPosition) {
+                // If someone buys 1 lot of RSI_MTM and it has 2 lots of gold, their exposure is 2 lots
+                const effectiveGoldUnits = pos.quantity * mtmPosition.gold_positions;
+                if (pos.side.toLowerCase() === 'buy') {
+                    netGoldUnits += effectiveGoldUnits;
+                } else {
+                    netGoldUnits -= effectiveGoldUnits;
+                }
+                console.log('Added RSI_Gold_mtm exposure:', {
+                    positionSize: pos.quantity,
+                    rsiGoldPosition: mtmPosition.gold_positions,
+                    effectiveGoldUnits,
+                    side: pos.side,
+                    newTotal: netGoldUnits
+                });
+            }
+            else if (pos.index_id === 'RSI_Gold_ctn' && ctnPosition) {
+                const effectiveGoldUnits = pos.quantity * ctnPosition.gold_positions;
+                if (pos.side.toLowerCase() === 'buy') {
+                    netGoldUnits += effectiveGoldUnits;
+                } else {
+                    netGoldUnits -= effectiveGoldUnits;
+                }
+                console.log('Added RSI_Gold_ctn exposure:', {
+                    positionSize: pos.quantity,
+                    rsiGoldPosition: ctnPosition.gold_positions,
+                    effectiveGoldUnits,
+                    side: pos.side,
+                    newTotal: netGoldUnits
+                });
+            }
+        });
+
+        // Log intermediate state after RSI positions
+        console.log('Gold exposure after RSI positions:', {
+            netGoldUnits,
+            value: netGoldUnits * goldPrice
+        });
+
+        // Add any other gold positions from RiskPositionManager
+        console.log('Processing additional gold positions from RiskPositionManager:', positions);
+        positions.forEach(pos => {
+            if (pos.index_id.toLowerCase().includes('gold') && 
+                !['RSI_Gold_mtm', 'RSI_Gold_ctn'].includes(pos.index_id)) {
                 const currentPrice = window.PriceUpdates.getCurrentPrice(pos.index_id) || pos.entry_price;
                 const effectiveUnits = (pos.quantity * currentPrice) / goldPrice;
                 if (pos.side.toLowerCase() === 'buy') {
@@ -255,6 +311,14 @@ const riskDashboard = {
                 } else {
                     netGoldUnits -= effectiveUnits;
                 }
+                console.log('Added position to gold units:', {
+                    index: pos.index_id,
+                    side: pos.side,
+                    quantity: pos.quantity,
+                    currentPrice,
+                    effectiveUnits,
+                    newTotal: netGoldUnits
+                });
             }
         });
 
