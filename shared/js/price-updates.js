@@ -110,7 +110,8 @@ window.PriceUpdates = {
                             this.currentPrices.set(index_id, data.price);
                             this.notifySubscribers({
                                 index_id,
-                                price: data.price
+                                price: data.price,
+                                name: index_id // Use ID as name for backward compatibility
                             });
                         });
                         
@@ -118,7 +119,6 @@ window.PriceUpdates = {
                         this.indicesReady = true;
                         console.log('Available indices:', this.getIndices());
                         window.dispatchEvent(new Event('indicesReady'));
-                        
                     } else if (message.type === 'price_update') {
                         // Handle individual price update
                         const { index_id, price } = message.data;
@@ -133,7 +133,8 @@ window.PriceUpdates = {
                         console.log('Notifying subscribers of price update');
                         this.notifySubscribers({
                             index_id,
-                            price
+                            price,
+                            name: index_id // Use ID as name for backward compatibility
                         });
                     }
                 } catch (error) {
@@ -230,7 +231,9 @@ window.PriceUpdates = {
         // Return indices from WebSocket data
         return Array.from(this.currentPrices.keys()).map(id => ({
             id,
-            name: id // Use ID as name since that's what feed engine provides
+            name: id.replace('RSI_Gold_mtm', 'Gold RSI Momentum')
+                  .replace('RSI_Gold_ctn', 'Gold RSI Contrarian')
+                  .replace('Gold', 'Gold Price')
         }));
     },
 

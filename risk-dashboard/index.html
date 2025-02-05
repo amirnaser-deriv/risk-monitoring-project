@@ -16,6 +16,7 @@
             supabase: false,
             auth: false,
             price: false,
+            goldPosition: false,
             position: false,
             charts: false
         };
@@ -50,6 +51,11 @@
         window.addEventListener('priceUpdatesReady', () => {
             console.log('Price updates ready event received');
             updateStatus('price', 'done', '✅ Price Updates: Ready');
+        });
+
+        window.addEventListener('goldPositionUpdatesReady', () => {
+            console.log('Gold position updates ready event received');
+            updateStatus('goldPosition', 'done', '✅ Gold Position Updates: Ready');
         });
 
         window.addEventListener('positionUpdatesReady', () => {
@@ -153,6 +159,7 @@
         <div class="status-item pending" id="status-supabase">⏳ Supabase: Loading...</div>
         <div class="status-item pending" id="status-auth">⏳ Auth: Waiting...</div>
         <div class="status-item pending" id="status-price">⏳ Price Updates: Waiting...</div>
+        <div class="status-item pending" id="status-goldPosition">⏳ Gold Position Updates: Waiting...</div>
         <div class="status-item pending" id="status-position">⏳ Position Updates: Waiting...</div>
         <div class="status-item pending" id="status-charts">⏳ Charts: Waiting...</div>
         <div class="status-item pending" id="status-app">⏳ App: Waiting...</div>
@@ -163,6 +170,7 @@
     <script src="/shared/js/auth.js"></script>
     <script src="/shared/js/auth-modal.js"></script>
     <script src="/shared/js/price-updates.js"></script>
+    <script src="/shared/js/gold-position-updates.js"></script>
     <script src="/risk-dashboard/js/risk-position-manager.js"></script>
     <script src="/risk-dashboard/js/charts.js"></script>
     <script src="/risk-dashboard/js/risk-dashboard.js"></script>

@@ -234,7 +234,7 @@ const tradingSite = {
         indexCard.dataset.price = update.price;
         indexCard.innerHTML = `
             <div>
-                <div class="index-name">${update.name || update.index_id}</div>
+                <div class="index-name">${update.name}</div>
                 <div class="index-price">$${update.price.toFixed(2)}</div>
             </div>
             <div class="price-change ${priceChange >= 0 ? 'positive' : 'negative'}">
@@ -295,7 +295,7 @@ const tradingSite = {
             return `
                 <div class="position-card" data-position-id="${position.id}">
                     <div class="position-header">
-                        <div class="position-title">${position.index_id}</div>
+                        <div class="position-title">${window.PriceUpdates.getIndices().find(i => i.id === position.index_id)?.name || position.index_id}</div>
                         <div class="position-pnl ${window.PositionUpdates.calculatePnL(position) >= 0 ? 'positive' : 'negative'}">
                             ${window.PositionUpdates.calculatePnL(position) >= 0 ? '+' : ''}$${Math.abs(window.PositionUpdates.calculatePnL(position) || 0).toFixed(2)}
                         </div>
@@ -350,7 +350,8 @@ const tradingSite = {
             // Show success message
             const successDiv = document.createElement('div');
             successDiv.className = 'alert alert-success';
-            successDiv.textContent = `Successfully opened ${side} position for ${quantity} ${indexId}`;
+            const indexName = window.PriceUpdates.getIndices().find(i => i.id === indexId)?.name || indexId;
+            successDiv.textContent = `Successfully opened ${side} position for ${quantity} ${indexName}`;
             document.body.appendChild(successDiv);
             setTimeout(() => successDiv.remove(), 5000);
 

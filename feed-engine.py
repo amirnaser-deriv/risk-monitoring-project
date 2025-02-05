@@ -63,16 +63,22 @@ AGGREGATED_DATA = {
         'rsi': 50.0,
         'cash_balance': INITIAL_CASH,             # 7k
         'gold_positions': INITIAL_GOLD_POSITIONS, # 3000 / 1900
-        'current': 0.0
+        'current': INITIAL_CASH + (INITIAL_GOLD_POSITIONS * INITIAL_GOLD_PRICE)  # Initial portfolio value
     },
 
     'RSI_Gold_ctn': {
         'rsi': 50.0,
         'cash_balance': INITIAL_CASH,
         'gold_positions': INITIAL_GOLD_POSITIONS,
-        'current': 0.0
+        'current': INITIAL_CASH + (INITIAL_GOLD_POSITIONS * INITIAL_GOLD_PRICE)  # Initial portfolio value
     }
 }
+
+# Log initial state
+logger.info("Initial state:")
+logger.info(f"Gold price: ${INITIAL_GOLD_PRICE:.2f}")
+logger.info(f"RSI_Gold_mtm: {INITIAL_GOLD_POSITIONS:.4f} gold @ ${INITIAL_GOLD_PRICE:.2f} + ${INITIAL_CASH:.2f} cash = ${AGGREGATED_DATA['RSI_Gold_mtm']['current']:.2f}")
+logger.info(f"RSI_Gold_ctn: {INITIAL_GOLD_POSITIONS:.4f} gold @ ${INITIAL_GOLD_PRICE:.2f} + ${INITIAL_CASH:.2f} cash = ${AGGREGATED_DATA['RSI_Gold_ctn']['current']:.2f}")
 
 # For storing to Supabase
 from supabase.lib.client_options import ClientOptions
@@ -98,11 +104,10 @@ except Exception as e:
     sys.exit(1)
 
 # We'll produce an INDICES dict to store current broadcast values to mirror AGGREGATED_DATA.
-
 INDICES = {
     'Gold':  {'min': GOLD_MIN, 'max': GOLD_MAX, 'current': AGGREGATED_DATA['Gold']['current']},
-    'RSI_Gold_mtm': {'min': 0.0, 'max': 999999.0, 'current': 0.0},
-    'RSI_Gold_ctn': {'min': 0.0, 'max': 999999.0, 'current': 0.0}
+    'RSI_Gold_mtm': {'min': 0.0, 'max': 999999.0, 'current': AGGREGATED_DATA['RSI_Gold_mtm']['current']},
+    'RSI_Gold_ctn': {'min': 0.0, 'max': 999999.0, 'current': AGGREGATED_DATA['RSI_Gold_ctn']['current']}
 }
 
 # Initialize them in the DB
@@ -128,12 +133,30 @@ async def register_client(websocket: websockets.WebSocketServerProtocol):
             }
             for idx_id, data in INDICES.items()
         }
+        # Send initial snapshots
         try:
+            # Send price snapshot
             await websocket.send(json.dumps({
                 'type': 'snapshot',
                 'data': current_prices
             }))
-            logger.info("Sent initial snapshot to client")
+            logger.info("Sent initial price snapshot to client")
+
+            # Send positions snapshot
+            await websocket.send(json.dumps({
+                'type': 'positions_snapshot',
+                'data': {
+                    'RSI_Gold_mtm': {
+                        'gold_positions': AGGREGATED_DATA['RSI_Gold_mtm']['gold_positions'],
+                        'cash_balance': AGGREGATED_DATA['RSI_Gold_mtm']['cash_balance']
+                    },
+                    'RSI_Gold_ctn': {
+                        'gold_positions': AGGREGATED_DATA['RSI_Gold_ctn']['gold_positions'],
+                        'cash_balance': AGGREGATED_DATA['RSI_Gold_ctn']['cash_balance']
+                    }
+                }
+            }))
+            logger.info("Sent initial positions snapshot to client")
         except websockets.ConnectionClosed:
             logger.warning("Client disconnected before receiving snapshot")
             return
@@ -155,14 +178,13 @@ async def register_client(websocket: websockets.WebSocketServerProtocol):
         connected_clients.remove(websocket)
         logger.info(f"Client disconnected. Total clients: {len(connected_clients)}")
 
-async def broadcast_price_update(index_id: str, price: float):
+async def broadcast_update(update_type: str, data: dict):
     if not connected_clients:
         return
     message = json.dumps({
-        'type': 'price_update',
+        'type': update_type,
         'data': {
-            'index_id': index_id,
-            'price': price,
+            **data,
             'timestamp': datetime.now(UTC).isoformat()
         }
     })
@@ -233,11 +255,13 @@ def rsi_momentum_logic(data):
         if data['cash_balance'] >= gold_price:
             data['cash_balance'] -= gold_price
             data['gold_positions'] += 1.0
+            logger.info(f"RSI_Gold_mtm: Bought 1 gold at {gold_price}, new positions: {data['gold_positions']}, cash: {data['cash_balance']}")
     # if RSI < 35 => sell 1 gold
     elif new_rsi < LOWER_RSI_THRESHOLD:
         if data['gold_positions'] > 0:
             data['gold_positions'] -= 1.0
             data['cash_balance'] += gold_price
+            logger.info(f"RSI_Gold_mtm: Sold 1 gold at {gold_price}, new positions: {data['gold_positions']}, cash: {data['cash_balance']}")
 
     # 3) Recompute portfolio
     portfolio_val = data['cash_balance'] + data['gold_positions'] * gold_price
@@ -251,15 +275,17 @@ def rsi_contrarian_logic(data):
 
     gold_price = AGGREGATED_DATA['Gold']['current']
     if new_rsi > UPPER_RSI_THRESHOLD:
-        # sell 1 gold
+        # sell 1 gold (contrarian: high RSI = sell)
         if data['gold_positions'] > 0:
             data['gold_positions'] -= 1.0
             data['cash_balance'] += gold_price
+            logger.info(f"RSI_Gold_ctn: Sold 1 gold at {gold_price}, new positions: {data['gold_positions']}, cash: {data['cash_balance']}")
     elif new_rsi < LOWER_RSI_THRESHOLD:
-        # buy 1 gold
+        # buy 1 gold (contrarian: low RSI = buy)
         if data['cash_balance'] >= gold_price:
             data['cash_balance'] -= gold_price
             data['gold_positions'] += 1.0
+            logger.info(f"RSI_Gold_ctn: Bought 1 gold at {gold_price}, new positions: {data['gold_positions']}, cash: {data['cash_balance']}")
 
     portfolio_val = data['cash_balance'] + data['gold_positions'] * gold_price
     data['current'] = portfolio_val
@@ -270,7 +296,10 @@ async def aggregator_update():
     # 1) Update Gold
     gold_new = update_gold_price()
     INDICES['Gold']['current'] = gold_new
-    await broadcast_price_update('Gold', gold_new)
+    await broadcast_update('price_update', {
+        'index_id': 'Gold',
+        'price': gold_new
+    })
     await store_price_update('Gold', gold_new)
     logger.info(f"Updated Gold => {gold_new:.2f}")
 
@@ -278,17 +307,37 @@ async def aggregator_update():
     mtm_data = AGGREGATED_DATA['RSI_Gold_mtm']
     val_mtm = rsi_momentum_logic(mtm_data)
     INDICES['RSI_Gold_mtm']['current'] = val_mtm
-    await broadcast_price_update('RSI_Gold_mtm', val_mtm)
+    await broadcast_update('price_update', {
+        'index_id': 'RSI_Gold_mtm',
+        'price': val_mtm
+    })
     await store_price_update('RSI_Gold_mtm', val_mtm)
     logger.info(f"Updated RSI_Gold_mtm => {val_mtm:.2f}")
+
+    # Broadcast position update for RSI_Gold_mtm
+    await broadcast_update('position_update', {
+        'index_id': 'RSI_Gold_mtm',
+        'gold_positions': mtm_data['gold_positions'],
+        'cash_balance': mtm_data['cash_balance']
+    })
 
     # 3) RSI_Gold_ctn
     ctn_data = AGGREGATED_DATA['RSI_Gold_ctn']
     val_ctn = rsi_contrarian_logic(ctn_data)
     INDICES['RSI_Gold_ctn']['current'] = val_ctn
-    await broadcast_price_update('RSI_Gold_ctn', val_ctn)
+    await broadcast_update('price_update', {
+        'index_id': 'RSI_Gold_ctn',
+        'price': val_ctn
+    })
     await store_price_update('RSI_Gold_ctn', val_ctn)
     logger.info(f"Updated RSI_Gold_ctn => {val_ctn:.2f}")
+
+    # Broadcast position update for RSI_Gold_ctn
+    await broadcast_update('position_update', {
+        'index_id': 'RSI_Gold_ctn',
+        'gold_positions': ctn_data['gold_positions'],
+        'cash_balance': ctn_data['cash_balance']
+    })
 
 async def price_generator():
     """Called in a loop to update aggregator every 1 second."""
