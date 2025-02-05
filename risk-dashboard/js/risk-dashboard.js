@@ -92,6 +92,14 @@ const riskDashboard = {
 
             console.log('Access granted, proceeding with dashboard initialization');
 
+            // Wait for PriceUpdates to be ready
+            if (!window.PriceUpdates?.isInitialized) {
+                console.log('Waiting for PriceUpdates...');
+                await new Promise((resolve) => {
+                    window.addEventListener('priceUpdatesReady', resolve, { once: true });
+                });
+            }
+
             // Wait for MetalPositionUpdates to be ready
             if (!window.MetalPositionUpdates?.isInitialized) {
                 console.log('Waiting for MetalPositionUpdates...');
@@ -251,8 +259,8 @@ const riskDashboard = {
         this.previousMetrics.positions = positionsCount;
 
         // Get metal prices
-        const goldPrice = window.PriceUpdates.getCurrentPrice('Gold') || 1900;
-        const silverPrice = window.PriceUpdates.getCurrentPrice('Silver') || 30;
+        const goldPrice = window.PriceUpdates.getCurrentPrice('Gold Price') || 1900;
+        const silverPrice = window.PriceUpdates.getCurrentPrice('Silver Price') || 30;
 
         // Initialize net units
         let netGoldUnits = 0;
@@ -557,7 +565,25 @@ const riskDashboard = {
 
     renderPositionCard(position) {
         try {
-            const currentPrice = window.PriceUpdates.getCurrentPrice(position.index_id);
+            // Get the appropriate price for the position
+            let currentPrice;
+            const normalizedId = position.index_id
+                .replace('RSI_', '')
+                .replace('_mtm', ' RSI Momentum')
+                .replace('_ctn', ' RSI Contrarian');
+            
+            // Normalize metal names
+            const normalizedMetalId = position.index_id
+                .replace('Gold', 'Gold Price')
+                .replace('Silver', 'Silver Price');
+            
+            if (normalizedId === 'Gold RSI Momentum' || normalizedId === 'Gold RSI Contrarian') {
+                currentPrice = window.PriceUpdates.getCurrentPrice('Gold Price');
+            } else if (normalizedId === 'Silver RSI Momentum' || normalizedId === 'Silver RSI Contrarian') {
+                currentPrice = window.PriceUpdates.getCurrentPrice('Silver Price');
+            } else {
+                currentPrice = window.PriceUpdates.getCurrentPrice(normalizedMetalId);
+            }
             const pnl = window.RiskPositionManager.calculatePnL(position);
             const pnlClass = pnl >= 0 ? 'positive' : 'negative';
             const exposure = position.quantity * (currentPrice || position.entry_price);
@@ -647,7 +673,24 @@ const riskDashboard = {
 
         // Calculate total exposure and P&L
         const totalExposure = positions.reduce((sum, pos) => {
-            const currentPrice = window.PriceUpdates.getCurrentPrice(pos.index_id);
+            // Normalize RSI index names and metal names
+            const normalizedId = pos.index_id
+                .replace('RSI_', '')
+                .replace('_mtm', ' RSI Momentum')
+                .replace('_ctn', ' RSI Contrarian');
+            
+            const normalizedMetalId = pos.index_id
+                .replace('Gold', 'Gold Price')
+                .replace('Silver', 'Silver Price');
+            
+            let currentPrice;
+            if (normalizedId === 'Gold RSI Momentum' || normalizedId === 'Gold RSI Contrarian') {
+                currentPrice = window.PriceUpdates.getCurrentPrice('Gold Price');
+            } else if (normalizedId === 'Silver RSI Momentum' || normalizedId === 'Silver RSI Contrarian') {
+                currentPrice = window.PriceUpdates.getCurrentPrice('Silver Price');
+            } else {
+                currentPrice = window.PriceUpdates.getCurrentPrice(normalizedMetalId);
+            }
             return sum + (pos.quantity * (currentPrice || pos.entry_price));
         }, 0);
 
