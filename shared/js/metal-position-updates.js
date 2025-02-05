@@ -101,8 +101,8 @@ window.MetalPositionUpdates = {
 
                     // Log final state after processing snapshot
                     console.log('Current positions after snapshot:', {
-                        mtm: this.currentPositions.get('RSI_Gold_mtm'),
-                        ctn: this.currentPositions.get('RSI_Gold_ctn')
+                        mtm: this.currentPositions.get('Gold RSI Momentum'),
+                        ctn: this.currentPositions.get('Gold RSI Contrarian')
                     });
                 } else if (message.type === 'position_update') {
                     // Handle individual position update
@@ -130,8 +130,8 @@ window.MetalPositionUpdates = {
 
                     // Log current state of all positions
                     console.log('Current positions after update:', {
-                        mtm: this.currentPositions.get('RSI_Gold_mtm'),
-                        ctn: this.currentPositions.get('RSI_Gold_ctn')
+                        mtm: this.currentPositions.get('Gold RSI Momentum'),
+                        ctn: this.currentPositions.get('Gold RSI Contrarian')
                     });
                 }
             } catch (error) {

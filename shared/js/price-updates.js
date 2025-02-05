@@ -231,9 +231,7 @@ window.PriceUpdates = {
         // Return indices from WebSocket data
         return Array.from(this.currentPrices.keys()).map(id => ({
             id,
-            name: id.replace('RSI_Gold_mtm', 'Gold RSI Momentum')
-                  .replace('RSI_Gold_ctn', 'Gold RSI Contrarian')
-                  .replace('Gold', 'Gold Price')
+            name: id // No need to replace names since they're already in the correct format from feed-engine
         }));
     },
 

@@ -126,6 +126,12 @@ const riskDashboard = {
                 this.handlePriceUpdate(update);
             });
 
+            // Subscribe to metal position updates
+            window.MetalPositionUpdates.subscribe(update => {
+                console.log('Received metal position update:', update);
+                // The update will be used in updateMetrics() to calculate exposures
+            });
+
             this.isInitialized = true;
             console.log('Risk Dashboard: Initialized successfully');
             updateStatus('app', 'done', '✅ App: Ready');
@@ -253,10 +259,10 @@ const riskDashboard = {
         let netSilverUnits = 0;
 
         // Get current RSI positions
-        const goldMtmPosition = window.MetalPositionUpdates?.getCurrentPosition('RSI_Gold_mtm');
-        const goldCtnPosition = window.MetalPositionUpdates?.getCurrentPosition('RSI_Gold_ctn');
-        const silverMtmPosition = window.MetalPositionUpdates?.getCurrentPosition('RSI_Silver_mtm');
-        const silverCtnPosition = window.MetalPositionUpdates?.getCurrentPosition('RSI_Silver_ctn');
+        const goldMtmPosition = window.MetalPositionUpdates?.getCurrentPosition('Gold RSI Momentum');
+        const goldCtnPosition = window.MetalPositionUpdates?.getCurrentPosition('Gold RSI Contrarian');
+        const silverMtmPosition = window.MetalPositionUpdates?.getCurrentPosition('Silver RSI Momentum');
+        const silverCtnPosition = window.MetalPositionUpdates?.getCurrentPosition('Silver RSI Contrarian');
 
         // Log RSI states
         console.log('Current RSI states:', {
@@ -269,14 +275,14 @@ const riskDashboard = {
         // Calculate exposure from positions in RSI indices
         positions.forEach(pos => {
             // Gold RSI positions
-            if (pos.index_id === 'RSI_Gold_mtm' && goldMtmPosition) {
+            if (pos.index_id === 'Gold RSI Momentum' && goldMtmPosition) {
                 const effectiveGoldUnits = pos.quantity * goldMtmPosition.gold_positions;
                 if (pos.side.toLowerCase() === 'buy') {
                     netGoldUnits += effectiveGoldUnits;
                 } else {
                     netGoldUnits -= effectiveGoldUnits;
                 }
-                console.log('Added RSI_Gold_mtm exposure:', {
+                console.log('Added Gold RSI Momentum exposure:', {
                     positionSize: pos.quantity,
                     rsiGoldPosition: goldMtmPosition.gold_positions,
                     effectiveGoldUnits,
@@ -284,14 +290,14 @@ const riskDashboard = {
                     newTotal: netGoldUnits
                 });
             }
-            else if (pos.index_id === 'RSI_Gold_ctn' && goldCtnPosition) {
+            else if (pos.index_id === 'Gold RSI Contrarian' && goldCtnPosition) {
                 const effectiveGoldUnits = pos.quantity * goldCtnPosition.gold_positions;
                 if (pos.side.toLowerCase() === 'buy') {
                     netGoldUnits += effectiveGoldUnits;
                 } else {
                     netGoldUnits -= effectiveGoldUnits;
                 }
-                console.log('Added RSI_Gold_ctn exposure:', {
+                console.log('Added Gold RSI Contrarian exposure:', {
                     positionSize: pos.quantity,
                     rsiGoldPosition: goldCtnPosition.gold_positions,
                     effectiveGoldUnits,
@@ -300,14 +306,14 @@ const riskDashboard = {
                 });
             }
             // Silver RSI positions
-            else if (pos.index_id === 'RSI_Silver_mtm' && silverMtmPosition) {
+            else if (pos.index_id === 'Silver RSI Momentum' && silverMtmPosition) {
                 const effectiveSilverUnits = pos.quantity * silverMtmPosition.silver_positions;
                 if (pos.side.toLowerCase() === 'buy') {
                     netSilverUnits += effectiveSilverUnits;
                 } else {
                     netSilverUnits -= effectiveSilverUnits;
                 }
-                console.log('Added RSI_Silver_mtm exposure:', {
+                console.log('Added Silver RSI Momentum exposure:', {
                     positionSize: pos.quantity,
                     rsiSilverPosition: silverMtmPosition.silver_positions,
                     effectiveSilverUnits,
@@ -315,14 +321,14 @@ const riskDashboard = {
                     newTotal: netSilverUnits
                 });
             }
-            else if (pos.index_id === 'RSI_Silver_ctn' && silverCtnPosition) {
+            else if (pos.index_id === 'Silver RSI Contrarian' && silverCtnPosition) {
                 const effectiveSilverUnits = pos.quantity * silverCtnPosition.silver_positions;
                 if (pos.side.toLowerCase() === 'buy') {
                     netSilverUnits += effectiveSilverUnits;
                 } else {
                     netSilverUnits -= effectiveSilverUnits;
                 }
-                console.log('Added RSI_Silver_ctn exposure:', {
+                console.log('Added Silver RSI Contrarian exposure:', {
                     positionSize: pos.quantity,
                     rsiSilverPosition: silverCtnPosition.silver_positions,
                     effectiveSilverUnits,
@@ -343,7 +349,7 @@ const riskDashboard = {
         positions.forEach(pos => {
             // Direct gold positions
             if (pos.index_id.toLowerCase().includes('gold') && 
-                !['RSI_Gold_mtm', 'RSI_Gold_ctn'].includes(pos.index_id)) {
+                !['Gold RSI Momentum', 'Gold RSI Contrarian'].includes(pos.index_id)) {
                 const currentPrice = window.PriceUpdates.getCurrentPrice(pos.index_id) || pos.entry_price;
                 const effectiveUnits = (pos.quantity * currentPrice) / goldPrice;
                 if (pos.side.toLowerCase() === 'buy') {
@@ -362,7 +368,7 @@ const riskDashboard = {
             }
             // Direct silver positions
             else if (pos.index_id.toLowerCase().includes('silver') && 
-                !['RSI_Silver_mtm', 'RSI_Silver_ctn'].includes(pos.index_id)) {
+                !['Silver RSI Momentum', 'Silver RSI Contrarian'].includes(pos.index_id)) {
                 const currentPrice = window.PriceUpdates.getCurrentPrice(pos.index_id) || pos.entry_price;
                 const effectiveUnits = (pos.quantity * currentPrice) / silverPrice;
                 if (pos.side.toLowerCase() === 'buy') {
