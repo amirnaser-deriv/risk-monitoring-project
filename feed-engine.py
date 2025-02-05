@@ -11,17 +11,23 @@ from typing import Set, Dict
 import logging
 
 """
-Reworked feed-engine.py to aggregate data from:
- 1) Gold Price (random walk, like gold_price.py)
- 2) RSI_Gold_mtm (RSI with momentum strategy) – here we now incorporate an actual portfolio reference to the 'Gold' price
- 3) RSI_Gold_ctn (RSI with contrarian strategy) – similarly referencing the actual 'Gold' price
+Feed engine aggregates data from:
+ 1) Metal Prices (random walk)
+    - Gold Price ($1700-$2100)
+    - Silver Price ($20-$40)
+ 2) RSI Momentum Indices
+    - RSI_Gold_mtm (follows gold price trends)
+    - RSI_Silver_mtm (follows silver price trends)
+ 3) RSI Contrarian Indices
+    - RSI_Gold_ctn (trades against gold price trends)
+    - RSI_Silver_ctn (trades against silver price trends)
 
-Each starts with $7,000 in cash and $3,000 worth of gold (fractional positions).
-We push these three items as 'Gold', 'RSI_Gold_mtm', and 'RSI_Gold_ctn' to Supabase and broadcast them
-to connected WebSocket clients. The portfolio value for RSI-based items is now influenced by the real gold price.
+Each RSI index starts with:
+- $7,000 in cash
+- $3,000 worth of the respective metal (fractional positions)
 
-All previous database, positions, logs, etc. remain intact. The 'indices' table in Supabase
-will have 'Gold', 'RSI_Gold_mtm', and 'RSI_Gold_ctn'.
+The engine broadcasts prices and positions via WebSocket and stores them in Supabase.
+RSI index values are influenced by their respective metal prices.
 """
 
 logging.basicConfig(
@@ -33,52 +39,79 @@ logger = logging.getLogger(__name__)
 # ---------------------------
 #  Configuration & Constants
 # ---------------------------
+# Gold settings
 GOLD_MIN = 1700.0
 GOLD_MAX = 2100.0
+INITIAL_GOLD_PRICE = 1900.0
 
+# Silver settings
+SILVER_MIN = 20.0
+SILVER_MAX = 40.0
+INITIAL_SILVER_PRICE = 30.0
+
+# RSI settings
 RSI_MIN = 0.0
 RSI_MAX = 100.0
-
 UPPER_RSI_THRESHOLD = 65
 LOWER_RSI_THRESHOLD = 35
 
 # We'll keep track of 1 "unit" as 1 ounce or 1 share, etc.  
 # RSI modes will buy/sell 1 unit at a time if there's enough cash or positions.
 
-# Starting portfolio conditions: $7,000 in cash + $3,000 in gold
-INITIAL_GOLD_PRICE = 1900.0  # used at initialization
+# Starting portfolio conditions: $7,000 in cash + $3,000 in metal
 INITIAL_CASH = 7000.0
-INITIAL_GOLD_INVESTMENT = 3000.0
-INITIAL_GOLD_POSITIONS = INITIAL_GOLD_INVESTMENT / INITIAL_GOLD_PRICE
+INITIAL_INVESTMENT = 3000.0
 
-# We'll hold a small structure for each of the three aggregated items.
+# Calculate initial positions
+INITIAL_GOLD_POSITIONS = INITIAL_INVESTMENT / INITIAL_GOLD_PRICE
+INITIAL_SILVER_POSITIONS = INITIAL_INVESTMENT / INITIAL_SILVER_PRICE
+
+# We'll hold a small structure for each of the aggregated items.
 AGGREGATED_DATA = {
     'Gold': {
         'min': GOLD_MIN,
         'max': GOLD_MAX,
         'current': INITIAL_GOLD_PRICE
     },
-
+    'Silver': {
+        'min': SILVER_MIN,
+        'max': SILVER_MAX,
+        'current': INITIAL_SILVER_PRICE
+    },
     'RSI_Gold_mtm': {
         'rsi': 50.0,
-        'cash_balance': INITIAL_CASH,             # 7k
-        'gold_positions': INITIAL_GOLD_POSITIONS, # 3000 / 1900
-        'current': INITIAL_CASH + (INITIAL_GOLD_POSITIONS * INITIAL_GOLD_PRICE)  # Initial portfolio value
+        'cash_balance': INITIAL_CASH,
+        'gold_positions': INITIAL_GOLD_POSITIONS,
+        'current': INITIAL_CASH + (INITIAL_GOLD_POSITIONS * INITIAL_GOLD_PRICE)
     },
-
     'RSI_Gold_ctn': {
         'rsi': 50.0,
         'cash_balance': INITIAL_CASH,
         'gold_positions': INITIAL_GOLD_POSITIONS,
-        'current': INITIAL_CASH + (INITIAL_GOLD_POSITIONS * INITIAL_GOLD_PRICE)  # Initial portfolio value
+        'current': INITIAL_CASH + (INITIAL_GOLD_POSITIONS * INITIAL_GOLD_PRICE)
+    },
+    'RSI_Silver_mtm': {
+        'rsi': 50.0,
+        'cash_balance': INITIAL_CASH,
+        'silver_positions': INITIAL_SILVER_POSITIONS,
+        'current': INITIAL_CASH + (INITIAL_SILVER_POSITIONS * INITIAL_SILVER_PRICE)
+    },
+    'RSI_Silver_ctn': {
+        'rsi': 50.0,
+        'cash_balance': INITIAL_CASH,
+        'silver_positions': INITIAL_SILVER_POSITIONS,
+        'current': INITIAL_CASH + (INITIAL_SILVER_POSITIONS * INITIAL_SILVER_PRICE)
     }
 }
 
 # Log initial state
 logger.info("Initial state:")
 logger.info(f"Gold price: ${INITIAL_GOLD_PRICE:.2f}")
+logger.info(f"Silver price: ${INITIAL_SILVER_PRICE:.2f}")
 logger.info(f"RSI_Gold_mtm: {INITIAL_GOLD_POSITIONS:.4f} gold @ ${INITIAL_GOLD_PRICE:.2f} + ${INITIAL_CASH:.2f} cash = ${AGGREGATED_DATA['RSI_Gold_mtm']['current']:.2f}")
 logger.info(f"RSI_Gold_ctn: {INITIAL_GOLD_POSITIONS:.4f} gold @ ${INITIAL_GOLD_PRICE:.2f} + ${INITIAL_CASH:.2f} cash = ${AGGREGATED_DATA['RSI_Gold_ctn']['current']:.2f}")
+logger.info(f"RSI_Silver_mtm: {INITIAL_SILVER_POSITIONS:.4f} silver @ ${INITIAL_SILVER_PRICE:.2f} + ${INITIAL_CASH:.2f} cash = ${AGGREGATED_DATA['RSI_Silver_mtm']['current']:.2f}")
+logger.info(f"RSI_Silver_ctn: {INITIAL_SILVER_POSITIONS:.4f} silver @ ${INITIAL_SILVER_PRICE:.2f} + ${INITIAL_CASH:.2f} cash = ${AGGREGATED_DATA['RSI_Silver_ctn']['current']:.2f}")
 
 # For storing to Supabase
 from supabase.lib.client_options import ClientOptions
@@ -105,12 +138,23 @@ except Exception as e:
 
 # We'll produce an INDICES dict to store current broadcast values to mirror AGGREGATED_DATA.
 INDICES = {
-    'Gold':  {'min': GOLD_MIN, 'max': GOLD_MAX, 'current': AGGREGATED_DATA['Gold']['current']},
+    'Gold': {'min': GOLD_MIN, 'max': GOLD_MAX, 'current': AGGREGATED_DATA['Gold']['current']},
+    'Silver': {'min': SILVER_MIN, 'max': SILVER_MAX, 'current': AGGREGATED_DATA['Silver']['current']},
     'RSI_Gold_mtm': {'min': 0.0, 'max': 999999.0, 'current': AGGREGATED_DATA['RSI_Gold_mtm']['current']},
-    'RSI_Gold_ctn': {'min': 0.0, 'max': 999999.0, 'current': AGGREGATED_DATA['RSI_Gold_ctn']['current']}
+    'RSI_Gold_ctn': {'min': 0.0, 'max': 999999.0, 'current': AGGREGATED_DATA['RSI_Gold_ctn']['current']},
+    'RSI_Silver_mtm': {'min': 0.0, 'max': 999999.0, 'current': AGGREGATED_DATA['RSI_Silver_mtm']['current']},
+    'RSI_Silver_ctn': {'min': 0.0, 'max': 999999.0, 'current': AGGREGATED_DATA['RSI_Silver_ctn']['current']}
 }
 
-# Initialize them in the DB
+# Clear existing indices first
+try:
+    supabase.table('indices').delete().neq('id', '').execute()
+    logger.info("Cleared existing indices")
+except Exception as e:
+    logger.error(f"Error clearing indices: {e}")
+    sys.exit(1)
+
+# Initialize new indices in the DB
 for idx_id, data in INDICES.items():
     supabase.table('indices').upsert({
         'id': idx_id,
@@ -118,7 +162,7 @@ for idx_id, data in INDICES.items():
         'current_price': data['current'],
         'updated_at': datetime.now(UTC).isoformat()
     }).execute()
-logger.info("Initialized indices table with Gold, RSI_Gold_mtm, RSI_Gold_ctn")
+logger.info("Initialized indices table with Gold, Silver, RSI_Gold_mtm, RSI_Gold_ctn, RSI_Silver_mtm, RSI_Silver_ctn")
 
 connected_clients: Set[websockets.WebSocketServerProtocol] = set()
 
@@ -153,6 +197,14 @@ async def register_client(websocket: websockets.WebSocketServerProtocol):
                     'RSI_Gold_ctn': {
                         'gold_positions': AGGREGATED_DATA['RSI_Gold_ctn']['gold_positions'],
                         'cash_balance': AGGREGATED_DATA['RSI_Gold_ctn']['cash_balance']
+                    },
+                    'RSI_Silver_mtm': {
+                        'silver_positions': AGGREGATED_DATA['RSI_Silver_mtm']['silver_positions'],
+                        'cash_balance': AGGREGATED_DATA['RSI_Silver_mtm']['cash_balance']
+                    },
+                    'RSI_Silver_ctn': {
+                        'silver_positions': AGGREGATED_DATA['RSI_Silver_ctn']['silver_positions'],
+                        'cash_balance': AGGREGATED_DATA['RSI_Silver_ctn']['cash_balance']
                     }
                 }
             }))
@@ -227,11 +279,20 @@ async def store_price_update(index_id: str, price: float):
 #   Random Walk + RSI Logic
 # ---------------------------
 def update_gold_price():
-    """Mimic gold_price for 'Gold'."""
+    """Random walk for Gold price."""
     data = AGGREGATED_DATA['Gold']
     change = random.uniform(-2.0, 2.0)
     new_price = data['current'] + change
     new_price = max(GOLD_MIN, min(GOLD_MAX, new_price))
+    data['current'] = new_price
+    return new_price
+
+def update_silver_price():
+    """Random walk for Silver price."""
+    data = AGGREGATED_DATA['Silver']
+    change = random.uniform(-0.1, 0.1)  # Smaller changes for silver due to lower price
+    new_price = data['current'] + change
+    new_price = max(SILVER_MIN, min(SILVER_MAX, new_price))
     data['current'] = new_price
     return new_price
 
@@ -241,58 +302,60 @@ def random_walk_rsi(rsi_val: float) -> float:
     new_rsi = rsi_val + fluctuation
     return max(RSI_MIN, min(RSI_MAX, new_rsi))
 
-def rsi_momentum_logic(data):
-    """Update RSI, then buy/sell gold positions if thresholds crossed, then compute new portfolio value."""
-    # data has keys: rsi, cash_balance, gold_positions
-    # 1) Update RSI
+def rsi_momentum_logic(data, metal_type='gold'):
+    """Update RSI, then buy/sell metal positions if thresholds crossed."""
     new_rsi = random_walk_rsi(data['rsi'])
     data['rsi'] = new_rsi
 
-    # 2) Momentum logic
-    gold_price = AGGREGATED_DATA['Gold']['current']
-    # if RSI > 65 => buy 1 gold
-    if new_rsi > UPPER_RSI_THRESHOLD:
-        if data['cash_balance'] >= gold_price:
-            data['cash_balance'] -= gold_price
-            data['gold_positions'] += 1.0
-            logger.info(f"RSI_Gold_mtm: Bought 1 gold at {gold_price}, new positions: {data['gold_positions']}, cash: {data['cash_balance']}")
-    # if RSI < 35 => sell 1 gold
-    elif new_rsi < LOWER_RSI_THRESHOLD:
-        if data['gold_positions'] > 0:
-            data['gold_positions'] -= 1.0
-            data['cash_balance'] += gold_price
-            logger.info(f"RSI_Gold_mtm: Sold 1 gold at {gold_price}, new positions: {data['gold_positions']}, cash: {data['cash_balance']}")
+    metal_price = AGGREGATED_DATA[metal_type.capitalize()]['current']
+    positions_key = f'{metal_type}_positions'
 
-    # 3) Recompute portfolio
-    portfolio_val = data['cash_balance'] + data['gold_positions'] * gold_price
+    # if RSI > 65 => buy 1 unit
+    if new_rsi > UPPER_RSI_THRESHOLD:
+        if data['cash_balance'] >= metal_price:
+            data['cash_balance'] -= metal_price
+            data[positions_key] += 1.0
+            logger.info(f"RSI_{metal_type.capitalize()}_mtm: Bought 1 {metal_type} at {metal_price}, new positions: {data[positions_key]}, cash: {data['cash_balance']}")
+    # if RSI < 35 => sell 1 unit
+    elif new_rsi < LOWER_RSI_THRESHOLD:
+        if data[positions_key] > 0:
+            data[positions_key] -= 1.0
+            data['cash_balance'] += metal_price
+            logger.info(f"RSI_{metal_type.capitalize()}_mtm: Sold 1 {metal_type} at {metal_price}, new positions: {data[positions_key]}, cash: {data['cash_balance']}")
+
+    # Recompute portfolio
+    portfolio_val = data['cash_balance'] + data[positions_key] * metal_price
     data['current'] = portfolio_val
     return portfolio_val
 
-def rsi_contrarian_logic(data):
-    """RSI contrarian logic => if RSI>65 => sell gold, if RSI<35 => buy gold, then portfolio = cash + (positions * price)."""
+def rsi_contrarian_logic(data, metal_type='gold'):
+    """RSI contrarian logic => if RSI>65 => sell, if RSI<35 => buy."""
     new_rsi = random_walk_rsi(data['rsi'])
     data['rsi'] = new_rsi
 
-    gold_price = AGGREGATED_DATA['Gold']['current']
-    if new_rsi > UPPER_RSI_THRESHOLD:
-        # sell 1 gold (contrarian: high RSI = sell)
-        if data['gold_positions'] > 0:
-            data['gold_positions'] -= 1.0
-            data['cash_balance'] += gold_price
-            logger.info(f"RSI_Gold_ctn: Sold 1 gold at {gold_price}, new positions: {data['gold_positions']}, cash: {data['cash_balance']}")
-    elif new_rsi < LOWER_RSI_THRESHOLD:
-        # buy 1 gold (contrarian: low RSI = buy)
-        if data['cash_balance'] >= gold_price:
-            data['cash_balance'] -= gold_price
-            data['gold_positions'] += 1.0
-            logger.info(f"RSI_Gold_ctn: Bought 1 gold at {gold_price}, new positions: {data['gold_positions']}, cash: {data['cash_balance']}")
+    metal_price = AGGREGATED_DATA[metal_type.capitalize()]['current']
+    positions_key = f'{metal_type}_positions'
 
-    portfolio_val = data['cash_balance'] + data['gold_positions'] * gold_price
+    if new_rsi > UPPER_RSI_THRESHOLD:
+        # sell 1 unit (contrarian: high RSI = sell)
+        if data[positions_key] > 0:
+            data[positions_key] -= 1.0
+            data['cash_balance'] += metal_price
+            logger.info(f"RSI_{metal_type.capitalize()}_ctn: Sold 1 {metal_type} at {metal_price}, new positions: {data[positions_key]}, cash: {data['cash_balance']}")
+    elif new_rsi < LOWER_RSI_THRESHOLD:
+        # buy 1 unit (contrarian: low RSI = buy)
+        if data['cash_balance'] >= metal_price:
+            data['cash_balance'] -= metal_price
+            data[positions_key] += 1.0
+            logger.info(f"RSI_{metal_type.capitalize()}_ctn: Bought 1 {metal_type} at {metal_price}, new positions: {data[positions_key]}, cash: {data['cash_balance']}")
+
+    # Recompute portfolio
+    portfolio_val = data['cash_balance'] + data[positions_key] * metal_price
     data['current'] = portfolio_val
     return portfolio_val
 
 async def aggregator_update():
-    """Update 'Gold' price, then update momentum RSI, contrarian RSI, broadcast & store each."""
+    """Update metal prices and RSI indices."""
     # 1) Update Gold
     gold_new = update_gold_price()
     INDICES['Gold']['current'] = gold_new
@@ -303,41 +366,79 @@ async def aggregator_update():
     await store_price_update('Gold', gold_new)
     logger.info(f"Updated Gold => {gold_new:.2f}")
 
-    # 2) RSI_Gold_mtm
-    mtm_data = AGGREGATED_DATA['RSI_Gold_mtm']
-    val_mtm = rsi_momentum_logic(mtm_data)
-    INDICES['RSI_Gold_mtm']['current'] = val_mtm
+    # 2) Update Silver
+    silver_new = update_silver_price()
+    INDICES['Silver']['current'] = silver_new
+    await broadcast_update('price_update', {
+        'index_id': 'Silver',
+        'price': silver_new
+    })
+    await store_price_update('Silver', silver_new)
+    logger.info(f"Updated Silver => {silver_new:.2f}")
+
+    # 3) RSI_Gold_mtm
+    mtm_gold_data = AGGREGATED_DATA['RSI_Gold_mtm']
+    val_gold_mtm = rsi_momentum_logic(mtm_gold_data, 'gold')
+    INDICES['RSI_Gold_mtm']['current'] = val_gold_mtm
     await broadcast_update('price_update', {
         'index_id': 'RSI_Gold_mtm',
-        'price': val_mtm
+        'price': val_gold_mtm
     })
-    await store_price_update('RSI_Gold_mtm', val_mtm)
-    logger.info(f"Updated RSI_Gold_mtm => {val_mtm:.2f}")
-
-    # Broadcast position update for RSI_Gold_mtm
+    await store_price_update('RSI_Gold_mtm', val_gold_mtm)
     await broadcast_update('position_update', {
         'index_id': 'RSI_Gold_mtm',
-        'gold_positions': mtm_data['gold_positions'],
-        'cash_balance': mtm_data['cash_balance']
+        'gold_positions': mtm_gold_data['gold_positions'],
+        'cash_balance': mtm_gold_data['cash_balance']
     })
+    logger.info(f"Updated RSI_Gold_mtm => {val_gold_mtm:.2f}")
 
-    # 3) RSI_Gold_ctn
-    ctn_data = AGGREGATED_DATA['RSI_Gold_ctn']
-    val_ctn = rsi_contrarian_logic(ctn_data)
-    INDICES['RSI_Gold_ctn']['current'] = val_ctn
+    # 4) RSI_Gold_ctn
+    ctn_gold_data = AGGREGATED_DATA['RSI_Gold_ctn']
+    val_gold_ctn = rsi_contrarian_logic(ctn_gold_data, 'gold')
+    INDICES['RSI_Gold_ctn']['current'] = val_gold_ctn
     await broadcast_update('price_update', {
         'index_id': 'RSI_Gold_ctn',
-        'price': val_ctn
+        'price': val_gold_ctn
     })
-    await store_price_update('RSI_Gold_ctn', val_ctn)
-    logger.info(f"Updated RSI_Gold_ctn => {val_ctn:.2f}")
-
-    # Broadcast position update for RSI_Gold_ctn
+    await store_price_update('RSI_Gold_ctn', val_gold_ctn)
     await broadcast_update('position_update', {
         'index_id': 'RSI_Gold_ctn',
-        'gold_positions': ctn_data['gold_positions'],
-        'cash_balance': ctn_data['cash_balance']
+        'gold_positions': ctn_gold_data['gold_positions'],
+        'cash_balance': ctn_gold_data['cash_balance']
     })
+    logger.info(f"Updated RSI_Gold_ctn => {val_gold_ctn:.2f}")
+
+    # 5) RSI_Silver_mtm
+    mtm_silver_data = AGGREGATED_DATA['RSI_Silver_mtm']
+    val_silver_mtm = rsi_momentum_logic(mtm_silver_data, 'silver')
+    INDICES['RSI_Silver_mtm']['current'] = val_silver_mtm
+    await broadcast_update('price_update', {
+        'index_id': 'RSI_Silver_mtm',
+        'price': val_silver_mtm
+    })
+    await store_price_update('RSI_Silver_mtm', val_silver_mtm)
+    await broadcast_update('position_update', {
+        'index_id': 'RSI_Silver_mtm',
+        'silver_positions': mtm_silver_data['silver_positions'],
+        'cash_balance': mtm_silver_data['cash_balance']
+    })
+    logger.info(f"Updated RSI_Silver_mtm => {val_silver_mtm:.2f}")
+
+    # 6) RSI_Silver_ctn
+    ctn_silver_data = AGGREGATED_DATA['RSI_Silver_ctn']
+    val_silver_ctn = rsi_contrarian_logic(ctn_silver_data, 'silver')
+    INDICES['RSI_Silver_ctn']['current'] = val_silver_ctn
+    await broadcast_update('price_update', {
+        'index_id': 'RSI_Silver_ctn',
+        'price': val_silver_ctn
+    })
+    await store_price_update('RSI_Silver_ctn', val_silver_ctn)
+    await broadcast_update('position_update', {
+        'index_id': 'RSI_Silver_ctn',
+        'silver_positions': ctn_silver_data['silver_positions'],
+        'cash_balance': ctn_silver_data['cash_balance']
+    })
+    logger.info(f"Updated RSI_Silver_ctn => {val_silver_ctn:.2f}")
 
 async def price_generator():
     """Called in a loop to update aggregator every 1 second."""
@@ -361,7 +462,7 @@ async def health_check():
             await asyncio.sleep(30)
 
 async def main():
-    logger.info("Starting feed engine aggregator with real gold-based RSI portfolios...")
+    logger.info("Starting feed engine aggregator with metal prices and RSI portfolios...")
 
     # Perform an immediate aggregator update so initial RSI + portfolio reflect gold
     await aggregator_update()

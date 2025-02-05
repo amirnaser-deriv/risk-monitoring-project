@@ -1,324 +1,259 @@
-2025-02-05 15:07:17,644:INFO - Initial state:
-2025-02-05 15:07:17,644:INFO - Gold price: $1900.00
-2025-02-05 15:07:17,644:INFO - RSI_Gold_mtm: 1.5789 gold @ $1900.00 + $7000.00 cash = $10000.00
-2025-02-05 15:07:17,644:INFO - RSI_Gold_ctn: 1.5789 gold @ $1900.00 + $7000.00 cash = $10000.00
-2025-02-05 15:07:18,109:INFO - Successfully connected to Supabase
-2025-02-05 15:07:18,621:INFO - Initialized indices table with Gold, RSI_Gold_mtm, RSI_Gold_ctn
-2025-02-05 15:07:18,621:INFO - Starting feed engine aggregator with real gold-based RSI portfolios...
-2025-02-05 15:07:18,801:INFO - Updated Gold => 1901.38
-2025-02-05 15:07:19,130:INFO - Updated RSI_Gold_mtm => 10002.19
-2025-02-05 15:07:19,296:INFO - Updated RSI_Gold_ctn => 10002.19
-2025-02-05 15:07:19,304:INFO - server listening on [::1]:8765
-2025-02-05 15:07:19,305:INFO - server listening on 127.0.0.1:8765
-2025-02-05 15:07:19,305:INFO - WebSocket server running on ws://localhost:8765
-2025-02-05 15:07:19,305:INFO - Press Ctrl+C to stop
-2025-02-05 15:07:19,466:INFO - Updated Gold => 1900.11
-2025-02-05 15:07:19,637:INFO - Updated RSI_Gold_mtm => 10000.17
-2025-02-05 15:07:19,806:INFO - Updated RSI_Gold_ctn => 10000.17
-2025-02-05 15:07:19,882:INFO - connection open
-2025-02-05 15:07:19,882:INFO - Client connected. Total clients: 1
-2025-02-05 15:07:19,882:INFO - Sent initial price snapshot to client
-2025-02-05 15:07:19,883:INFO - Sent initial positions snapshot to client
-2025-02-05 15:07:20,990:INFO - Updated Gold => 1901.33
-2025-02-05 15:07:21,216:INFO - Updated RSI_Gold_mtm => 10002.10
-2025-02-05 15:07:21,382:INFO - Updated RSI_Gold_ctn => 10002.10
-2025-02-05 15:07:22,553:INFO - Updated Gold => 1902.43
-2025-02-05 15:07:22,720:INFO - Updated RSI_Gold_mtm => 10003.83
-2025-02-05 15:07:22,905:INFO - Updated RSI_Gold_ctn => 10003.83
-2025-02-05 15:07:24,061:INFO - Updated Gold => 1903.23
-2025-02-05 15:07:24,229:INFO - Updated RSI_Gold_mtm => 10005.10
-2025-02-05 15:07:24,395:INFO - Updated RSI_Gold_ctn => 10005.10
-2025-02-05 15:07:25,559:INFO - Updated Gold => 1902.79
-2025-02-05 15:07:25,723:INFO - Updated RSI_Gold_mtm => 10004.40
-2025-02-05 15:07:25,903:INFO - Updated RSI_Gold_ctn => 10004.40
-2025-02-05 15:07:27,066:INFO - Updated Gold => 1903.97
-2025-02-05 15:07:27,238:INFO - Updated RSI_Gold_mtm => 10006.27
-2025-02-05 15:07:27,434:INFO - Updated RSI_Gold_ctn => 10006.27
-2025-02-05 15:07:28,631:INFO - Updated Gold => 1904.57
-2025-02-05 15:07:28,802:INFO - Updated RSI_Gold_mtm => 10007.22
-2025-02-05 15:07:28,968:INFO - Updated RSI_Gold_ctn => 10007.22
-2025-02-05 15:07:30,146:INFO - Updated Gold => 1903.54
-2025-02-05 15:07:30,321:INFO - Updated RSI_Gold_mtm => 10005.59
-2025-02-05 15:07:30,479:INFO - Updated RSI_Gold_ctn => 10005.59
-2025-02-05 15:07:31,702:INFO - Updated Gold => 1902.46
-2025-02-05 15:07:31,875:INFO - Updated RSI_Gold_mtm => 10003.89
-2025-02-05 15:07:32,040:INFO - Updated RSI_Gold_ctn => 10003.89
-2025-02-05 15:07:33,283:INFO - Updated Gold => 1902.11
-2025-02-05 15:07:33,435:INFO - Updated RSI_Gold_mtm => 10003.34
-2025-02-05 15:07:33,609:INFO - Updated RSI_Gold_ctn => 10003.34
-2025-02-05 15:07:34,777:INFO - Updated Gold => 1900.95
-2025-02-05 15:07:34,938:INFO - Updated RSI_Gold_mtm => 10001.49
-2025-02-05 15:07:35,094:INFO - Updated RSI_Gold_ctn => 10001.49
-2025-02-05 15:07:35,095:INFO - Client disconnected. Total clients: 0
-2025-02-05 15:07:35,096:INFO - connection open
-2025-02-05 15:07:35,096:INFO - Client connected. Total clients: 1
-2025-02-05 15:07:35,096:INFO - Sent initial price snapshot to client
-2025-02-05 15:07:35,096:INFO - Sent initial positions snapshot to client
-2025-02-05 15:07:35,096:INFO - connection closed
-2025-02-05 15:07:36,270:INFO - Updated Gold => 1900.50
-2025-02-05 15:07:36,454:INFO - Updated RSI_Gold_mtm => 10000.79
-2025-02-05 15:07:36,608:INFO - Updated RSI_Gold_ctn => 10000.79
-2025-02-05 15:07:37,208:INFO - Client disconnected. Total clients: 0
-2025-02-05 15:07:37,208:INFO - connection closed
-2025-02-05 15:07:37,216:INFO - connection open
-2025-02-05 15:07:37,216:INFO - Client connected. Total clients: 1
-2025-02-05 15:07:37,216:INFO - Sent initial price snapshot to client
-2025-02-05 15:07:37,216:INFO - Sent initial positions snapshot to client
-2025-02-05 15:07:37,787:INFO - Updated Gold => 1898.92
-2025-02-05 15:07:37,942:INFO - Updated RSI_Gold_mtm => 9998.29
-2025-02-05 15:07:38,098:INFO - Updated RSI_Gold_ctn => 9998.29
-2025-02-05 15:07:39,283:INFO - Updated Gold => 1900.50
-2025-02-05 15:07:39,445:INFO - Updated RSI_Gold_mtm => 10000.78
-2025-02-05 15:07:39,606:INFO - Updated RSI_Gold_ctn => 10000.78
-2025-02-05 15:07:40,800:INFO - Updated Gold => 1899.66
-2025-02-05 15:07:40,966:INFO - Updated RSI_Gold_mtm => 9999.46
-2025-02-05 15:07:41,130:INFO - Updated RSI_Gold_ctn => 9999.46
-2025-02-05 15:07:42,315:INFO - Updated Gold => 1899.49
-2025-02-05 15:07:42,502:INFO - Updated RSI_Gold_mtm => 9999.20
-2025-02-05 15:07:42,660:INFO - Updated RSI_Gold_ctn => 9999.20
-2025-02-05 15:07:43,639:INFO - Client disconnected. Total clients: 0
-2025-02-05 15:07:43,640:INFO - connection closed
-2025-02-05 15:07:43,651:INFO - connection open
-2025-02-05 15:07:43,651:INFO - Client connected. Total clients: 1
-2025-02-05 15:07:43,652:INFO - Sent initial price snapshot to client
-2025-02-05 15:07:43,652:INFO - Sent initial positions snapshot to client
-2025-02-05 15:07:43,821:INFO - Updated Gold => 1897.99
-2025-02-05 15:07:44,003:INFO - Updated RSI_Gold_mtm => 9996.83
-2025-02-05 15:07:44,276:INFO - Updated RSI_Gold_ctn => 9996.83
-2025-02-05 15:07:45,457:INFO - Updated Gold => 1896.93
-2025-02-05 15:07:45,683:INFO - Updated RSI_Gold_mtm => 9995.15
-2025-02-05 15:07:45,850:INFO - Updated RSI_Gold_ctn => 9995.15
-2025-02-05 15:07:47,032:INFO - Updated Gold => 1898.01
-2025-02-05 15:07:47,190:INFO - Updated RSI_Gold_mtm => 9996.86
-2025-02-05 15:07:47,460:INFO - Updated RSI_Gold_ctn => 9996.86
-2025-02-05 15:07:48,626:INFO - Updated Gold => 1899.77
-2025-02-05 15:07:48,848:INFO - Updated RSI_Gold_mtm => 9999.64
-2025-02-05 15:07:49,021:INFO - Updated RSI_Gold_ctn => 9999.64
-2025-02-05 15:07:49,022:INFO - Client disconnected. Total clients: 0
-2025-02-05 15:07:49,023:INFO - connection closed
-2025-02-05 15:07:49,023:INFO - connection open
-2025-02-05 15:07:49,023:INFO - Client connected. Total clients: 1
-2025-02-05 15:07:49,024:INFO - Sent initial price snapshot to client
-2025-02-05 15:07:49,024:INFO - Sent initial positions snapshot to client
-2025-02-05 15:07:50,176:INFO - Updated Gold => 1900.78
-2025-02-05 15:07:50,335:INFO - Updated RSI_Gold_mtm => 10001.23
-2025-02-05 15:07:50,583:INFO - Updated RSI_Gold_ctn => 10001.23
-2025-02-05 15:07:51,832:INFO - Updated Gold => 1902.18
-2025-02-05 15:07:52,078:INFO - Updated RSI_Gold_mtm => 10003.45
-2025-02-05 15:07:52,237:INFO - Updated RSI_Gold_ctn => 10003.45
-2025-02-05 15:07:53,411:INFO - Updated Gold => 1901.02
-2025-02-05 15:07:53,569:INFO - Updated RSI_Gold_mtm => 10001.62
-2025-02-05 15:07:53,757:INFO - Updated RSI_Gold_ctn => 10001.62
-2025-02-05 15:07:54,963:INFO - Updated Gold => 1899.23
-2025-02-05 15:07:55,145:INFO - Updated RSI_Gold_mtm => 9998.78
-2025-02-05 15:07:55,310:INFO - Updated RSI_Gold_ctn => 9998.78
-2025-02-05 15:07:56,497:INFO - Updated Gold => 1898.77
-2025-02-05 15:07:56,658:INFO - Updated RSI_Gold_mtm => 9998.06
-2025-02-05 15:07:56,830:INFO - Updated RSI_Gold_ctn => 9998.06
-2025-02-05 15:07:58,029:INFO - Updated Gold => 1899.77
-2025-02-05 15:07:58,230:INFO - Updated RSI_Gold_mtm => 9999.64
-2025-02-05 15:07:58,390:INFO - Updated RSI_Gold_ctn => 9999.64
-2025-02-05 15:07:58,957:INFO - Client disconnected. Total clients: 0
-2025-02-05 15:07:58,957:INFO - connection closed
-2025-02-05 15:07:58,972:INFO - connection open
-2025-02-05 15:07:58,973:INFO - Client connected. Total clients: 1
-2025-02-05 15:07:58,973:INFO - Sent initial price snapshot to client
-2025-02-05 15:07:58,973:INFO - Sent initial positions snapshot to client
-2025-02-05 15:07:59,564:INFO - Updated Gold => 1898.06
-2025-02-05 15:07:59,720:INFO - Updated RSI_Gold_mtm => 9996.93
-2025-02-05 15:07:59,888:INFO - Updated RSI_Gold_ctn => 9996.93
-2025-02-05 15:08:01,081:INFO - Updated Gold => 1899.37
-2025-02-05 15:08:01,241:INFO - Updated RSI_Gold_mtm => 9999.00
-2025-02-05 15:08:01,394:INFO - Updated RSI_Gold_ctn => 9999.00
-2025-02-05 15:08:02,761:INFO - Updated Gold => 1898.25
-2025-02-05 15:08:02,929:INFO - Updated RSI_Gold_mtm => 9997.23
-2025-02-05 15:08:03,087:INFO - Updated RSI_Gold_ctn => 9997.23
-2025-02-05 15:08:04,236:INFO - Updated Gold => 1897.74
-2025-02-05 15:08:04,484:INFO - Updated RSI_Gold_mtm => 9996.44
-2025-02-05 15:08:04,796:INFO - Updated RSI_Gold_ctn => 9996.44
-2025-02-05 15:08:05,981:INFO - Updated Gold => 1898.73
-2025-02-05 15:08:06,147:INFO - Updated RSI_Gold_mtm => 9997.99
-2025-02-05 15:08:06,321:INFO - Updated RSI_Gold_ctn => 9997.99
-2025-02-05 15:08:07,510:INFO - Updated Gold => 1897.32
-2025-02-05 15:08:07,687:INFO - Updated RSI_Gold_mtm => 9995.76
-2025-02-05 15:08:07,867:INFO - Updated RSI_Gold_ctn => 9995.76
-2025-02-05 15:08:09,043:INFO - Updated Gold => 1897.58
-2025-02-05 15:08:09,211:INFO - Updated RSI_Gold_mtm => 9996.18
-2025-02-05 15:08:09,373:INFO - Updated RSI_Gold_ctn => 9996.18
-2025-02-05 15:08:10,532:INFO - Updated Gold => 1899.23
-2025-02-05 15:08:10,691:INFO - Updated RSI_Gold_mtm => 9998.79
-2025-02-05 15:08:10,844:INFO - Updated RSI_Gold_ctn => 9998.79
-2025-02-05 15:08:12,004:INFO - Updated Gold => 1898.00
-2025-02-05 15:08:12,195:INFO - Updated RSI_Gold_mtm => 9996.84
-2025-02-05 15:08:12,398:INFO - Updated RSI_Gold_ctn => 9996.84
-2025-02-05 15:08:13,594:INFO - Updated Gold => 1898.10
-2025-02-05 15:08:13,594:INFO - RSI_Gold_mtm: Sold 1 gold at 1898.1019586708453, new positions: 0.5789473684210527, cash: 8898.101958670846
-2025-02-05 15:08:13,759:INFO - Updated RSI_Gold_mtm => 9997.00
-2025-02-05 15:08:13,917:INFO - Updated RSI_Gold_ctn => 9997.00
-2025-02-05 15:08:14,711:INFO - Client disconnected. Total clients: 0
-2025-02-05 15:08:14,712:INFO - connection closed
-2025-02-05 15:08:14,731:INFO - connection open
-2025-02-05 15:08:14,731:INFO - Client connected. Total clients: 1
-2025-02-05 15:08:14,732:INFO - Sent initial price snapshot to client
-2025-02-05 15:08:14,732:INFO - Sent initial positions snapshot to client
-2025-02-05 15:08:15,095:INFO - Updated Gold => 1896.92
-2025-02-05 15:08:15,261:INFO - Updated RSI_Gold_mtm => 9996.32
-2025-02-05 15:08:15,459:INFO - Updated RSI_Gold_ctn => 9995.14
-2025-02-05 15:08:16,619:INFO - Updated Gold => 1896.61
-2025-02-05 15:08:16,619:INFO - RSI_Gold_mtm: Sold 1 gold at 1896.6066644509235, new positions: -0.42105263157894735, cash: 10794.708623121769
-2025-02-05 15:08:16,798:INFO - Updated RSI_Gold_mtm => 9996.14
-2025-02-05 15:08:16,966:INFO - Updated RSI_Gold_ctn => 9994.64
-2025-02-05 15:08:18,164:INFO - Updated Gold => 1896.94
-2025-02-05 15:08:18,326:INFO - Updated RSI_Gold_mtm => 9996.00
-2025-02-05 15:08:18,539:INFO - Updated RSI_Gold_ctn => 9995.17
-2025-02-05 15:08:19,725:INFO - Updated Gold => 1897.97
-2025-02-05 15:08:19,895:INFO - Updated RSI_Gold_mtm => 9995.56
-2025-02-05 15:08:20,062:INFO - Updated RSI_Gold_ctn => 9996.80
-2025-02-05 15:08:21,228:INFO - Updated Gold => 1897.45
-2025-02-05 15:08:21,394:INFO - Updated RSI_Gold_mtm => 9995.78
-2025-02-05 15:08:21,571:INFO - Updated RSI_Gold_ctn => 9995.98
-2025-02-05 15:08:22,413:INFO - Client disconnected. Total clients: 0
-2025-02-05 15:08:22,413:INFO - connection closed
-2025-02-05 15:08:22,424:INFO - connection open
-2025-02-05 15:08:22,424:INFO - Client connected. Total clients: 1
-2025-02-05 15:08:22,424:INFO - Sent initial price snapshot to client
-2025-02-05 15:08:22,424:INFO - Sent initial positions snapshot to client
-2025-02-05 15:08:22,724:INFO - Updated Gold => 1896.36
-2025-02-05 15:08:22,902:INFO - Updated RSI_Gold_mtm => 9996.24
-2025-02-05 15:08:23,054:INFO - Updated RSI_Gold_ctn => 9994.25
-2025-02-05 15:08:24,230:INFO - Updated Gold => 1894.52
-2025-02-05 15:08:24,400:INFO - Updated RSI_Gold_mtm => 9997.01
-2025-02-05 15:08:24,562:INFO - Updated RSI_Gold_ctn => 9991.35
-2025-02-05 15:08:25,755:INFO - Updated Gold => 1893.35
-2025-02-05 15:08:25,927:INFO - Updated RSI_Gold_mtm => 9997.51
-2025-02-05 15:08:26,085:INFO - Updated RSI_Gold_ctn => 9989.50
-2025-02-05 15:08:27,297:INFO - Updated Gold => 1894.46
-2025-02-05 15:08:27,450:INFO - Updated RSI_Gold_mtm => 9997.04
-2025-02-05 15:08:27,608:INFO - Updated RSI_Gold_ctn => 9991.25
-2025-02-05 15:08:28,802:INFO - Updated Gold => 1894.78
-2025-02-05 15:08:28,971:INFO - Updated RSI_Gold_mtm => 9996.90
-2025-02-05 15:08:29,161:INFO - Updated RSI_Gold_ctn => 9991.77
-2025-02-05 15:08:30,376:INFO - Updated Gold => 1895.31
-2025-02-05 15:08:30,543:INFO - Updated RSI_Gold_mtm => 9996.68
-2025-02-05 15:08:30,544:INFO - Removed dead client. Total clients: 0
-2025-02-05 15:08:30,702:INFO - Updated RSI_Gold_ctn => 9992.59
-2025-02-05 15:08:30,703:ERROR - connection handler failed
+2025-02-05 15:34:48,249:INFO - Initial state:
+2025-02-05 15:34:48,250:INFO - Gold price: $1900.00
+2025-02-05 15:34:48,250:INFO - Silver price: $30.00
+2025-02-05 15:34:48,250:INFO - RSI_Gold_mtm: 1.5789 gold @ $1900.00 + $7000.00 cash = $10000.00
+2025-02-05 15:34:48,250:INFO - RSI_Gold_ctn: 1.5789 gold @ $1900.00 + $7000.00 cash = $10000.00
+2025-02-05 15:34:48,250:INFO - RSI_Silver_mtm: 100.0000 silver @ $30.00 + $7000.00 cash = $10000.00
+2025-02-05 15:34:48,250:INFO - RSI_Silver_ctn: 100.0000 silver @ $30.00 + $7000.00 cash = $10000.00
+2025-02-05 15:34:49,241:INFO - Successfully connected to Supabase
+2025-02-05 15:34:49,826:INFO - Cleared existing indices
+2025-02-05 15:34:51,215:INFO - Initialized indices table with Gold, Silver, RSI_Gold_mtm, RSI_Gold_ctn, RSI_Silver_mtm, RSI_Silver_ctn
+2025-02-05 15:34:51,215:INFO - Starting feed engine aggregator with metal prices and RSI portfolios...
+2025-02-05 15:34:51,404:INFO - Updated Gold => 1901.39
+2025-02-05 15:34:51,670:INFO - Updated Silver => 29.98
+2025-02-05 15:34:51,875:INFO - Updated RSI_Gold_mtm => 10002.19
+2025-02-05 15:34:52,074:INFO - Updated RSI_Gold_ctn => 10002.19
+2025-02-05 15:34:52,322:INFO - Updated RSI_Silver_mtm => 9997.95
+2025-02-05 15:34:52,515:INFO - Updated RSI_Silver_ctn => 9997.95
+2025-02-05 15:34:52,520:INFO - server listening on [::1]:8765
+2025-02-05 15:34:52,520:INFO - server listening on 127.0.0.1:8765
+2025-02-05 15:34:52,520:INFO - WebSocket server running on ws://localhost:8765
+2025-02-05 15:34:52,520:INFO - Press Ctrl+C to stop
+2025-02-05 15:34:52,697:INFO - Updated Gold => 1902.56
+2025-02-05 15:34:52,983:INFO - Updated Silver => 30.07
+2025-02-05 15:34:53,164:INFO - Updated RSI_Gold_mtm => 10004.04
+2025-02-05 15:34:53,364:INFO - Updated RSI_Gold_ctn => 10004.04
+2025-02-05 15:34:53,560:INFO - Updated RSI_Silver_mtm => 10007.04
+2025-02-05 15:34:53,966:INFO - Updated RSI_Silver_ctn => 10007.04
+2025-02-05 15:34:53,968:INFO - connection open
+2025-02-05 15:34:53,968:INFO - Client connected. Total clients: 1
+2025-02-05 15:34:53,969:INFO - Sent initial price snapshot to client
+2025-02-05 15:34:53,969:INFO - Sent initial positions snapshot to client
+2025-02-05 15:34:55,283:INFO - Updated Gold => 1900.62
+2025-02-05 15:34:55,480:INFO - Updated Silver => 30.01
+2025-02-05 15:34:55,681:INFO - Updated RSI_Gold_mtm => 10000.99
+2025-02-05 15:34:55,868:INFO - Updated RSI_Gold_ctn => 10000.99
+2025-02-05 15:34:56,227:INFO - Updated RSI_Silver_mtm => 10000.73
+2025-02-05 15:34:56,424:INFO - Updated RSI_Silver_ctn => 10000.73
+2025-02-05 15:34:57,629:INFO - Updated Gold => 1899.27
+2025-02-05 15:34:57,829:INFO - Updated Silver => 30.07
+2025-02-05 15:34:58,116:INFO - Updated RSI_Gold_mtm => 9998.85
+2025-02-05 15:34:58,315:INFO - Updated RSI_Gold_ctn => 9998.85
+2025-02-05 15:34:58,573:INFO - Updated RSI_Silver_mtm => 10007.05
+2025-02-05 15:34:59,097:INFO - Updated RSI_Silver_ctn => 10007.05
+2025-02-05 15:35:00,641:INFO - Updated Gold => 1900.80
+2025-02-05 15:35:01,135:INFO - Updated Silver => 30.11
+2025-02-05 15:35:01,572:INFO - Updated RSI_Gold_mtm => 10001.27
+2025-02-05 15:35:01,814:INFO - Updated RSI_Gold_ctn => 10001.27
+2025-02-05 15:35:02,030:INFO - Updated RSI_Silver_mtm => 10010.53
+2025-02-05 15:35:02,359:INFO - Updated RSI_Silver_ctn => 10010.53
+2025-02-05 15:35:03,560:INFO - Updated Gold => 1901.08
+2025-02-05 15:35:03,773:INFO - Updated Silver => 30.17
+2025-02-05 15:35:03,997:INFO - Updated RSI_Gold_mtm => 10001.71
+2025-02-05 15:35:04,224:INFO - Updated RSI_Gold_ctn => 10001.71
+2025-02-05 15:35:04,645:INFO - Updated RSI_Silver_mtm => 10016.55
+2025-02-05 15:35:05,120:INFO - Updated RSI_Silver_ctn => 10016.55
+2025-02-05 15:35:06,328:INFO - Updated Gold => 1902.57
+2025-02-05 15:35:06,632:INFO - Updated Silver => 30.11
+2025-02-05 15:35:07,764:INFO - Updated RSI_Gold_mtm => 10004.06
+2025-02-05 15:35:08,076:INFO - Updated RSI_Gold_ctn => 10004.06
+2025-02-05 15:35:08,650:INFO - Updated RSI_Silver_mtm => 10010.67
+2025-02-05 15:35:08,842:INFO - Updated RSI_Silver_ctn => 10010.67
+2025-02-05 15:35:10,571:INFO - Updated Gold => 1901.40
+2025-02-05 15:35:11,013:INFO - Updated Silver => 30.03
+2025-02-05 15:35:11,183:INFO - Updated RSI_Gold_mtm => 10002.21
+2025-02-05 15:35:11,748:INFO - Updated RSI_Gold_ctn => 10002.21
+2025-02-05 15:35:13,091:INFO - Updated RSI_Silver_mtm => 10002.54
+2025-02-05 15:35:13,589:INFO - Updated RSI_Silver_ctn => 10002.54
+2025-02-05 15:35:18,041:INFO - Updated Gold => 1901.41
+2025-02-05 15:35:18,272:INFO - Updated Silver => 30.07
+2025-02-05 15:35:18,473:INFO - Updated RSI_Gold_mtm => 10002.23
+2025-02-05 15:35:18,648:INFO - Updated RSI_Gold_ctn => 10002.23
+2025-02-05 15:35:18,858:INFO - Updated RSI_Silver_mtm => 10006.92
+2025-02-05 15:35:19,112:INFO - Updated RSI_Silver_ctn => 10006.92
+2025-02-05 15:35:20,378:INFO - Updated Gold => 1902.91
+2025-02-05 15:35:20,583:INFO - Updated Silver => 30.15
+2025-02-05 15:35:20,986:INFO - Updated RSI_Gold_mtm => 10004.59
+2025-02-05 15:35:21,208:INFO - Updated RSI_Gold_ctn => 10004.59
+2025-02-05 15:35:21,402:INFO - Updated RSI_Silver_mtm => 10015.11
+2025-02-05 15:35:21,612:INFO - Updated RSI_Silver_ctn => 10015.11
+2025-02-05 15:35:22,881:INFO - Updated Gold => 1904.71
+2025-02-05 15:35:23,075:INFO - Updated Silver => 30.12
+2025-02-05 15:35:23,264:INFO - Updated RSI_Gold_mtm => 10007.44
+2025-02-05 15:35:23,448:INFO - Updated RSI_Gold_ctn => 10007.44
+2025-02-05 15:35:23,626:INFO - Updated RSI_Silver_mtm => 10011.58
+2025-02-05 15:35:23,875:INFO - Updated RSI_Silver_ctn => 10011.58
+2025-02-05 15:35:25,080:INFO - Updated Gold => 1906.68
+2025-02-05 15:35:25,291:INFO - Updated Silver => 30.05
+2025-02-05 15:35:25,475:INFO - Updated RSI_Gold_mtm => 10010.55
+2025-02-05 15:35:25,685:INFO - Updated RSI_Gold_ctn => 10010.55
+2025-02-05 15:35:25,865:INFO - Updated RSI_Silver_mtm => 10005.02
+2025-02-05 15:35:25,866:INFO - Removed dead client. Total clients: 0
+2025-02-05 15:35:26,047:INFO - Updated RSI_Silver_ctn => 10005.02
+2025-02-05 15:35:26,048:ERROR - connection handler failed
 Traceback (most recent call last):
   File "/opt/anaconda3/lib/python3.12/site-packages/websockets/legacy/server.py", line 236, in handler
     await self.ws_handler(self)
-  File "/Users/matthewchan/Documents/Repos/risk-monitoring-project/feed-engine.py", line 178, in register_client
+  File "/Users/matthewchan/Documents/Repos/risk-monitoring-project/feed-engine.py", line 230, in register_client
     connected_clients.remove(websocket)
-KeyError: <websockets.legacy.server.WebSocketServerProtocol object at 0x105868da0>
-2025-02-05 15:08:30,706:INFO - connection closed
-2025-02-05 15:08:30,707:INFO - connection open
-2025-02-05 15:08:30,707:INFO - Client connected. Total clients: 1
-2025-02-05 15:08:30,707:INFO - Sent initial price snapshot to client
-2025-02-05 15:08:30,707:INFO - Sent initial positions snapshot to client
-2025-02-05 15:08:31,923:INFO - Updated Gold => 1897.16
-2025-02-05 15:08:32,144:INFO - Updated RSI_Gold_mtm => 9995.90
-2025-02-05 15:08:32,301:INFO - Updated RSI_Gold_ctn => 9995.51
-2025-02-05 15:08:33,572:INFO - Updated Gold => 1898.60
-2025-02-05 15:08:33,737:INFO - Updated RSI_Gold_mtm => 9995.30
-2025-02-05 15:08:33,911:INFO - Updated RSI_Gold_ctn => 9997.78
-2025-02-05 15:08:35,113:INFO - Updated Gold => 1898.69
-2025-02-05 15:08:35,296:INFO - Updated RSI_Gold_mtm => 9995.26
-2025-02-05 15:08:35,468:INFO - Updated RSI_Gold_ctn => 9997.92
-2025-02-05 15:08:36,635:INFO - Updated Gold => 1897.02
-2025-02-05 15:08:36,799:INFO - Updated RSI_Gold_mtm => 9995.96
-2025-02-05 15:08:36,958:INFO - Updated RSI_Gold_ctn => 9995.29
-2025-02-05 15:08:37,897:INFO - Client disconnected. Total clients: 0
-2025-02-05 15:08:37,898:INFO - connection closed
-2025-02-05 15:08:37,909:INFO - connection open
-2025-02-05 15:08:37,909:INFO - Client connected. Total clients: 1
-2025-02-05 15:08:37,910:INFO - Sent initial price snapshot to client
-2025-02-05 15:08:37,910:INFO - Sent initial positions snapshot to client
-2025-02-05 15:08:38,157:INFO - Updated Gold => 1895.15
-2025-02-05 15:08:38,320:INFO - Updated RSI_Gold_mtm => 9996.75
-2025-02-05 15:08:38,518:INFO - Updated RSI_Gold_ctn => 9992.34
-2025-02-05 15:08:39,729:INFO - Updated Gold => 1895.59
-2025-02-05 15:08:39,924:INFO - Updated RSI_Gold_mtm => 9996.57
-2025-02-05 15:08:40,078:INFO - Updated RSI_Gold_ctn => 9993.03
-2025-02-05 15:08:41,247:INFO - Updated Gold => 1897.08
-2025-02-05 15:08:41,412:INFO - Updated RSI_Gold_mtm => 9995.94
-2025-02-05 15:08:41,596:INFO - Updated RSI_Gold_ctn => 9995.39
-2025-02-05 15:08:42,757:INFO - Updated Gold => 1896.28
-2025-02-05 15:08:42,919:INFO - Updated RSI_Gold_mtm => 9996.28
-2025-02-05 15:08:43,095:INFO - Updated RSI_Gold_ctn => 9994.12
-2025-02-05 15:08:43,838:INFO - Client disconnected. Total clients: 0
-2025-02-05 15:08:43,838:INFO - connection closed
-2025-02-05 15:08:43,851:INFO - connection open
-2025-02-05 15:08:43,851:INFO - Client connected. Total clients: 1
-2025-02-05 15:08:43,852:INFO - Sent initial price snapshot to client
-2025-02-05 15:08:43,852:INFO - Sent initial positions snapshot to client
-2025-02-05 15:08:44,291:INFO - Updated Gold => 1894.37
-2025-02-05 15:08:44,457:INFO - Updated RSI_Gold_mtm => 9997.08
-2025-02-05 15:08:44,634:INFO - Updated RSI_Gold_ctn => 9991.11
-2025-02-05 15:08:45,841:INFO - Updated Gold => 1894.09
-2025-02-05 15:08:46,009:INFO - Updated RSI_Gold_mtm => 9997.20
-2025-02-05 15:08:46,211:INFO - Updated RSI_Gold_ctn => 9990.67
-2025-02-05 15:08:47,403:INFO - Updated Gold => 1893.45
-2025-02-05 15:08:47,578:INFO - Updated RSI_Gold_mtm => 9997.47
-2025-02-05 15:08:47,757:INFO - Updated RSI_Gold_ctn => 9989.66
-2025-02-05 15:08:47,949:INFO - Client disconnected. Total clients: 0
-2025-02-05 15:08:47,949:INFO - connection closed
-2025-02-05 15:08:47,960:INFO - connection open
-2025-02-05 15:08:47,960:INFO - Client connected. Total clients: 1
-2025-02-05 15:08:47,962:INFO - Sent initial price snapshot to client
-2025-02-05 15:08:47,962:INFO - Sent initial positions snapshot to client
-2025-02-05 15:08:48,916:INFO - Updated Gold => 1892.31
-2025-02-05 15:08:49,075:INFO - Updated RSI_Gold_mtm => 9997.95
-2025-02-05 15:08:49,256:INFO - Updated RSI_Gold_ctn => 9987.86
-2025-02-05 15:08:50,435:INFO - Updated Gold => 1890.45
-2025-02-05 15:08:50,616:INFO - Updated RSI_Gold_mtm => 9998.73
-2025-02-05 15:08:50,809:INFO - Updated RSI_Gold_ctn => 9984.92
-2025-02-05 15:08:50,812:INFO - Client disconnected. Total clients: 0
-2025-02-05 15:08:50,813:INFO - connection closed
-2025-02-05 15:08:50,814:INFO - connection open
-2025-02-05 15:08:50,814:INFO - Client connected. Total clients: 1
-2025-02-05 15:08:50,814:INFO - Sent initial price snapshot to client
-2025-02-05 15:08:50,814:INFO - Sent initial positions snapshot to client
-2025-02-05 15:08:52,002:INFO - Updated Gold => 1892.06
-2025-02-05 15:08:52,174:INFO - Updated RSI_Gold_mtm => 9998.05
-2025-02-05 15:08:52,334:INFO - Updated RSI_Gold_ctn => 9987.46
-2025-02-05 15:08:53,493:INFO - Updated Gold => 1890.91
-2025-02-05 15:08:53,654:INFO - Updated RSI_Gold_mtm => 9998.53
-2025-02-05 15:08:53,808:INFO - Updated RSI_Gold_ctn => 9985.65
-2025-02-05 15:08:55,027:INFO - Updated Gold => 1890.84
-2025-02-05 15:08:55,212:INFO - Updated RSI_Gold_mtm => 9998.57
-2025-02-05 15:08:55,372:INFO - Updated RSI_Gold_ctn => 9985.53
-2025-02-05 15:08:56,534:INFO - Updated Gold => 1890.77
-2025-02-05 15:08:56,705:INFO - Updated RSI_Gold_mtm => 9998.59
-2025-02-05 15:08:56,865:INFO - Updated RSI_Gold_ctn => 9985.43
-2025-02-05 15:08:57,605:INFO - Client disconnected. Total clients: 0
-2025-02-05 15:08:57,605:INFO - connection closed
-2025-02-05 15:08:57,614:INFO - connection open
-2025-02-05 15:08:57,615:INFO - Client connected. Total clients: 1
-2025-02-05 15:08:57,615:INFO - Sent initial price snapshot to client
-2025-02-05 15:08:57,615:INFO - Sent initial positions snapshot to client
-2025-02-05 15:08:58,017:INFO - Updated Gold => 1890.87
-2025-02-05 15:08:58,177:INFO - Updated RSI_Gold_mtm => 9998.55
-2025-02-05 15:08:58,404:INFO - Updated RSI_Gold_ctn => 9985.58
-2025-02-05 15:08:59,562:INFO - Updated Gold => 1891.64
-2025-02-05 15:08:59,750:INFO - Updated RSI_Gold_mtm => 9998.23
-2025-02-05 15:08:59,918:INFO - Updated RSI_Gold_ctn => 9986.79
-2025-02-05 15:09:01,082:INFO - Updated Gold => 1893.26
-2025-02-05 15:09:01,243:INFO - Updated RSI_Gold_mtm => 9997.55
-2025-02-05 15:09:01,428:INFO - Updated RSI_Gold_ctn => 9989.36
-2025-02-05 15:09:02,586:INFO - Updated Gold => 1892.97
-2025-02-05 15:09:02,769:INFO - Updated RSI_Gold_mtm => 9997.67
-2025-02-05 15:09:02,966:INFO - Updated RSI_Gold_ctn => 9988.90
-2025-02-05 15:09:04,160:INFO - Updated Gold => 1894.63
-2025-02-05 15:09:04,345:INFO - Updated RSI_Gold_mtm => 9996.97
-2025-02-05 15:09:04,577:INFO - Updated RSI_Gold_ctn => 9991.52
-2025-02-05 15:09:05,737:INFO - Updated Gold => 1894.32
-2025-02-05 15:09:05,901:INFO - Updated RSI_Gold_mtm => 9997.10
-2025-02-05 15:09:06,087:INFO - Updated RSI_Gold_ctn => 9991.03
-2025-02-05 15:09:07,282:INFO - Updated Gold => 1895.37
-2025-02-05 15:09:07,446:INFO - Updated RSI_Gold_mtm => 9996.66
-2025-02-05 15:09:07,610:INFO - Updated RSI_Gold_ctn => 9992.69
-2025-02-05 15:09:08,774:INFO - Updated Gold => 1893.37
-2025-02-05 15:09:08,951:INFO - Updated RSI_Gold_mtm => 9997.50
-2025-02-05 15:09:09,123:INFO - Updated RSI_Gold_ctn => 9989.54
-2025-02-05 15:09:10,336:INFO - Updated Gold => 1892.68
-2025-02-05 15:09:10,494:INFO - Updated RSI_Gold_mtm => 9997.79
-2025-02-05 15:09:10,674:INFO - Updated RSI_Gold_ctn => 9988.44
+KeyError: <websockets.legacy.server.WebSocketServerProtocol object at 0x10593bc20>
+2025-02-05 15:35:26,052:INFO - connection closed
+2025-02-05 15:35:26,052:INFO - connection open
+2025-02-05 15:35:26,052:INFO - Client connected. Total clients: 1
+2025-02-05 15:35:26,052:INFO - Sent initial price snapshot to client
+2025-02-05 15:35:26,052:INFO - Sent initial positions snapshot to client
+2025-02-05 15:35:27,271:INFO - Updated Gold => 1905.96
+2025-02-05 15:35:27,443:INFO - Updated Silver => 30.07
+2025-02-05 15:35:27,623:INFO - Updated RSI_Gold_mtm => 10009.41
+2025-02-05 15:35:27,808:INFO - Updated RSI_Gold_ctn => 10009.41
+2025-02-05 15:35:27,987:INFO - Updated RSI_Silver_mtm => 10007.15
+2025-02-05 15:35:28,327:INFO - Updated RSI_Silver_ctn => 10007.15
+2025-02-05 15:35:29,822:INFO - Updated Gold => 1906.96
+2025-02-05 15:35:30,148:INFO - Updated Silver => 30.03
+2025-02-05 15:35:30,699:INFO - Updated RSI_Gold_mtm => 10010.99
+2025-02-05 15:35:30,946:INFO - Updated RSI_Gold_ctn => 10010.99
+2025-02-05 15:35:31,351:INFO - Updated RSI_Silver_mtm => 10003.45
+2025-02-05 15:35:31,543:INFO - Updated RSI_Silver_ctn => 10003.45
+2025-02-05 15:35:33,007:INFO - Updated Gold => 1908.51
+2025-02-05 15:35:33,227:INFO - Updated Silver => 30.00
+2025-02-05 15:35:34,530:INFO - Updated RSI_Gold_mtm => 10013.44
+2025-02-05 15:35:34,721:INFO - Updated RSI_Gold_ctn => 10013.44
+2025-02-05 15:35:34,929:INFO - Updated RSI_Silver_mtm => 9999.75
+2025-02-05 15:35:35,134:INFO - Updated RSI_Silver_ctn => 9999.75
+2025-02-05 15:35:36,317:INFO - Updated Gold => 1907.56
+2025-02-05 15:35:36,505:INFO - Updated Silver => 30.06
+2025-02-05 15:35:36,686:INFO - Updated RSI_Gold_mtm => 10011.94
+2025-02-05 15:35:36,858:INFO - Updated RSI_Gold_ctn => 10011.94
+2025-02-05 15:35:37,029:INFO - Updated RSI_Silver_mtm => 10006.28
+2025-02-05 15:35:37,204:INFO - Updated RSI_Silver_ctn => 10006.28
+2025-02-05 15:35:38,621:INFO - Updated Gold => 1907.98
+2025-02-05 15:35:38,778:INFO - Updated Silver => 30.12
+2025-02-05 15:35:38,962:INFO - Updated RSI_Gold_mtm => 10012.60
+2025-02-05 15:35:39,167:INFO - Updated RSI_Gold_ctn => 10012.60
+2025-02-05 15:35:39,330:INFO - Updated RSI_Silver_mtm => 10011.55
+2025-02-05 15:35:39,507:INFO - Updated RSI_Silver_ctn => 10011.55
+2025-02-05 15:35:40,941:INFO - Updated Gold => 1908.43
+2025-02-05 15:35:41,182:INFO - Updated Silver => 30.10
+2025-02-05 15:35:41,461:INFO - Updated RSI_Gold_mtm => 10013.32
+2025-02-05 15:35:41,699:INFO - Updated RSI_Gold_ctn => 10013.32
+2025-02-05 15:35:41,947:INFO - Updated RSI_Silver_mtm => 10010.01
+2025-02-05 15:35:42,273:INFO - Updated RSI_Silver_ctn => 10010.01
+2025-02-05 15:35:43,632:INFO - Updated Gold => 1908.09
+2025-02-05 15:35:43,883:INFO - Updated Silver => 30.19
+2025-02-05 15:35:44,058:INFO - Updated RSI_Gold_mtm => 10012.77
+2025-02-05 15:35:44,058:INFO - Removed dead client. Total clients: 0
+2025-02-05 15:35:44,253:INFO - Updated RSI_Gold_ctn => 10012.77
+2025-02-05 15:35:44,761:INFO - Updated RSI_Silver_mtm => 10019.35
+2025-02-05 15:35:44,891:INFO - Updated RSI_Silver_ctn => 10019.35
+2025-02-05 15:35:44,891:ERROR - connection handler failed
+Traceback (most recent call last):
+  File "/opt/anaconda3/lib/python3.12/site-packages/websockets/legacy/server.py", line 236, in handler
+    await self.ws_handler(self)
+  File "/Users/matthewchan/Documents/Repos/risk-monitoring-project/feed-engine.py", line 230, in register_client
+    connected_clients.remove(websocket)
+KeyError: <websockets.legacy.server.WebSocketServerProtocol object at 0x10599f0e0>
+2025-02-05 15:35:44,892:INFO - connection closed
+2025-02-05 15:35:44,893:INFO - connection open
+2025-02-05 15:35:44,893:INFO - Client connected. Total clients: 1
+2025-02-05 15:35:44,893:INFO - Sent initial price snapshot to client
+2025-02-05 15:35:44,894:INFO - Sent initial positions snapshot to client
+2025-02-05 15:35:46,439:INFO - Updated Gold => 1908.23
+2025-02-05 15:35:48,403:INFO - Updated Silver => 30.24
+2025-02-05 15:35:48,567:INFO - Updated RSI_Gold_mtm => 10012.99
+2025-02-05 15:35:48,781:INFO - Updated RSI_Gold_ctn => 10012.99
+2025-02-05 15:35:49,311:INFO - Updated RSI_Silver_mtm => 10023.62
+2025-02-05 15:35:49,712:INFO - Updated RSI_Silver_ctn => 10023.62
+2025-02-05 15:35:51,325:INFO - Updated Gold => 1908.87
+2025-02-05 15:35:51,590:INFO - Updated Silver => 30.17
+2025-02-05 15:35:51,788:INFO - Updated RSI_Gold_mtm => 10014.00
+2025-02-05 15:35:51,980:INFO - Updated RSI_Gold_ctn => 10014.00
+2025-02-05 15:35:52,534:INFO - Updated RSI_Silver_mtm => 10017.26
+2025-02-05 15:35:52,710:INFO - Updated RSI_Silver_ctn => 10017.26
+2025-02-05 15:35:53,880:INFO - Updated Gold => 1909.64
+2025-02-05 15:35:55,076:INFO - Updated Silver => 30.22
+2025-02-05 15:35:55,287:INFO - Updated RSI_Gold_mtm => 10015.22
+2025-02-05 15:35:55,582:INFO - Updated RSI_Gold_ctn => 10015.22
+2025-02-05 15:35:55,799:INFO - Updated RSI_Silver_mtm => 10022.39
+2025-02-05 15:35:55,984:INFO - Updated RSI_Silver_ctn => 10022.39
+2025-02-05 15:35:57,234:INFO - Updated Gold => 1908.43
+2025-02-05 15:35:57,635:INFO - Updated Silver => 30.26
+2025-02-05 15:35:58,862:INFO - Updated RSI_Gold_mtm => 10013.31
+2025-02-05 15:35:59,516:INFO - Updated RSI_Gold_ctn => 10013.31
+2025-02-05 15:35:59,702:INFO - Updated RSI_Silver_mtm => 10026.17
+2025-02-05 15:36:00,105:INFO - Updated RSI_Silver_ctn => 10026.17
+2025-02-05 15:36:01,734:INFO - Updated Gold => 1910.04
+2025-02-05 15:36:02,542:INFO - Updated Silver => 30.20
+2025-02-05 15:36:03,003:INFO - Updated RSI_Gold_mtm => 10015.86
+2025-02-05 15:36:03,227:INFO - Updated RSI_Gold_ctn => 10015.86
+2025-02-05 15:36:03,408:INFO - Updated RSI_Silver_mtm => 10020.01
+2025-02-05 15:36:03,606:INFO - Updated RSI_Silver_ctn => 10020.01
+2025-02-05 15:36:03,608:INFO - Client disconnected. Total clients: 0
+2025-02-05 15:36:03,608:INFO - connection closed
+2025-02-05 15:36:03,609:INFO - connection open
+2025-02-05 15:36:03,609:INFO - Client connected. Total clients: 1
+2025-02-05 15:36:03,609:INFO - Sent initial price snapshot to client
+2025-02-05 15:36:03,609:INFO - Sent initial positions snapshot to client
+2025-02-05 15:36:05,319:INFO - Updated Gold => 1910.59
+2025-02-05 15:36:07,182:INFO - Updated Silver => 30.26
+2025-02-05 15:36:07,521:INFO - Updated RSI_Gold_mtm => 10016.71
+2025-02-05 15:36:08,023:INFO - Updated RSI_Gold_ctn => 10016.71
+2025-02-05 15:36:08,316:INFO - Updated RSI_Silver_mtm => 10025.76
+2025-02-05 15:36:08,648:INFO - Updated RSI_Silver_ctn => 10025.76
+2025-02-05 15:36:09,846:INFO - Updated Gold => 1908.81
+2025-02-05 15:36:10,278:INFO - Updated Silver => 30.23
+2025-02-05 15:36:10,633:INFO - Updated RSI_Gold_mtm => 10013.91
+2025-02-05 15:36:11,105:INFO - Updated RSI_Gold_ctn => 10013.91
+2025-02-05 15:36:11,865:INFO - Updated RSI_Silver_mtm => 10022.57
+2025-02-05 15:36:12,040:INFO - Updated RSI_Silver_ctn => 10022.57
+2025-02-05 15:36:13,528:INFO - Updated Gold => 1909.37
+2025-02-05 15:36:13,723:INFO - Updated Silver => 30.25
+2025-02-05 15:36:13,935:INFO - Updated RSI_Gold_mtm => 10014.80
+2025-02-05 15:36:14,276:INFO - Updated RSI_Gold_ctn => 10014.80
+2025-02-05 15:36:14,475:INFO - Updated RSI_Silver_mtm => 10024.87
+2025-02-05 15:36:14,647:INFO - Updated RSI_Silver_ctn => 10024.87
+2025-02-05 15:36:15,826:INFO - Updated Gold => 1907.55
+2025-02-05 15:36:16,181:INFO - Updated Silver => 30.22
+2025-02-05 15:36:16,772:INFO - Updated RSI_Gold_mtm => 10011.92
+2025-02-05 15:36:16,974:INFO - Updated RSI_Gold_ctn => 10011.92
+2025-02-05 15:36:17,195:INFO - Updated RSI_Silver_mtm => 10022.25
+2025-02-05 15:36:17,377:INFO - Updated RSI_Silver_ctn => 10022.25
+2025-02-05 15:36:18,598:INFO - Updated Gold => 1906.39
+2025-02-05 15:36:19,163:INFO - Updated Silver => 30.19
+2025-02-05 15:36:19,683:INFO - Updated RSI_Gold_mtm => 10010.08
+2025-02-05 15:36:20,743:INFO - Updated RSI_Gold_ctn => 10010.08
+2025-02-05 15:36:21,076:INFO - Updated RSI_Silver_mtm => 10019.42
+2025-02-05 15:36:21,077:INFO - Removed dead client. Total clients: 0
+2025-02-05 15:36:21,751:INFO - Updated RSI_Silver_ctn => 10019.42
+2025-02-05 15:36:21,752:ERROR - connection handler failed
+Traceback (most recent call last):
+  File "/opt/anaconda3/lib/python3.12/site-packages/websockets/legacy/server.py", line 236, in handler
+    await self.ws_handler(self)
+  File "/Users/matthewchan/Documents/Repos/risk-monitoring-project/feed-engine.py", line 230, in register_client
+    connected_clients.remove(websocket)
+KeyError: <websockets.legacy.server.WebSocketServerProtocol object at 0x1059cd9d0>
+2025-02-05 15:36:21,753:INFO - connection closed
+2025-02-05 15:36:21,754:INFO - connection open
+2025-02-05 15:36:21,754:INFO - Client connected. Total clients: 1
+2025-02-05 15:36:21,754:INFO - Sent initial price snapshot to client
+2025-02-05 15:36:21,754:INFO - Sent initial positions snapshot to client
+2025-02-05 15:36:23,135:INFO - Updated Gold => 1908.10
+2025-02-05 15:36:23,369:INFO - Updated Silver => 30.13
+2025-02-05 15:36:23,547:INFO - Updated RSI_Gold_mtm => 10012.78
+2025-02-05 15:36:23,760:INFO - Updated RSI_Gold_ctn => 10012.78
+2025-02-05 15:36:24,002:INFO - Updated RSI_Silver_mtm => 10013.38
+2025-02-05 15:36:24,186:INFO - Updated RSI_Silver_ctn => 10013.38
+2025-02-05 15:36:25,371:INFO - Updated Gold => 1906.93
+2025-02-05 15:36:25,547:INFO - Updated Silver => 30.20
+2025-02-05 15:36:25,755:INFO - Updated RSI_Gold_mtm => 10010.95
+2025-02-05 15:36:25,944:INFO - Updated RSI_Gold_ctn => 10010.95
+2025-02-05 15:36:26,155:INFO - Updated RSI_Silver_mtm => 10019.60
+2025-02-05 15:36:26,427:INFO - Updated RSI_Silver_ctn => 10019.60
+2025-02-05 15:36:27,624:INFO - Updated Gold => 1905.57
+2025-02-05 15:36:27,819:INFO - Updated Silver => 30.20
+2025-02-05 15:36:28,002:INFO - Updated RSI_Gold_mtm => 10008.79
+2025-02-05 15:36:28,193:INFO - Updated RSI_Gold_ctn => 10008.79
+2025-02-05 15:36:28,545:INFO - Updated RSI_Silver_mtm => 10019.66
+2025-02-05 15:36:28,805:INFO - Updated RSI_Silver_ctn => 10019.66
+2025-02-05 15:36:29,989:INFO - Updated Gold => 1905.41
+2025-02-05 15:36:30,199:INFO - Updated Silver => 30.24
+2025-02-05 15:36:30,398:INFO - Updated RSI_Gold_mtm => 10008.54

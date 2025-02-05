@@ -16,7 +16,7 @@
             supabase: false,
             auth: false,
             price: false,
-            goldPosition: false,
+            metalPosition: false,
             position: false,
             charts: false
         };
@@ -53,9 +53,9 @@
             updateStatus('price', 'done', '✅ Price Updates: Ready');
         });
 
-        window.addEventListener('goldPositionUpdatesReady', () => {
-            console.log('Gold position updates ready event received');
-            updateStatus('goldPosition', 'done', '✅ Gold Position Updates: Ready');
+        window.addEventListener('metalPositionUpdatesReady', () => {
+            console.log('Metal position updates ready event received');
+            updateStatus('metalPosition', 'done', '✅ Metal Position Updates: Ready');
         });
 
         window.addEventListener('positionUpdatesReady', () => {
@@ -97,9 +97,14 @@
                 <div id="positions-trend" class="metric-trend">No change</div>
             </div>
             <div class="metric-card">
-                <h3>Total Gold Exposure</h3>
+                <h3>Gold Exposure</h3>
                 <div id="total-gold-exposure" class="metric-value currency">0.00</div>
                 <div id="gold-exposure-trend" class="metric-trend">No change</div>
+            </div>
+            <div class="metric-card">
+                <h3>Silver Exposure</h3>
+                <div id="total-silver-exposure" class="metric-value currency">0.00</div>
+                <div id="silver-exposure-trend" class="metric-trend">No change</div>
             </div>
             <div class="metric-card">
                 <h3>Daily P&L</h3>
@@ -159,7 +164,7 @@
         <div class="status-item pending" id="status-supabase">⏳ Supabase: Loading...</div>
         <div class="status-item pending" id="status-auth">⏳ Auth: Waiting...</div>
         <div class="status-item pending" id="status-price">⏳ Price Updates: Waiting...</div>
-        <div class="status-item pending" id="status-goldPosition">⏳ Gold Position Updates: Waiting...</div>
+        <div class="status-item pending" id="status-metalPosition">⏳ Metal Position Updates: Waiting...</div>
         <div class="status-item pending" id="status-position">⏳ Position Updates: Waiting...</div>
         <div class="status-item pending" id="status-charts">⏳ Charts: Waiting...</div>
         <div class="status-item pending" id="status-app">⏳ App: Waiting...</div>
@@ -170,7 +175,7 @@
     <script src="/shared/js/auth.js"></script>
     <script src="/shared/js/auth-modal.js"></script>
     <script src="/shared/js/price-updates.js"></script>
-    <script src="/shared/js/gold-position-updates.js"></script>
+    <script src="/shared/js/metal-position-updates.js"></script>
     <script src="/risk-dashboard/js/risk-position-manager.js"></script>
     <script src="/risk-dashboard/js/charts.js"></script>
     <script src="/risk-dashboard/js/risk-dashboard.js"></script>
