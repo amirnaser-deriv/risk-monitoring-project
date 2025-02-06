@@ -285,10 +285,11 @@ const riskDashboard = {
             // Gold RSI positions
             if (pos.index_id === 'Gold RSI Momentum' && goldMtmPosition) {
                 const effectiveGoldUnits = pos.quantity * goldMtmPosition.gold_positions;
+                // Company's position is inverse of client's position
                 if (pos.side.toLowerCase() === 'buy') {
-                    netGoldUnits += effectiveGoldUnits;
+                    netGoldUnits -= effectiveGoldUnits;  // Client buys, we're short
                 } else {
-                    netGoldUnits -= effectiveGoldUnits;
+                    netGoldUnits += effectiveGoldUnits;  // Client sells, we're long
                 }
                 console.log('Added Gold RSI Momentum exposure:', {
                     positionSize: pos.quantity,
@@ -316,10 +317,11 @@ const riskDashboard = {
             // Silver RSI positions
             else if (pos.index_id === 'Silver RSI Momentum' && silverMtmPosition) {
                 const effectiveSilverUnits = pos.quantity * silverMtmPosition.silver_positions;
+                // Company's position is inverse of client's position
                 if (pos.side.toLowerCase() === 'buy') {
-                    netSilverUnits += effectiveSilverUnits;
+                    netSilverUnits -= effectiveSilverUnits;  // Client buys, we're short
                 } else {
-                    netSilverUnits -= effectiveSilverUnits;
+                    netSilverUnits += effectiveSilverUnits;  // Client sells, we're long
                 }
                 console.log('Added Silver RSI Momentum exposure:', {
                     positionSize: pos.quantity,
@@ -360,10 +362,11 @@ const riskDashboard = {
                 !['Gold RSI Momentum', 'Gold RSI Contrarian'].includes(pos.index_id)) {
                 const currentPrice = window.PriceUpdates.getCurrentPrice(pos.index_id) || pos.entry_price;
                 const effectiveUnits = (pos.quantity * currentPrice) / goldPrice;
+                // Company's position is inverse of client's position
                 if (pos.side.toLowerCase() === 'buy') {
-                    netGoldUnits += effectiveUnits;
+                    netGoldUnits -= effectiveUnits;  // Client buys, we're short
                 } else {
-                    netGoldUnits -= effectiveUnits;
+                    netGoldUnits += effectiveUnits;  // Client sells, we're long
                 }
                 console.log('Added position to gold units:', {
                     index: pos.index_id,
@@ -379,10 +382,11 @@ const riskDashboard = {
                 !['Silver RSI Momentum', 'Silver RSI Contrarian'].includes(pos.index_id)) {
                 const currentPrice = window.PriceUpdates.getCurrentPrice(pos.index_id) || pos.entry_price;
                 const effectiveUnits = (pos.quantity * currentPrice) / silverPrice;
+                // Company's position is inverse of client's position
                 if (pos.side.toLowerCase() === 'buy') {
-                    netSilverUnits += effectiveUnits;
+                    netSilverUnits -= effectiveUnits;  // Client buys, we're short
                 } else {
-                    netSilverUnits -= effectiveUnits;
+                    netSilverUnits += effectiveUnits;  // Client sells, we're long
                 }
                 console.log('Added position to silver units:', {
                     index: pos.index_id,
@@ -682,11 +686,11 @@ const riskDashboard = {
         const goldExpTrendElem = document.getElementById('gold-exposure-trend');
 
 if (netGoldUnits > 0) {
-      goldExpElem.style.color = '#27ae60';
-      goldExpElem.innerHTML = `${netGoldUnits.toFixed(2).replace('$', '')} gold lots long<br>${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(netGoldExposure)}`;
+      goldExpElem.style.color = '#e74c3c';  // Red for our short position
+      goldExpElem.innerHTML = `${netGoldUnits.toFixed(2).replace('$', '')} gold lots short<br>${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(-netGoldExposure)}`;  // Negative exposure
     } else if (netGoldUnits < 0) {
-      goldExpElem.style.color = '#e74c3c';
-      goldExpElem.innerHTML = `${Math.abs(netGoldUnits).toFixed(2).replace('$', '')} gold lots short<br>${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(netGoldExposure)}`;
+      goldExpElem.style.color = '#27ae60';  // Green for our long position
+      goldExpElem.innerHTML = `${Math.abs(netGoldUnits).toFixed(2).replace('$', '')} gold lots long<br>${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(-netGoldExposure)}`;  // Negative exposure
     } else {
       goldExpElem.style.color = '#7f8c8d';
       goldExpElem.textContent = '0 Gold';
@@ -701,11 +705,11 @@ if (netGoldUnits > 0) {
     const silverExpTrendElem = document.getElementById('silver-exposure-trend');
 
     if (netSilverUnits > 0) {
-      silverExpElem.style.color = '#27ae60';
-      silverExpElem.innerHTML = `${netSilverUnits.toFixed(2).replace('$', '')} silver lots long<br>${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(netSilverExposure)}`;
+      silverExpElem.style.color = '#e74c3c';  // Red for our short position
+      silverExpElem.innerHTML = `${netSilverUnits.toFixed(2).replace('$', '')} silver lots short<br>${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(-netSilverExposure)}`;  // Negative exposure
     } else if (netSilverUnits < 0) {
-      silverExpElem.style.color = '#e74c3c';
-      silverExpElem.innerHTML = `${Math.abs(netSilverUnits).toFixed(2).replace('$', '')} silver lots short<br>${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(netSilverExposure)}`;
+      silverExpElem.style.color = '#27ae60';  // Green for our long position
+      silverExpElem.innerHTML = `${Math.abs(netSilverUnits).toFixed(2).replace('$', '')} silver lots long<br>${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(-netSilverExposure)}`;  // Negative exposure
     } else {
       silverExpElem.style.color = '#7f8c8d';
       silverExpElem.textContent = '0 Silver';
