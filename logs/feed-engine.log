@@ -1,351 +1,933 @@
-2025-02-05 17:28:00,709:INFO - Starting feed engine aggregator with metal prices and RSI portfolios...
-2025-02-05 17:28:00,709:INFO - Updated Gold Price => 1901.96
-2025-02-05 17:28:00,709:INFO - Updated Silver Price => 29.94
-2025-02-05 17:28:00,709:INFO - Updated Gold RSI Momentum => 10003.01
-2025-02-05 17:28:00,709:INFO - Updated Gold RSI Contrarian => 10003.01
-2025-02-05 17:28:00,709:INFO - Updated Silver RSI Momentum => 9993.69
-2025-02-05 17:28:00,709:INFO - Updated Silver RSI Contrarian => 9993.69
-2025-02-05 17:28:00,713:INFO - server listening on 127.0.0.1:8765
-2025-02-05 17:28:00,713:INFO - server listening on [::1]:8765
-2025-02-05 17:28:00,713:INFO - WebSocket server running on ws://localhost:8765
-2025-02-05 17:28:00,713:INFO - Press Ctrl+C to stop
-2025-02-05 17:28:00,713:INFO - Updated Gold Price => 1900.21
-2025-02-05 17:28:00,713:INFO - Updated Silver Price => 30.01
-2025-02-05 17:28:00,713:INFO - Updated Gold RSI Momentum => 10000.23
-2025-02-05 17:28:00,713:INFO - Updated Gold RSI Contrarian => 10000.23
-2025-02-05 17:28:00,713:INFO - Updated Silver RSI Momentum => 10000.78
-2025-02-05 17:28:00,713:INFO - Updated Silver RSI Contrarian => 10000.78
-2025-02-05 17:28:01,516:INFO - connection open
-2025-02-05 17:28:01,516:INFO - Client connected. Total clients: 1
-2025-02-05 17:28:01,517:INFO - Sent initial price snapshot to client
-2025-02-05 17:28:01,517:INFO - Sent initial positions snapshot to client
-2025-02-05 17:28:01,714:INFO - Updated Gold Price => 1902.07
-2025-02-05 17:28:01,715:INFO - Updated Silver Price => 30.04
-2025-02-05 17:28:01,715:INFO - Updated Gold RSI Momentum => 10003.18
-2025-02-05 17:28:01,715:INFO - Updated Gold RSI Contrarian => 10003.18
-2025-02-05 17:28:01,715:INFO - Updated Silver RSI Momentum => 10004.32
-2025-02-05 17:28:01,715:INFO - Updated Silver RSI Contrarian => 10004.32
-2025-02-05 17:28:02,717:INFO - Updated Gold Price => 1903.75
-2025-02-05 17:28:02,718:INFO - Updated Silver Price => 30.00
-2025-02-05 17:28:02,720:INFO - Updated Gold RSI Momentum => 10005.83
-2025-02-05 17:28:02,722:INFO - Updated Gold RSI Contrarian => 10005.83
-2025-02-05 17:28:02,722:INFO - Updated Silver RSI Momentum => 10000.15
-2025-02-05 17:28:02,722:INFO - Updated Silver RSI Contrarian => 10000.15
-2025-02-05 17:28:03,727:INFO - Updated Gold Price => 1903.05
-2025-02-05 17:28:03,727:INFO - Updated Silver Price => 30.05
-2025-02-05 17:28:03,728:INFO - Updated Gold RSI Momentum => 10004.73
-2025-02-05 17:28:03,729:INFO - Updated Gold RSI Contrarian => 10004.73
-2025-02-05 17:28:03,729:INFO - Updated Silver RSI Momentum => 10004.94
-2025-02-05 17:28:03,729:INFO - Updated Silver RSI Contrarian => 10004.94
-2025-02-05 17:28:04,731:INFO - Updated Gold Price => 1902.23
-2025-02-05 17:28:04,732:INFO - Updated Silver Price => 29.96
-2025-02-05 17:28:04,732:INFO - Updated Gold RSI Momentum => 10003.43
-2025-02-05 17:28:04,732:INFO - Updated Gold RSI Contrarian => 10003.43
-2025-02-05 17:28:04,733:INFO - Updated Silver RSI Momentum => 9996.32
-2025-02-05 17:28:04,733:INFO - Updated Silver RSI Contrarian => 9996.32
-2025-02-05 17:28:05,735:INFO - Updated Gold Price => 1902.86
-2025-02-05 17:28:05,735:INFO - Updated Silver Price => 30.01
-2025-02-05 17:28:05,736:INFO - Updated Gold RSI Momentum => 10004.42
-2025-02-05 17:28:05,736:INFO - Updated Gold RSI Contrarian => 10004.42
-2025-02-05 17:28:05,736:INFO - Updated Silver RSI Momentum => 10000.70
-2025-02-05 17:28:05,737:INFO - Updated Silver RSI Contrarian => 10000.70
-2025-02-05 17:28:06,739:INFO - Updated Gold Price => 1902.62
-2025-02-05 17:28:06,739:INFO - Updated Silver Price => 30.02
-2025-02-05 17:28:06,740:INFO - Updated Gold RSI Momentum => 10004.04
-2025-02-05 17:28:06,740:INFO - Updated Gold RSI Contrarian => 10004.04
-2025-02-05 17:28:06,741:INFO - Updated Silver RSI Momentum => 10001.85
-2025-02-05 17:28:06,741:INFO - Updated Silver RSI Contrarian => 10001.85
-2025-02-05 17:28:07,743:INFO - Updated Gold Price => 1902.36
-2025-02-05 17:28:07,744:INFO - Updated Silver Price => 30.07
-2025-02-05 17:28:07,744:INFO - Updated Gold RSI Momentum => 10003.64
-2025-02-05 17:28:07,744:INFO - Updated Gold RSI Contrarian => 10003.64
-2025-02-05 17:28:07,745:INFO - Updated Silver RSI Momentum => 10006.74
-2025-02-05 17:28:07,745:INFO - Updated Silver RSI Contrarian => 10006.74
-2025-02-05 17:28:08,750:INFO - Updated Gold Price => 1903.31
-2025-02-05 17:28:08,751:INFO - Updated Silver Price => 30.04
-2025-02-05 17:28:08,751:INFO - Updated Gold RSI Momentum => 10005.14
-2025-02-05 17:28:08,751:INFO - Updated Gold RSI Contrarian => 10005.14
-2025-02-05 17:28:08,751:INFO - Updated Silver RSI Momentum => 10004.18
-2025-02-05 17:28:08,751:INFO - Updated Silver RSI Contrarian => 10004.18
-2025-02-05 17:28:09,753:INFO - Updated Gold Price => 1904.71
-2025-02-05 17:28:09,754:INFO - Updated Silver Price => 30.08
-2025-02-05 17:28:09,754:INFO - Updated Gold RSI Momentum => 10007.35
-2025-02-05 17:28:09,755:INFO - Updated Gold RSI Contrarian => 10007.35
-2025-02-05 17:28:09,755:INFO - Updated Silver RSI Momentum => 10008.50
-2025-02-05 17:28:09,755:INFO - Updated Silver RSI Contrarian => 10008.50
-2025-02-05 17:28:10,758:INFO - Updated Gold Price => 1904.84
-2025-02-05 17:28:10,761:INFO - Updated Silver Price => 30.15
-2025-02-05 17:28:10,762:INFO - Updated Gold RSI Momentum => 10007.56
-2025-02-05 17:28:10,762:INFO - Updated Gold RSI Contrarian => 10007.56
-2025-02-05 17:28:10,762:INFO - Updated Silver RSI Momentum => 10015.02
-2025-02-05 17:28:10,762:INFO - Updated Silver RSI Contrarian => 10015.02
-2025-02-05 17:28:11,765:INFO - Updated Gold Price => 1904.77
-2025-02-05 17:28:11,768:INFO - Updated Silver Price => 30.09
-2025-02-05 17:28:11,769:INFO - Updated Gold RSI Momentum => 10007.44
-2025-02-05 17:28:11,769:INFO - Updated Gold RSI Contrarian => 10007.44
-2025-02-05 17:28:11,769:INFO - Updated Silver RSI Momentum => 10008.56
-2025-02-05 17:28:11,769:INFO - Updated Silver RSI Contrarian => 10008.56
-2025-02-05 17:28:12,771:INFO - Updated Gold Price => 1905.36
-2025-02-05 17:28:12,772:INFO - Updated Silver Price => 30.14
-2025-02-05 17:28:12,772:INFO - Updated Gold RSI Momentum => 10008.37
-2025-02-05 17:28:12,773:INFO - Updated Gold RSI Contrarian => 10008.37
-2025-02-05 17:28:12,773:INFO - Updated Silver RSI Momentum => 10013.74
-2025-02-05 17:28:12,773:INFO - Updated Silver RSI Contrarian => 10013.74
-2025-02-05 17:28:13,777:INFO - Updated Gold Price => 1905.54
-2025-02-05 17:28:13,781:INFO - Updated Silver Price => 30.12
-2025-02-05 17:28:13,782:INFO - Updated Gold RSI Momentum => 10008.65
-2025-02-05 17:28:13,782:INFO - Updated Gold RSI Contrarian => 10008.65
-2025-02-05 17:28:13,783:INFO - Updated Silver RSI Momentum => 10012.39
-2025-02-05 17:28:13,783:INFO - Updated Silver RSI Contrarian => 10012.39
-2025-02-05 17:28:14,785:INFO - Updated Gold Price => 1907.46
-2025-02-05 17:28:14,786:INFO - Updated Silver Price => 30.15
-2025-02-05 17:28:14,786:INFO - Updated Gold RSI Momentum => 10011.69
-2025-02-05 17:28:14,787:INFO - Updated Gold RSI Contrarian => 10011.69
-2025-02-05 17:28:14,787:INFO - Updated Silver RSI Momentum => 10014.55
-2025-02-05 17:28:14,787:INFO - Updated Silver RSI Contrarian => 10014.55
-2025-02-05 17:28:15,790:INFO - Updated Gold Price => 1906.57
-2025-02-05 17:28:15,793:INFO - Updated Silver Price => 30.19
-2025-02-05 17:28:15,794:INFO - Updated Gold RSI Momentum => 10010.28
-2025-02-05 17:28:15,794:INFO - Updated Gold RSI Contrarian => 10010.28
-2025-02-05 17:28:15,794:INFO - Updated Silver RSI Momentum => 10019.16
-2025-02-05 17:28:15,794:INFO - Updated Silver RSI Contrarian => 10019.16
-2025-02-05 17:28:16,795:INFO - Updated Gold Price => 1907.43
-2025-02-05 17:28:16,796:INFO - Updated Silver Price => 30.20
-2025-02-05 17:28:16,796:INFO - Updated Gold RSI Momentum => 10011.63
-2025-02-05 17:28:16,796:INFO - Updated Gold RSI Contrarian => 10011.63
-2025-02-05 17:28:16,796:INFO - Updated Silver RSI Momentum => 10019.92
-2025-02-05 17:28:16,797:INFO - Updated Silver RSI Contrarian => 10019.92
-2025-02-05 17:28:17,799:INFO - Updated Gold Price => 1908.51
-2025-02-05 17:28:17,800:INFO - Updated Silver Price => 30.10
-2025-02-05 17:28:17,800:INFO - Updated Gold RSI Momentum => 10013.35
-2025-02-05 17:28:17,801:INFO - Updated Gold RSI Contrarian => 10013.35
-2025-02-05 17:28:17,801:INFO - Updated Silver RSI Momentum => 10010.00
-2025-02-05 17:28:17,801:INFO - Updated Silver RSI Contrarian => 10010.00
-2025-02-05 17:28:18,804:INFO - Updated Gold Price => 1910.32
-2025-02-05 17:28:18,805:INFO - Updated Silver Price => 30.05
-2025-02-05 17:28:18,808:INFO - Updated Gold RSI Momentum => 10016.20
-2025-02-05 17:28:18,809:INFO - Updated Gold RSI Contrarian => 10016.20
-2025-02-05 17:28:18,809:INFO - Updated Silver RSI Momentum => 10005.20
-2025-02-05 17:28:18,809:INFO - Updated Silver RSI Contrarian => 10005.20
-2025-02-05 17:28:19,811:INFO - Updated Gold Price => 1908.56
-2025-02-05 17:28:19,815:INFO - Updated Silver Price => 30.08
-2025-02-05 17:28:19,816:INFO - Updated Gold RSI Momentum => 10013.43
-2025-02-05 17:28:19,817:INFO - Updated Gold RSI Contrarian => 10013.43
-2025-02-05 17:28:19,817:INFO - Updated Silver RSI Momentum => 10008.36
-2025-02-05 17:28:19,818:INFO - Updated Silver RSI Contrarian => 10008.36
-2025-02-05 17:28:20,821:INFO - Updated Gold Price => 1909.86
-2025-02-05 17:28:20,822:INFO - Updated Silver Price => 30.07
-2025-02-05 17:28:20,823:INFO - Updated Gold RSI Momentum => 10015.48
-2025-02-05 17:28:20,823:INFO - Updated Gold RSI Contrarian => 10015.48
-2025-02-05 17:28:20,823:INFO - Updated Silver RSI Momentum => 10006.96
-2025-02-05 17:28:20,823:INFO - Updated Silver RSI Contrarian => 10006.96
-2025-02-05 17:28:21,824:INFO - Updated Gold Price => 1908.80
-2025-02-05 17:28:21,824:INFO - Updated Silver Price => 30.01
-2025-02-05 17:28:21,825:INFO - Updated Gold RSI Momentum => 10013.80
-2025-02-05 17:28:21,825:INFO - Updated Gold RSI Contrarian => 10013.80
-2025-02-05 17:28:21,825:INFO - Updated Silver RSI Momentum => 10001.06
-2025-02-05 17:28:21,825:INFO - Updated Silver RSI Contrarian => 10001.06
-2025-02-05 17:28:22,827:INFO - Updated Gold Price => 1909.02
-2025-02-05 17:28:22,828:INFO - Updated Silver Price => 29.93
-2025-02-05 17:28:22,829:INFO - Updated Gold RSI Momentum => 10014.15
-2025-02-05 17:28:22,829:INFO - Updated Gold RSI Contrarian => 10014.15
-2025-02-05 17:28:22,829:INFO - Updated Silver RSI Momentum => 9992.75
-2025-02-05 17:28:22,830:INFO - Updated Silver RSI Contrarian => 9992.75
-2025-02-05 17:28:23,832:INFO - Updated Gold Price => 1909.23
-2025-02-05 17:28:23,832:INFO - Updated Silver Price => 29.88
-2025-02-05 17:28:23,833:INFO - Updated Gold RSI Momentum => 10014.49
-2025-02-05 17:28:23,833:INFO - Updated Gold RSI Contrarian => 10014.49
-2025-02-05 17:28:23,833:INFO - Updated Silver RSI Momentum => 9988.19
-2025-02-05 17:28:23,833:INFO - Updated Silver RSI Contrarian => 9988.19
-2025-02-05 17:28:24,835:INFO - Updated Gold Price => 1910.57
-2025-02-05 17:28:24,836:INFO - Updated Silver Price => 29.84
-2025-02-05 17:28:24,837:INFO - Updated Gold RSI Momentum => 10016.60
-2025-02-05 17:28:24,837:INFO - Updated Gold RSI Contrarian => 10016.60
-2025-02-05 17:28:24,837:INFO - Updated Silver RSI Momentum => 9984.35
-2025-02-05 17:28:24,837:INFO - Updated Silver RSI Contrarian => 9984.35
-2025-02-05 17:28:25,839:INFO - Updated Gold Price => 1910.06
-2025-02-05 17:28:25,840:INFO - Updated Silver Price => 29.77
-2025-02-05 17:28:25,840:INFO - Updated Gold RSI Momentum => 10015.80
-2025-02-05 17:28:25,841:INFO - Updated Gold RSI Contrarian => 10015.80
-2025-02-05 17:28:25,841:INFO - Updated Silver RSI Momentum => 9977.43
-2025-02-05 17:28:25,842:INFO - Updated Silver RSI Contrarian => 9977.43
-2025-02-05 17:28:26,843:INFO - Updated Gold Price => 1911.96
-2025-02-05 17:28:26,844:INFO - Updated Silver Price => 29.69
-2025-02-05 17:28:26,844:INFO - Updated Gold RSI Momentum => 10018.79
-2025-02-05 17:28:26,844:INFO - Updated Gold RSI Contrarian => 10018.79
-2025-02-05 17:28:26,845:INFO - Updated Silver RSI Momentum => 9969.10
-2025-02-05 17:28:26,845:INFO - Updated Silver RSI Contrarian => 9969.10
-2025-02-05 17:28:27,847:INFO - Updated Gold Price => 1912.12
-2025-02-05 17:28:27,848:INFO - Updated Silver Price => 29.72
-2025-02-05 17:28:27,848:INFO - Updated Gold RSI Momentum => 10019.05
-2025-02-05 17:28:27,848:INFO - Updated Gold RSI Contrarian => 10019.05
-2025-02-05 17:28:27,848:INFO - Updated Silver RSI Momentum => 9972.23
-2025-02-05 17:28:27,849:INFO - Updated Silver RSI Contrarian => 9972.23
-2025-02-05 17:28:28,851:INFO - Updated Gold Price => 1912.44
-2025-02-05 17:28:28,851:INFO - Updated Silver Price => 29.65
-2025-02-05 17:28:28,852:INFO - Updated Gold RSI Momentum => 10019.56
-2025-02-05 17:28:28,852:INFO - Updated Gold RSI Contrarian => 10019.56
-2025-02-05 17:28:28,852:INFO - Updated Silver RSI Momentum => 9964.83
-2025-02-05 17:28:28,853:INFO - Updated Silver RSI Contrarian => 9964.83
-2025-02-05 17:28:29,854:INFO - Updated Gold Price => 1914.18
-2025-02-05 17:28:29,856:INFO - Updated Silver Price => 29.58
-2025-02-05 17:28:29,857:INFO - Updated Gold RSI Momentum => 10022.30
-2025-02-05 17:28:29,857:INFO - Updated Gold RSI Contrarian => 10022.30
-2025-02-05 17:28:29,857:INFO - Updated Silver RSI Momentum => 9957.92
-2025-02-05 17:28:29,858:INFO - Updated Silver RSI Contrarian => 9957.92
-2025-02-05 17:28:30,164:INFO - Client disconnected. Total clients: 0
-2025-02-05 17:28:30,165:INFO - connection closed
-2025-02-05 17:28:30,186:INFO - connection open
-2025-02-05 17:28:30,186:INFO - Client connected. Total clients: 1
-2025-02-05 17:28:30,186:INFO - Sent initial price snapshot to client
-2025-02-05 17:28:30,187:INFO - Sent initial positions snapshot to client
-2025-02-05 17:28:30,860:INFO - Updated Gold Price => 1913.37
-2025-02-05 17:28:30,860:INFO - Updated Silver Price => 29.68
-2025-02-05 17:28:30,861:INFO - Updated Gold RSI Momentum => 10021.02
-2025-02-05 17:28:30,861:INFO - Updated Gold RSI Contrarian => 10021.02
-2025-02-05 17:28:30,862:INFO - Updated Silver RSI Momentum => 9967.54
-2025-02-05 17:28:30,862:INFO - Updated Silver RSI Contrarian => 9967.54
-2025-02-05 17:28:31,863:INFO - Updated Gold Price => 1913.99
-2025-02-05 17:28:31,863:INFO - Updated Silver Price => 29.77
-2025-02-05 17:28:31,864:INFO - Updated Gold RSI Momentum => 10022.00
-2025-02-05 17:28:31,864:INFO - Updated Gold RSI Contrarian => 10022.00
-2025-02-05 17:28:31,864:INFO - Updated Silver RSI Momentum => 9977.02
-2025-02-05 17:28:31,864:INFO - Updated Silver RSI Contrarian => 9977.02
-2025-02-05 17:28:32,866:INFO - Updated Gold Price => 1915.95
-2025-02-05 17:28:32,866:INFO - Updated Silver Price => 29.71
-2025-02-05 17:28:32,866:INFO - Updated Gold RSI Momentum => 10025.09
-2025-02-05 17:28:32,866:INFO - Updated Gold RSI Contrarian => 10025.09
-2025-02-05 17:28:32,867:INFO - Updated Silver RSI Momentum => 9971.27
-2025-02-05 17:28:32,867:INFO - Updated Silver RSI Contrarian => 9971.27
-2025-02-05 17:28:33,869:INFO - Updated Gold Price => 1914.30
-2025-02-05 17:28:33,870:INFO - Updated Silver Price => 29.62
-2025-02-05 17:28:33,870:INFO - Updated Gold RSI Momentum => 10022.49
-2025-02-05 17:28:33,870:INFO - Updated Gold RSI Contrarian => 10022.49
-2025-02-05 17:28:33,871:INFO - Updated Silver RSI Momentum => 9962.31
-2025-02-05 17:28:33,871:INFO - Updated Silver RSI Contrarian => 9962.31
-2025-02-05 17:28:34,872:INFO - Updated Gold Price => 1912.31
-2025-02-05 17:28:34,873:INFO - Updated Silver Price => 29.58
-2025-02-05 17:28:34,873:INFO - Updated Gold RSI Momentum => 10019.35
-2025-02-05 17:28:34,873:INFO - Updated Gold RSI Contrarian => 10019.35
-2025-02-05 17:28:34,874:INFO - Updated Silver RSI Momentum => 9957.98
-2025-02-05 17:28:34,874:INFO - Updated Silver RSI Contrarian => 9957.98
-2025-02-05 17:28:35,876:INFO - Updated Gold Price => 1912.05
-2025-02-05 17:28:35,876:INFO - Updated Silver Price => 29.57
-2025-02-05 17:28:35,877:INFO - Updated Gold RSI Momentum => 10018.93
-2025-02-05 17:28:35,877:INFO - Updated Gold RSI Contrarian => 10018.93
-2025-02-05 17:28:35,877:INFO - Updated Silver RSI Momentum => 9957.23
-2025-02-05 17:28:35,877:INFO - Updated Silver RSI Contrarian => 9957.23
-2025-02-05 17:28:36,879:INFO - Updated Gold Price => 1911.20
-2025-02-05 17:28:36,880:INFO - Updated Silver Price => 29.56
-2025-02-05 17:28:36,880:INFO - Updated Gold RSI Momentum => 10017.59
-2025-02-05 17:28:36,880:INFO - Updated Gold RSI Contrarian => 10017.59
-2025-02-05 17:28:36,880:INFO - Updated Silver RSI Momentum => 9956.13
-2025-02-05 17:28:36,880:INFO - Updated Silver RSI Contrarian => 9956.13
-2025-02-05 17:28:37,882:INFO - Updated Gold Price => 1912.12
-2025-02-05 17:28:37,883:INFO - Updated Silver Price => 29.54
-2025-02-05 17:28:37,883:INFO - Updated Gold RSI Momentum => 10019.04
-2025-02-05 17:28:37,883:INFO - Updated Gold RSI Contrarian => 10019.04
-2025-02-05 17:28:37,884:INFO - Updated Silver RSI Momentum => 9953.82
-2025-02-05 17:28:37,884:INFO - Updated Silver RSI Contrarian => 9953.82
-2025-02-05 17:28:38,886:INFO - Updated Gold Price => 1910.39
-2025-02-05 17:28:38,886:INFO - Updated Silver Price => 29.45
-2025-02-05 17:28:38,886:INFO - Updated Gold RSI Momentum => 10016.32
-2025-02-05 17:28:38,887:INFO - Updated Gold RSI Contrarian => 10016.32
-2025-02-05 17:28:38,887:INFO - Updated Silver RSI Momentum => 9944.60
-2025-02-05 17:28:38,887:INFO - Updated Silver RSI Contrarian => 9944.60
-2025-02-05 17:28:39,888:INFO - Updated Gold Price => 1910.02
-2025-02-05 17:28:39,889:INFO - Updated Silver Price => 29.54
-2025-02-05 17:28:39,889:INFO - Updated Gold RSI Momentum => 10015.73
-2025-02-05 17:28:39,889:INFO - Updated Gold RSI Contrarian => 10015.73
-2025-02-05 17:28:39,890:INFO - Updated Silver RSI Momentum => 9953.57
-2025-02-05 17:28:39,890:INFO - Updated Silver RSI Contrarian => 9953.57
-2025-02-05 17:28:40,891:INFO - Updated Gold Price => 1908.07
-2025-02-05 17:28:40,892:INFO - Updated Silver Price => 29.51
-2025-02-05 17:28:40,892:INFO - Updated Gold RSI Momentum => 10012.65
-2025-02-05 17:28:40,893:INFO - Updated Gold RSI Contrarian => 10012.65
-2025-02-05 17:28:40,893:INFO - Updated Silver RSI Momentum => 9951.21
-2025-02-05 17:28:40,894:INFO - Updated Silver RSI Contrarian => 9951.21
-2025-02-05 17:28:41,896:INFO - Updated Gold Price => 1908.28
-2025-02-05 17:28:41,897:INFO - Updated Silver Price => 29.61
-2025-02-05 17:28:41,897:INFO - Updated Gold RSI Momentum => 10012.99
-2025-02-05 17:28:41,897:INFO - Updated Gold RSI Contrarian => 10012.99
-2025-02-05 17:28:41,897:INFO - Updated Silver RSI Momentum => 9960.88
-2025-02-05 17:28:41,898:INFO - Updated Silver RSI Contrarian => 9960.88
-2025-02-05 17:28:42,899:INFO - Updated Gold Price => 1909.41
-2025-02-05 17:28:42,900:INFO - Updated Silver Price => 29.64
-2025-02-05 17:28:42,900:INFO - Updated Gold RSI Momentum => 10014.77
-2025-02-05 17:28:42,901:INFO - Updated Gold RSI Contrarian => 10014.77
-2025-02-05 17:28:42,901:INFO - Updated Silver RSI Momentum => 9964.44
-2025-02-05 17:28:42,902:INFO - Updated Silver RSI Contrarian => 9964.44
-2025-02-05 17:28:43,904:INFO - Updated Gold Price => 1910.96
-2025-02-05 17:28:43,904:INFO - Updated Silver Price => 29.67
-2025-02-05 17:28:43,905:INFO - Updated Gold RSI Momentum => 10017.22
-2025-02-05 17:28:43,905:INFO - Updated Gold RSI Contrarian => 10017.22
-2025-02-05 17:28:43,905:INFO - Updated Silver RSI Momentum => 9966.92
-2025-02-05 17:28:43,906:INFO - Updated Silver RSI Contrarian => 9966.92
-2025-02-05 17:28:44,908:INFO - Updated Gold Price => 1909.54
-2025-02-05 17:28:44,908:INFO - Updated Silver Price => 29.71
-2025-02-05 17:28:44,909:INFO - Updated Gold RSI Momentum => 10014.97
-2025-02-05 17:28:44,909:INFO - Updated Gold RSI Contrarian => 10014.97
-2025-02-05 17:28:44,909:INFO - Updated Silver RSI Momentum => 9970.57
-2025-02-05 17:28:44,909:INFO - Updated Silver RSI Contrarian => 9970.57
-2025-02-05 17:28:45,912:INFO - Updated Gold Price => 1909.05
-2025-02-05 17:28:45,912:INFO - Updated Silver Price => 29.61
-2025-02-05 17:28:45,913:INFO - Updated Gold RSI Momentum => 10014.20
-2025-02-05 17:28:45,913:INFO - Updated Gold RSI Contrarian => 10014.20
-2025-02-05 17:28:45,913:INFO - Updated Silver RSI Momentum => 9961.44
-2025-02-05 17:28:45,913:INFO - Updated Silver RSI Contrarian => 9961.44
-2025-02-05 17:28:46,916:INFO - Updated Gold Price => 1908.53
-2025-02-05 17:28:46,916:INFO - Updated Silver Price => 29.67
-2025-02-05 17:28:46,917:INFO - Updated Gold RSI Momentum => 10013.38
-2025-02-05 17:28:46,917:INFO - Updated Gold RSI Contrarian => 10013.38
-2025-02-05 17:28:46,917:INFO - Updated Silver RSI Momentum => 9967.22
-2025-02-05 17:28:46,918:INFO - Updated Silver RSI Contrarian => 9967.22
-2025-02-05 17:28:47,919:INFO - Updated Gold Price => 1909.00
-2025-02-05 17:28:47,923:INFO - Updated Silver Price => 29.58
-2025-02-05 17:28:47,923:INFO - Updated Gold RSI Momentum => 10014.12
-2025-02-05 17:28:47,924:INFO - Updated Gold RSI Contrarian => 10014.12
-2025-02-05 17:28:47,924:INFO - Updated Silver RSI Momentum => 9957.97
-2025-02-05 17:28:47,924:INFO - Updated Silver RSI Contrarian => 9957.97
-2025-02-05 17:28:48,926:INFO - Updated Gold Price => 1910.15
-2025-02-05 17:28:48,927:INFO - Updated Silver Price => 29.51
-2025-02-05 17:28:48,930:INFO - Updated Gold RSI Momentum => 10015.94
-2025-02-05 17:28:48,930:INFO - Updated Gold RSI Contrarian => 10015.94
-2025-02-05 17:28:48,931:INFO - Updated Silver RSI Momentum => 9950.67
-2025-02-05 17:28:48,931:INFO - Updated Silver RSI Contrarian => 9950.67
-2025-02-05 17:28:49,932:INFO - Updated Gold Price => 1911.64
-2025-02-05 17:28:49,933:INFO - Updated Silver Price => 29.51
-2025-02-05 17:28:49,933:INFO - Updated Gold RSI Momentum => 10018.29
-2025-02-05 17:28:49,933:INFO - Updated Gold RSI Contrarian => 10018.29
-2025-02-05 17:28:49,933:INFO - Updated Silver RSI Momentum => 9951.21
-2025-02-05 17:28:49,933:INFO - Updated Silver RSI Contrarian => 9951.21
-2025-02-05 17:28:50,934:INFO - Updated Gold Price => 1912.59
-2025-02-05 17:28:50,934:INFO - Updated Silver Price => 29.49
-2025-02-05 17:28:50,934:INFO - Updated Gold RSI Momentum => 10019.79
-2025-02-05 17:28:50,934:INFO - Updated Gold RSI Contrarian => 10019.79
-2025-02-05 17:28:50,934:INFO - Updated Silver RSI Momentum => 9949.39
-2025-02-05 17:28:50,935:INFO - Updated Silver RSI Contrarian => 9949.39
-2025-02-05 17:28:51,936:INFO - Updated Gold Price => 1912.85
-2025-02-05 17:28:51,936:INFO - Updated Silver Price => 29.55
-2025-02-05 17:28:51,937:INFO - Updated Gold RSI Momentum => 10020.19
-2025-02-05 17:28:51,937:INFO - Updated Gold RSI Contrarian => 10020.19
-2025-02-05 17:28:51,937:INFO - Updated Silver RSI Momentum => 9954.84
-2025-02-05 17:28:51,937:INFO - Updated Silver RSI Contrarian => 9954.84
-2025-02-05 17:28:52,938:INFO - Updated Gold Price => 1913.40
-2025-02-05 17:28:52,939:INFO - Updated Silver Price => 29.54
-2025-02-05 17:28:52,939:INFO - Updated Gold RSI Momentum => 10021.07
-2025-02-05 17:28:52,939:INFO - Updated Gold RSI Contrarian => 10021.07
-2025-02-05 17:28:52,939:INFO - Updated Silver RSI Momentum => 9953.61
-2025-02-05 17:28:52,940:INFO - Updated Silver RSI Contrarian => 9953.61
-2025-02-05 17:28:53,942:INFO - Updated Gold Price => 1915.17
-2025-02-05 17:28:53,945:INFO - Updated Silver Price => 29.46
-2025-02-05 17:28:53,946:INFO - Updated Gold RSI Momentum => 10023.87
-2025-02-05 17:28:53,946:INFO - Updated Gold RSI Contrarian => 10023.87
-2025-02-05 17:28:53,946:INFO - Updated Silver RSI Momentum => 9945.71
-2025-02-05 17:28:53,947:INFO - Updated Silver RSI Contrarian => 9945.71
-2025-02-05 17:28:54,949:INFO - Updated Gold Price => 1915.29
-2025-02-05 17:28:54,955:INFO - Updated Silver Price => 29.40
-2025-02-05 17:28:54,956:INFO - Updated Gold RSI Momentum => 10024.05
-2025-02-05 17:28:54,956:INFO - Updated Gold RSI Contrarian => 10024.05
-2025-02-05 17:28:54,956:INFO - Updated Silver RSI Momentum => 9940.15
-2025-02-05 17:28:54,957:INFO - Updated Silver RSI Contrarian => 9940.15
+2025-02-06 11:44:20,077:INFO - Starting feed engine aggregator with metal prices and RSI portfolios...
+2025-02-06 11:44:20,077:INFO - Updated Gold Price => 1901.39
+2025-02-06 11:44:20,077:INFO - Updated Silver Price => 30.03
+2025-02-06 11:44:20,077:INFO - Updated Gold RSI Momentum => 10002.11
+2025-02-06 11:44:20,077:INFO - Updated Gold RSI Contrarian => 10002.11
+2025-02-06 11:44:20,077:INFO - Updated Silver RSI Momentum => 10003.01
+2025-02-06 11:44:20,077:INFO - Updated Silver RSI Contrarian => 10003.01
+2025-02-06 11:44:20,082:INFO - server listening on [::1]:8765
+2025-02-06 11:44:20,082:INFO - server listening on 127.0.0.1:8765
+2025-02-06 11:44:20,082:INFO - WebSocket server running on ws://localhost:8765
+2025-02-06 11:44:20,082:INFO - Press Ctrl+C to stop
+2025-02-06 11:44:20,082:INFO - Updated Gold Price => 1902.72
+2025-02-06 11:44:20,082:INFO - Updated Silver Price => 30.00
+2025-02-06 11:44:20,082:INFO - Updated Gold RSI Momentum => 10004.20
+2025-02-06 11:44:20,083:INFO - Updated Gold RSI Contrarian => 10004.20
+2025-02-06 11:44:20,083:INFO - Updated Silver RSI Momentum => 9999.88
+2025-02-06 11:44:20,083:INFO - Updated Silver RSI Contrarian => 9999.88
+2025-02-06 11:44:20,884:INFO - connection open
+2025-02-06 11:44:20,884:INFO - Client connected. Total clients: 1
+2025-02-06 11:44:20,884:INFO - Sent initial price snapshot to client
+2025-02-06 11:44:20,884:INFO - Sent initial positions snapshot to client
+2025-02-06 11:44:21,085:INFO - Updated Gold Price => 1901.83
+2025-02-06 11:44:21,085:INFO - Updated Silver Price => 30.09
+2025-02-06 11:44:21,086:INFO - Updated Gold RSI Momentum => 10002.80
+2025-02-06 11:44:21,086:INFO - Updated Gold RSI Contrarian => 10002.80
+2025-02-06 11:44:21,087:INFO - Updated Silver RSI Momentum => 10009.37
+2025-02-06 11:44:21,087:INFO - Updated Silver RSI Contrarian => 10009.37
+2025-02-06 11:44:22,089:INFO - Updated Gold Price => 1899.85
+2025-02-06 11:44:22,090:INFO - Updated Silver Price => 30.11
+2025-02-06 11:44:22,091:INFO - Updated Gold RSI Momentum => 9999.67
+2025-02-06 11:44:22,091:INFO - Updated Gold RSI Contrarian => 9999.67
+2025-02-06 11:44:22,091:INFO - Updated Silver RSI Momentum => 10010.96
+2025-02-06 11:44:22,092:INFO - Updated Silver RSI Contrarian => 10010.96
+2025-02-06 11:44:23,094:INFO - Updated Gold Price => 1901.45
+2025-02-06 11:44:23,094:INFO - Updated Silver Price => 30.12
+2025-02-06 11:44:23,095:INFO - Updated Gold RSI Momentum => 10002.20
+2025-02-06 11:44:23,095:INFO - Updated Gold RSI Contrarian => 10002.20
+2025-02-06 11:44:23,095:INFO - Updated Silver RSI Momentum => 10012.06
+2025-02-06 11:44:23,095:INFO - Updated Silver RSI Contrarian => 10012.06
+2025-02-06 11:44:24,097:INFO - Updated Gold Price => 1900.02
+2025-02-06 11:44:24,097:INFO - Updated Silver Price => 30.13
+2025-02-06 11:44:24,098:INFO - Updated Gold RSI Momentum => 9999.94
+2025-02-06 11:44:24,098:INFO - Updated Gold RSI Contrarian => 9999.94
+2025-02-06 11:44:24,099:INFO - Updated Silver RSI Momentum => 10012.94
+2025-02-06 11:44:24,099:INFO - Updated Silver RSI Contrarian => 10012.94
+2025-02-06 11:44:25,101:INFO - Updated Gold Price => 1898.91
+2025-02-06 11:44:25,101:INFO - Updated Silver Price => 30.11
+2025-02-06 11:44:25,101:INFO - Updated Gold RSI Momentum => 9998.19
+2025-02-06 11:44:25,102:INFO - Updated Gold RSI Contrarian => 9998.19
+2025-02-06 11:44:25,102:INFO - Updated Silver RSI Momentum => 10010.55
+2025-02-06 11:44:25,102:INFO - Updated Silver RSI Contrarian => 10010.55
+2025-02-06 11:44:26,103:INFO - Updated Gold Price => 1898.02
+2025-02-06 11:44:26,103:INFO - Updated Silver Price => 30.09
+2025-02-06 11:44:26,103:INFO - Updated Gold RSI Momentum => 9996.78
+2025-02-06 11:44:26,103:INFO - Updated Gold RSI Contrarian => 9996.78
+2025-02-06 11:44:26,103:INFO - Updated Silver RSI Momentum => 10009.46
+2025-02-06 11:44:26,103:INFO - Updated Silver RSI Contrarian => 10009.46
+2025-02-06 11:44:27,106:INFO - Updated Gold Price => 1898.62
+2025-02-06 11:44:27,106:INFO - Updated Silver Price => 30.16
+2025-02-06 11:44:27,107:INFO - Updated Gold RSI Momentum => 9997.73
+2025-02-06 11:44:27,107:INFO - Updated Gold RSI Contrarian => 9997.73
+2025-02-06 11:44:27,108:INFO - Updated Silver RSI Momentum => 10016.16
+2025-02-06 11:44:27,108:INFO - Updated Silver RSI Contrarian => 10016.16
+2025-02-06 11:44:28,110:INFO - Updated Gold Price => 1900.13
+2025-02-06 11:44:28,110:INFO - Updated Silver Price => 30.15
+2025-02-06 11:44:28,110:INFO - Updated Gold RSI Momentum => 10000.12
+2025-02-06 11:44:28,111:INFO - Updated Gold RSI Contrarian => 10000.12
+2025-02-06 11:44:28,111:INFO - Updated Silver RSI Momentum => 10015.08
+2025-02-06 11:44:28,111:INFO - Updated Silver RSI Contrarian => 10015.08
+2025-02-06 11:44:29,114:INFO - Updated Gold Price => 1902.06
+2025-02-06 11:44:29,118:INFO - Updated Silver Price => 30.13
+2025-02-06 11:44:29,118:INFO - Updated Gold RSI Momentum => 10003.16
+2025-02-06 11:44:29,118:INFO - Updated Gold RSI Contrarian => 10003.16
+2025-02-06 11:44:29,118:INFO - Updated Silver RSI Momentum => 10013.42
+2025-02-06 11:44:29,118:INFO - Updated Silver RSI Contrarian => 10013.42
+2025-02-06 11:44:30,120:INFO - Updated Gold Price => 1901.37
+2025-02-06 11:44:30,121:INFO - Updated Silver Price => 30.15
+2025-02-06 11:44:30,121:INFO - Updated Gold RSI Momentum => 10002.07
+2025-02-06 11:44:30,122:INFO - Updated Gold RSI Contrarian => 10002.07
+2025-02-06 11:44:30,122:INFO - Updated Silver RSI Momentum => 10014.80
+2025-02-06 11:44:30,123:INFO - Updated Silver RSI Contrarian => 10014.80
+2025-02-06 11:44:31,125:INFO - Updated Gold Price => 1902.71
+2025-02-06 11:44:31,128:INFO - Updated Silver Price => 30.05
+2025-02-06 11:44:31,128:INFO - Updated Gold RSI Momentum => 10004.19
+2025-02-06 11:44:31,129:INFO - Updated Gold RSI Contrarian => 10004.19
+2025-02-06 11:44:31,129:INFO - Updated Silver RSI Momentum => 10005.08
+2025-02-06 11:44:31,130:INFO - Updated Silver RSI Contrarian => 10005.08
+2025-02-06 11:44:32,137:INFO - Updated Gold Price => 1902.49
+2025-02-06 11:44:32,138:INFO - Updated Silver Price => 29.98
+2025-02-06 11:44:32,138:INFO - Updated Gold RSI Momentum => 10003.85
+2025-02-06 11:44:32,138:INFO - Updated Gold RSI Contrarian => 10003.85
+2025-02-06 11:44:32,138:INFO - Updated Silver RSI Momentum => 9998.37
+2025-02-06 11:44:32,138:INFO - Updated Silver RSI Contrarian => 9998.37
+2025-02-06 11:44:33,140:INFO - Updated Gold Price => 1902.42
+2025-02-06 11:44:33,140:INFO - Updated Silver Price => 29.90
+2025-02-06 11:44:33,141:INFO - Updated Gold RSI Momentum => 10003.72
+2025-02-06 11:44:33,141:INFO - Updated Gold RSI Contrarian => 10003.72
+2025-02-06 11:44:33,141:INFO - Updated Silver RSI Momentum => 9990.13
+2025-02-06 11:44:33,142:INFO - Updated Silver RSI Contrarian => 9990.13
+2025-02-06 11:44:34,144:INFO - Updated Gold Price => 1901.80
+2025-02-06 11:44:34,147:INFO - Updated Silver Price => 29.93
+2025-02-06 11:44:34,148:INFO - Updated Gold RSI Momentum => 10002.75
+2025-02-06 11:44:34,148:INFO - Updated Gold RSI Contrarian => 10002.75
+2025-02-06 11:44:34,149:INFO - Updated Silver RSI Momentum => 9993.38
+2025-02-06 11:44:34,150:INFO - Updated Silver RSI Contrarian => 9993.38
+2025-02-06 11:44:35,152:INFO - Updated Gold Price => 1901.72
+2025-02-06 11:44:35,155:INFO - Updated Silver Price => 30.03
+2025-02-06 11:44:35,156:INFO - Updated Gold RSI Momentum => 10002.63
+2025-02-06 11:44:35,157:INFO - Updated Gold RSI Contrarian => 10002.63
+2025-02-06 11:44:35,157:INFO - Updated Silver RSI Momentum => 10003.20
+2025-02-06 11:44:35,158:INFO - Updated Silver RSI Contrarian => 10003.20
+2025-02-06 11:44:36,160:INFO - Updated Gold Price => 1901.81
+2025-02-06 11:44:36,160:INFO - Updated Silver Price => 30.00
+2025-02-06 11:44:36,160:INFO - Updated Gold RSI Momentum => 10002.77
+2025-02-06 11:44:36,162:INFO - Updated Gold RSI Contrarian => 10002.77
+2025-02-06 11:44:36,162:INFO - Updated Silver RSI Momentum => 10000.18
+2025-02-06 11:44:36,162:INFO - Updated Silver RSI Contrarian => 10000.18
+2025-02-06 11:44:37,164:INFO - Updated Gold Price => 1899.97
+2025-02-06 11:44:37,165:INFO - Updated Silver Price => 29.95
+2025-02-06 11:44:37,165:INFO - Updated Gold RSI Momentum => 9999.87
+2025-02-06 11:44:37,166:INFO - Updated Gold RSI Contrarian => 9999.87
+2025-02-06 11:44:37,166:INFO - Updated Silver RSI Momentum => 9995.07
+2025-02-06 11:44:37,166:INFO - Updated Silver RSI Contrarian => 9995.07
+2025-02-06 11:44:38,168:INFO - Updated Gold Price => 1898.49
+2025-02-06 11:44:38,168:INFO - Updated Silver Price => 29.96
+2025-02-06 11:44:38,168:INFO - Updated Gold RSI Momentum => 9997.52
+2025-02-06 11:44:38,168:INFO - Updated Gold RSI Contrarian => 9997.52
+2025-02-06 11:44:38,168:INFO - Updated Silver RSI Momentum => 9996.19
+2025-02-06 11:44:38,168:INFO - Updated Silver RSI Contrarian => 9996.19
+2025-02-06 11:44:39,170:INFO - Updated Gold Price => 1898.24
+2025-02-06 11:44:39,171:INFO - Updated Silver Price => 29.88
+2025-02-06 11:44:39,171:INFO - Updated Gold RSI Momentum => 9997.13
+2025-02-06 11:44:39,172:INFO - Updated Gold RSI Contrarian => 9997.13
+2025-02-06 11:44:39,172:INFO - Updated Silver RSI Momentum => 9988.36
+2025-02-06 11:44:39,172:INFO - Updated Silver RSI Contrarian => 9988.36
+2025-02-06 11:44:40,179:INFO - Updated Gold Price => 1898.56
+2025-02-06 11:44:40,180:INFO - Updated Silver Price => 29.94
+2025-02-06 11:44:40,180:INFO - Updated Gold RSI Momentum => 9997.64
+2025-02-06 11:44:40,181:INFO - Updated Gold RSI Contrarian => 9997.64
+2025-02-06 11:44:40,181:INFO - Updated Silver RSI Momentum => 9993.74
+2025-02-06 11:44:40,181:INFO - Updated Silver RSI Contrarian => 9993.74
+2025-02-06 11:44:41,183:INFO - Updated Gold Price => 1900.36
+2025-02-06 11:44:41,183:INFO - Updated Silver Price => 29.85
+2025-02-06 11:44:41,184:INFO - Updated Gold RSI Momentum => 10000.48
+2025-02-06 11:44:41,184:INFO - Updated Gold RSI Contrarian => 10000.48
+2025-02-06 11:44:41,185:INFO - Updated Silver RSI Momentum => 9984.93
+2025-02-06 11:44:41,185:INFO - Updated Silver RSI Contrarian => 9984.93
+2025-02-06 11:44:42,186:INFO - Updated Gold Price => 1900.84
+2025-02-06 11:44:42,187:INFO - Updated Silver Price => 29.85
+2025-02-06 11:44:42,188:INFO - Updated Gold RSI Momentum => 10001.24
+2025-02-06 11:44:42,188:INFO - Updated Gold RSI Contrarian => 10001.24
+2025-02-06 11:44:42,188:INFO - Updated Silver RSI Momentum => 9984.83
+2025-02-06 11:44:42,188:INFO - Updated Silver RSI Contrarian => 9984.83
+2025-02-06 11:44:43,189:INFO - Updated Gold Price => 1902.45
+2025-02-06 11:44:43,190:INFO - Updated Silver Price => 29.79
+2025-02-06 11:44:43,190:INFO - Updated Gold RSI Momentum => 10003.78
+2025-02-06 11:44:43,190:INFO - Updated Gold RSI Contrarian => 10003.78
+2025-02-06 11:44:43,191:INFO - Updated Silver RSI Momentum => 9979.35
+2025-02-06 11:44:43,191:INFO - Updated Silver RSI Contrarian => 9979.35
+2025-02-06 11:44:44,192:INFO - Updated Gold Price => 1903.32
+2025-02-06 11:44:44,199:INFO - Updated Silver Price => 29.79
+2025-02-06 11:44:44,199:INFO - Updated Gold RSI Momentum => 10005.15
+2025-02-06 11:44:44,200:INFO - Updated Gold RSI Contrarian => 10005.15
+2025-02-06 11:44:44,200:INFO - Updated Silver RSI Momentum => 9978.72
+2025-02-06 11:44:44,200:INFO - Updated Silver RSI Contrarian => 9978.72
+2025-02-06 11:44:45,205:INFO - Updated Gold Price => 1902.27
+2025-02-06 11:44:45,206:INFO - Updated Silver Price => 29.74
+2025-02-06 11:44:45,207:INFO - Updated Gold RSI Momentum => 10003.49
+2025-02-06 11:44:45,207:INFO - Updated Gold RSI Contrarian => 10003.49
+2025-02-06 11:44:45,207:INFO - Updated Silver RSI Momentum => 9974.17
+2025-02-06 11:44:45,208:INFO - Updated Silver RSI Contrarian => 9974.17
+2025-02-06 11:44:46,209:INFO - Updated Gold Price => 1902.47
+2025-02-06 11:44:46,209:INFO - Updated Silver Price => 29.76
+2025-02-06 11:44:46,210:INFO - Updated Gold RSI Momentum => 10003.81
+2025-02-06 11:44:46,210:INFO - Updated Gold RSI Contrarian => 10003.81
+2025-02-06 11:44:46,210:INFO - Updated Silver RSI Momentum => 9976.36
+2025-02-06 11:44:46,210:INFO - Updated Silver RSI Contrarian => 9976.36
+2025-02-06 11:44:47,212:INFO - Updated Gold Price => 1901.87
+2025-02-06 11:44:47,213:INFO - Updated Silver Price => 29.81
+2025-02-06 11:44:47,213:INFO - Updated Gold RSI Momentum => 10002.86
+2025-02-06 11:44:47,213:INFO - Updated Gold RSI Contrarian => 10002.86
+2025-02-06 11:44:47,214:INFO - Updated Silver RSI Momentum => 9981.12
+2025-02-06 11:44:47,214:INFO - Updated Silver RSI Contrarian => 9981.12
+2025-02-06 11:44:47,315:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:44:47,316:INFO - connection closed
+2025-02-06 11:44:47,336:INFO - connection open
+2025-02-06 11:44:47,336:INFO - Client connected. Total clients: 1
+2025-02-06 11:44:47,336:INFO - Sent initial price snapshot to client
+2025-02-06 11:44:47,336:INFO - Sent initial positions snapshot to client
+2025-02-06 11:44:47,429:INFO - connection open
+2025-02-06 11:44:47,429:INFO - Client connected. Total clients: 2
+2025-02-06 11:44:47,429:INFO - Sent initial price snapshot to client
+2025-02-06 11:44:47,429:INFO - Sent initial positions snapshot to client
+2025-02-06 11:44:47,430:INFO - Client disconnected. Total clients: 1
+2025-02-06 11:44:47,433:INFO - connection closed
+2025-02-06 11:44:48,217:INFO - Updated Gold Price => 1901.49
+2025-02-06 11:44:48,217:INFO - Updated Silver Price => 29.90
+2025-02-06 11:44:48,217:INFO - Updated Gold RSI Momentum => 10002.27
+2025-02-06 11:44:48,217:INFO - Updated Gold RSI Contrarian => 10002.27
+2025-02-06 11:44:48,217:INFO - Updated Silver RSI Momentum => 9989.65
+2025-02-06 11:44:48,218:INFO - Updated Silver RSI Contrarian => 9989.65
+2025-02-06 11:44:48,430:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:44:48,430:INFO - connection closed
+2025-02-06 11:44:48,430:INFO - connection open
+2025-02-06 11:44:48,431:INFO - Client connected. Total clients: 1
+2025-02-06 11:44:48,431:INFO - Sent initial price snapshot to client
+2025-02-06 11:44:48,431:INFO - Sent initial positions snapshot to client
+2025-02-06 11:44:49,219:INFO - Updated Gold Price => 1899.57
+2025-02-06 11:44:49,220:INFO - Updated Silver Price => 29.85
+2025-02-06 11:44:49,221:INFO - Updated Gold RSI Momentum => 9999.22
+2025-02-06 11:44:49,221:INFO - Updated Gold RSI Contrarian => 9999.22
+2025-02-06 11:44:49,222:INFO - Updated Silver RSI Momentum => 9985.13
+2025-02-06 11:44:49,222:INFO - Updated Silver RSI Contrarian => 9985.13
+2025-02-06 11:44:49,434:INFO - connection open
+2025-02-06 11:44:49,434:INFO - Client connected. Total clients: 2
+2025-02-06 11:44:49,434:INFO - Sent initial price snapshot to client
+2025-02-06 11:44:49,434:INFO - Sent initial positions snapshot to client
+2025-02-06 11:44:49,435:INFO - Client disconnected. Total clients: 1
+2025-02-06 11:44:49,435:INFO - connection closed
+2025-02-06 11:44:50,224:INFO - Updated Gold Price => 1897.74
+2025-02-06 11:44:50,224:INFO - Updated Silver Price => 29.89
+2025-02-06 11:44:50,224:INFO - Updated Gold RSI Momentum => 9996.33
+2025-02-06 11:44:50,225:INFO - Updated Gold RSI Contrarian => 9996.33
+2025-02-06 11:44:50,225:INFO - Updated Silver RSI Momentum => 9988.51
+2025-02-06 11:44:50,225:INFO - Updated Silver RSI Contrarian => 9988.51
+2025-02-06 11:44:50,435:INFO - connection open
+2025-02-06 11:44:50,435:INFO - Client connected. Total clients: 2
+2025-02-06 11:44:50,435:INFO - Sent initial price snapshot to client
+2025-02-06 11:44:50,436:INFO - Sent initial positions snapshot to client
+2025-02-06 11:44:50,436:INFO - Client disconnected. Total clients: 1
+2025-02-06 11:44:50,436:INFO - connection closed
+2025-02-06 11:44:51,227:INFO - Updated Gold Price => 1898.52
+2025-02-06 11:44:51,229:INFO - Updated Silver Price => 29.96
+2025-02-06 11:44:51,230:INFO - Updated Gold RSI Momentum => 9997.58
+2025-02-06 11:44:51,230:INFO - Updated Gold RSI Contrarian => 9997.58
+2025-02-06 11:44:51,230:INFO - Updated Silver RSI Momentum => 9996.10
+2025-02-06 11:44:51,230:INFO - Updated Silver RSI Contrarian => 9996.10
+2025-02-06 11:44:51,438:INFO - connection open
+2025-02-06 11:44:51,439:INFO - Client connected. Total clients: 2
+2025-02-06 11:44:51,439:INFO - Sent initial price snapshot to client
+2025-02-06 11:44:51,439:INFO - Sent initial positions snapshot to client
+2025-02-06 11:44:51,439:INFO - Client disconnected. Total clients: 1
+2025-02-06 11:44:51,439:INFO - connection closed
+2025-02-06 11:44:52,233:INFO - Updated Gold Price => 1900.01
+2025-02-06 11:44:52,236:INFO - Updated Silver Price => 30.01
+2025-02-06 11:44:52,237:INFO - Updated Gold RSI Momentum => 9999.93
+2025-02-06 11:44:52,238:INFO - Updated Gold RSI Contrarian => 9999.93
+2025-02-06 11:44:52,238:INFO - Updated Silver RSI Momentum => 10001.18
+2025-02-06 11:44:52,239:INFO - Updated Silver RSI Contrarian => 10001.18
+2025-02-06 11:44:52,439:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:44:52,440:INFO - connection closed
+2025-02-06 11:44:52,440:INFO - connection open
+2025-02-06 11:44:52,441:INFO - Client connected. Total clients: 1
+2025-02-06 11:44:52,441:INFO - Sent initial price snapshot to client
+2025-02-06 11:44:52,441:INFO - Sent initial positions snapshot to client
+2025-02-06 11:44:53,241:INFO - Updated Gold Price => 1900.51
+2025-02-06 11:44:53,245:INFO - Updated Silver Price => 30.06
+2025-02-06 11:44:53,245:INFO - Updated Gold RSI Momentum => 10000.71
+2025-02-06 11:44:53,246:INFO - Updated Gold RSI Contrarian => 10000.71
+2025-02-06 11:44:53,246:INFO - Updated Silver RSI Momentum => 10005.94
+2025-02-06 11:44:53,247:INFO - Updated Silver RSI Contrarian => 10005.94
+2025-02-06 11:44:53,442:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:44:53,442:INFO - connection closed
+2025-02-06 11:44:53,442:INFO - connection open
+2025-02-06 11:44:53,442:INFO - Client connected. Total clients: 1
+2025-02-06 11:44:53,442:INFO - Sent initial price snapshot to client
+2025-02-06 11:44:53,442:INFO - Sent initial positions snapshot to client
+2025-02-06 11:44:54,249:INFO - Updated Gold Price => 1902.49
+2025-02-06 11:44:54,249:INFO - Updated Silver Price => 30.03
+2025-02-06 11:44:54,250:INFO - Updated Gold RSI Momentum => 10003.85
+2025-02-06 11:44:54,250:INFO - Updated Gold RSI Contrarian => 10003.85
+2025-02-06 11:44:54,251:INFO - Updated Silver RSI Momentum => 10003.05
+2025-02-06 11:44:54,251:INFO - Updated Silver RSI Contrarian => 10003.05
+2025-02-06 11:44:54,445:INFO - connection open
+2025-02-06 11:44:54,446:INFO - Client connected. Total clients: 2
+2025-02-06 11:44:54,446:INFO - Sent initial price snapshot to client
+2025-02-06 11:44:54,446:INFO - Sent initial positions snapshot to client
+2025-02-06 11:44:54,446:INFO - Client disconnected. Total clients: 1
+2025-02-06 11:44:54,447:INFO - connection closed
+2025-02-06 11:44:55,252:INFO - Updated Gold Price => 1900.70
+2025-02-06 11:44:55,253:INFO - Updated Silver Price => 29.98
+2025-02-06 11:44:55,254:INFO - Updated Gold RSI Momentum => 10001.01
+2025-02-06 11:44:55,254:INFO - Updated Gold RSI Contrarian => 10001.01
+2025-02-06 11:44:55,254:INFO - Updated Silver RSI Momentum => 9997.83
+2025-02-06 11:44:55,255:INFO - Updated Silver RSI Contrarian => 9997.83
+2025-02-06 11:44:55,446:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:44:55,446:INFO - connection closed
+2025-02-06 11:44:55,447:INFO - connection open
+2025-02-06 11:44:55,447:INFO - Client connected. Total clients: 1
+2025-02-06 11:44:55,447:INFO - Sent initial price snapshot to client
+2025-02-06 11:44:55,448:INFO - Sent initial positions snapshot to client
+2025-02-06 11:44:56,256:INFO - Updated Gold Price => 1901.05
+2025-02-06 11:44:56,256:INFO - Updated Silver Price => 30.00
+2025-02-06 11:44:56,257:INFO - Updated Gold RSI Momentum => 10001.56
+2025-02-06 11:44:56,257:INFO - Updated Gold RSI Contrarian => 10001.56
+2025-02-06 11:44:56,257:INFO - Updated Silver RSI Momentum => 10000.14
+2025-02-06 11:44:56,257:INFO - Updated Silver RSI Contrarian => 10000.14
+2025-02-06 11:44:56,450:INFO - connection open
+2025-02-06 11:44:56,451:INFO - Client connected. Total clients: 2
+2025-02-06 11:44:56,451:INFO - Sent initial price snapshot to client
+2025-02-06 11:44:56,451:INFO - Sent initial positions snapshot to client
+2025-02-06 11:44:56,451:INFO - Client disconnected. Total clients: 1
+2025-02-06 11:44:56,452:INFO - connection closed
+2025-02-06 11:44:57,259:INFO - Updated Gold Price => 1903.01
+2025-02-06 11:44:57,260:INFO - Updated Silver Price => 30.07
+2025-02-06 11:44:57,260:INFO - Updated Gold RSI Momentum => 10004.66
+2025-02-06 11:44:57,260:INFO - Updated Gold RSI Contrarian => 10004.66
+2025-02-06 11:44:57,260:INFO - Updated Silver RSI Momentum => 10007.17
+2025-02-06 11:44:57,261:INFO - Updated Silver RSI Contrarian => 10007.17
+2025-02-06 11:44:57,460:INFO - connection open
+2025-02-06 11:44:57,460:INFO - Client connected. Total clients: 2
+2025-02-06 11:44:57,460:INFO - Sent initial price snapshot to client
+2025-02-06 11:44:57,460:INFO - Sent initial positions snapshot to client
+2025-02-06 11:44:57,461:INFO - Client disconnected. Total clients: 1
+2025-02-06 11:44:57,461:INFO - connection closed
+2025-02-06 11:44:57,495:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:44:57,495:INFO - connection closed
+2025-02-06 11:44:57,506:INFO - connection open
+2025-02-06 11:44:57,506:INFO - Client connected. Total clients: 1
+2025-02-06 11:44:57,507:INFO - Sent initial price snapshot to client
+2025-02-06 11:44:57,507:INFO - Sent initial positions snapshot to client
+2025-02-06 11:44:58,262:INFO - Updated Gold Price => 1902.05
+2025-02-06 11:44:58,263:INFO - Updated Silver Price => 30.09
+2025-02-06 11:44:58,263:INFO - Updated Gold RSI Momentum => 10003.14
+2025-02-06 11:44:58,263:INFO - Updated Gold RSI Contrarian => 10003.14
+2025-02-06 11:44:58,264:INFO - Updated Silver RSI Momentum => 10008.52
+2025-02-06 11:44:58,264:INFO - Updated Silver RSI Contrarian => 10008.52
+2025-02-06 11:44:59,269:INFO - Updated Gold Price => 1902.44
+2025-02-06 11:44:59,270:INFO - Updated Silver Price => 30.07
+2025-02-06 11:44:59,271:INFO - Updated Gold RSI Momentum => 10003.76
+2025-02-06 11:44:59,271:INFO - Updated Gold RSI Contrarian => 10003.76
+2025-02-06 11:44:59,271:INFO - Updated Silver RSI Momentum => 10007.10
+2025-02-06 11:44:59,272:INFO - Updated Silver RSI Contrarian => 10007.10
+2025-02-06 11:45:00,273:INFO - Updated Gold Price => 1901.95
+2025-02-06 11:45:00,274:INFO - Updated Silver Price => 30.11
+2025-02-06 11:45:00,274:INFO - Updated Gold RSI Momentum => 10002.98
+2025-02-06 11:45:00,274:INFO - Updated Gold RSI Contrarian => 10002.98
+2025-02-06 11:45:00,275:INFO - Updated Silver RSI Momentum => 10010.76
+2025-02-06 11:45:00,275:INFO - Updated Silver RSI Contrarian => 10010.76
+2025-02-06 11:45:01,276:INFO - Updated Gold Price => 1901.47
+2025-02-06 11:45:01,277:INFO - Updated Silver Price => 30.03
+2025-02-06 11:45:01,277:INFO - Updated Gold RSI Momentum => 10002.23
+2025-02-06 11:45:01,278:INFO - Updated Gold RSI Contrarian => 10002.23
+2025-02-06 11:45:01,278:INFO - Updated Silver RSI Momentum => 10003.20
+2025-02-06 11:45:01,278:INFO - Updated Silver RSI Contrarian => 10003.20
+2025-02-06 11:45:02,280:INFO - Updated Gold Price => 1901.52
+2025-02-06 11:45:02,280:INFO - Updated Silver Price => 29.99
+2025-02-06 11:45:02,281:INFO - Updated Gold RSI Momentum => 10002.31
+2025-02-06 11:45:02,281:INFO - Updated Gold RSI Contrarian => 10002.31
+2025-02-06 11:45:02,282:INFO - Updated Silver RSI Momentum => 9998.83
+2025-02-06 11:45:02,282:INFO - Updated Silver RSI Contrarian => 9998.83
+2025-02-06 11:45:03,284:INFO - Updated Gold Price => 1901.75
+2025-02-06 11:45:03,289:INFO - Updated Silver Price => 29.93
+2025-02-06 11:45:03,290:INFO - Updated Gold RSI Momentum => 10002.68
+2025-02-06 11:45:03,290:INFO - Updated Gold RSI Contrarian => 10002.68
+2025-02-06 11:45:03,290:INFO - Updated Silver RSI Momentum => 9992.90
+2025-02-06 11:45:03,290:INFO - Updated Silver RSI Contrarian => 9992.90
+2025-02-06 11:45:04,292:INFO - Updated Gold Price => 1902.33
+2025-02-06 11:45:04,293:INFO - Updated Silver Price => 29.85
+2025-02-06 11:45:04,293:INFO - Updated Gold RSI Momentum => 10003.59
+2025-02-06 11:45:04,293:INFO - Updated Gold RSI Contrarian => 10003.59
+2025-02-06 11:45:04,293:INFO - Updated Silver RSI Momentum => 9984.67
+2025-02-06 11:45:04,293:INFO - Updated Silver RSI Contrarian => 9984.67
+2025-02-06 11:45:05,295:INFO - Updated Gold Price => 1903.00
+2025-02-06 11:45:05,296:INFO - Updated Silver Price => 29.81
+2025-02-06 11:45:05,296:INFO - Updated Gold RSI Momentum => 10004.64
+2025-02-06 11:45:05,297:INFO - Updated Gold RSI Contrarian => 10004.64
+2025-02-06 11:45:05,297:INFO - Updated Silver RSI Momentum => 9980.55
+2025-02-06 11:45:05,297:INFO - Updated Silver RSI Contrarian => 9980.55
+2025-02-06 11:45:06,299:INFO - Updated Gold Price => 1901.56
+2025-02-06 11:45:06,299:INFO - Updated Silver Price => 29.73
+2025-02-06 11:45:06,300:INFO - Updated Gold RSI Momentum => 10002.38
+2025-02-06 11:45:06,300:INFO - Updated Gold RSI Contrarian => 10002.38
+2025-02-06 11:45:06,300:INFO - Updated Silver RSI Momentum => 9973.23
+2025-02-06 11:45:06,301:INFO - Updated Silver RSI Contrarian => 9973.23
+2025-02-06 11:45:07,303:INFO - Updated Gold Price => 1900.29
+2025-02-06 11:45:07,304:INFO - Updated Silver Price => 29.74
+2025-02-06 11:45:07,304:INFO - Updated Gold RSI Momentum => 10000.37
+2025-02-06 11:45:07,304:INFO - Updated Gold RSI Contrarian => 10000.37
+2025-02-06 11:45:07,305:INFO - Updated Silver RSI Momentum => 9973.89
+2025-02-06 11:45:07,305:INFO - Updated Silver RSI Contrarian => 9973.89
+2025-02-06 11:45:07,792:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:45:07,793:INFO - connection closed
+2025-02-06 11:45:07,812:INFO - connection open
+2025-02-06 11:45:07,812:INFO - Client connected. Total clients: 1
+2025-02-06 11:45:07,812:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:07,812:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:07,885:INFO - connection open
+2025-02-06 11:45:07,885:INFO - Client connected. Total clients: 2
+2025-02-06 11:45:07,886:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:07,886:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:07,886:INFO - Client disconnected. Total clients: 1
+2025-02-06 11:45:07,886:INFO - connection closed
+2025-02-06 11:45:08,307:INFO - Updated Gold Price => 1899.89
+2025-02-06 11:45:08,307:INFO - Updated Silver Price => 29.70
+2025-02-06 11:45:08,307:INFO - Updated Gold RSI Momentum => 9999.73
+2025-02-06 11:45:08,308:INFO - Updated Gold RSI Contrarian => 9999.73
+2025-02-06 11:45:08,308:INFO - Updated Silver RSI Momentum => 9969.83
+2025-02-06 11:45:08,309:INFO - Updated Silver RSI Contrarian => 9969.83
+2025-02-06 11:45:08,884:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:45:08,884:INFO - connection closed
+2025-02-06 11:45:08,885:INFO - connection open
+2025-02-06 11:45:08,885:INFO - Client connected. Total clients: 1
+2025-02-06 11:45:08,885:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:08,885:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:09,311:INFO - Updated Gold Price => 1898.59
+2025-02-06 11:45:09,311:INFO - Updated Silver Price => 29.69
+2025-02-06 11:45:09,312:INFO - Updated Gold RSI Momentum => 9997.69
+2025-02-06 11:45:09,312:INFO - Updated Gold RSI Contrarian => 9997.69
+2025-02-06 11:45:09,312:INFO - Updated Silver RSI Momentum => 9969.05
+2025-02-06 11:45:09,312:INFO - Updated Silver RSI Contrarian => 9969.05
+2025-02-06 11:45:09,886:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:45:09,887:INFO - connection closed
+2025-02-06 11:45:09,887:INFO - connection open
+2025-02-06 11:45:09,887:INFO - Client connected. Total clients: 1
+2025-02-06 11:45:09,887:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:09,888:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:10,314:INFO - Updated Gold Price => 1898.42
+2025-02-06 11:45:10,315:INFO - Updated Silver Price => 29.74
+2025-02-06 11:45:10,316:INFO - Updated Gold RSI Momentum => 9997.42
+2025-02-06 11:45:10,316:INFO - Updated Gold RSI Contrarian => 9997.42
+2025-02-06 11:45:10,316:INFO - Updated Silver RSI Momentum => 9973.56
+2025-02-06 11:45:10,316:INFO - Updated Silver RSI Contrarian => 9973.56
+2025-02-06 11:45:10,889:INFO - connection open
+2025-02-06 11:45:10,890:INFO - Client connected. Total clients: 2
+2025-02-06 11:45:10,890:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:10,891:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:10,891:INFO - Client disconnected. Total clients: 1
+2025-02-06 11:45:10,891:INFO - connection closed
+2025-02-06 11:45:11,318:INFO - Updated Gold Price => 1897.24
+2025-02-06 11:45:11,318:INFO - Updated Silver Price => 29.82
+2025-02-06 11:45:11,319:INFO - Updated Gold RSI Momentum => 9995.56
+2025-02-06 11:45:11,319:INFO - Updated Gold RSI Contrarian => 9995.56
+2025-02-06 11:45:11,319:INFO - Updated Silver RSI Momentum => 9982.35
+2025-02-06 11:45:11,320:INFO - Updated Silver RSI Contrarian => 9982.35
+2025-02-06 11:45:11,892:INFO - connection open
+2025-02-06 11:45:11,892:INFO - Client connected. Total clients: 2
+2025-02-06 11:45:11,892:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:11,893:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:11,893:INFO - Client disconnected. Total clients: 1
+2025-02-06 11:45:11,893:INFO - connection closed
+2025-02-06 11:45:12,322:INFO - Updated Gold Price => 1898.50
+2025-02-06 11:45:12,322:INFO - Updated Silver Price => 29.86
+2025-02-06 11:45:12,322:INFO - Updated Gold RSI Momentum => 9997.54
+2025-02-06 11:45:12,323:INFO - Updated Gold RSI Contrarian => 9997.54
+2025-02-06 11:45:12,323:INFO - Updated Silver RSI Momentum => 9986.44
+2025-02-06 11:45:12,323:INFO - Updated Silver RSI Contrarian => 9986.44
+2025-02-06 11:45:12,895:INFO - connection open
+2025-02-06 11:45:12,895:INFO - Client connected. Total clients: 2
+2025-02-06 11:45:12,895:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:12,895:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:12,896:INFO - Client disconnected. Total clients: 1
+2025-02-06 11:45:12,896:INFO - connection closed
+2025-02-06 11:45:13,325:INFO - Updated Gold Price => 1897.52
+2025-02-06 11:45:13,325:INFO - Updated Silver Price => 29.95
+2025-02-06 11:45:13,325:INFO - Updated Gold RSI Momentum => 9995.99
+2025-02-06 11:45:13,326:INFO - Updated Gold RSI Contrarian => 9995.99
+2025-02-06 11:45:13,326:INFO - Updated Silver RSI Momentum => 9995.35
+2025-02-06 11:45:13,326:INFO - Updated Silver RSI Contrarian => 9995.35
+2025-02-06 11:45:13,897:INFO - connection open
+2025-02-06 11:45:13,898:INFO - Client connected. Total clients: 2
+2025-02-06 11:45:13,898:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:13,898:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:13,898:INFO - Client disconnected. Total clients: 1
+2025-02-06 11:45:13,898:INFO - connection closed
+2025-02-06 11:45:14,328:INFO - Updated Gold Price => 1898.86
+2025-02-06 11:45:14,328:INFO - Updated Silver Price => 30.04
+2025-02-06 11:45:14,329:INFO - Updated Gold RSI Momentum => 9998.10
+2025-02-06 11:45:14,329:INFO - Updated Gold RSI Contrarian => 9998.10
+2025-02-06 11:45:14,330:INFO - Updated Silver RSI Momentum => 10004.26
+2025-02-06 11:45:14,330:INFO - Updated Silver RSI Contrarian => 10004.26
+2025-02-06 11:45:14,900:INFO - connection open
+2025-02-06 11:45:14,900:INFO - Client connected. Total clients: 2
+2025-02-06 11:45:14,900:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:14,901:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:14,901:INFO - Client disconnected. Total clients: 1
+2025-02-06 11:45:14,901:INFO - connection closed
+2025-02-06 11:45:15,332:INFO - Updated Gold Price => 1899.16
+2025-02-06 11:45:15,332:INFO - Updated Silver Price => 29.95
+2025-02-06 11:45:15,333:INFO - Updated Gold RSI Momentum => 9998.58
+2025-02-06 11:45:15,333:INFO - Updated Gold RSI Contrarian => 9998.58
+2025-02-06 11:45:15,333:INFO - Updated Silver RSI Momentum => 9995.30
+2025-02-06 11:45:15,334:INFO - Updated Silver RSI Contrarian => 9995.30
+2025-02-06 11:45:15,901:INFO - connection open
+2025-02-06 11:45:15,902:INFO - Client connected. Total clients: 2
+2025-02-06 11:45:15,902:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:15,902:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:15,902:INFO - Client disconnected. Total clients: 1
+2025-02-06 11:45:15,903:INFO - connection closed
+2025-02-06 11:45:16,334:INFO - Updated Gold Price => 1899.61
+2025-02-06 11:45:16,335:INFO - Updated Silver Price => 30.00
+2025-02-06 11:45:16,335:INFO - Updated Gold RSI Momentum => 9999.30
+2025-02-06 11:45:16,335:INFO - Updated Gold RSI Contrarian => 9999.30
+2025-02-06 11:45:16,335:INFO - Updated Silver RSI Momentum => 10000.26
+2025-02-06 11:45:16,336:INFO - Updated Silver RSI Contrarian => 10000.26
+2025-02-06 11:45:16,902:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:45:16,902:INFO - connection closed
+2025-02-06 11:45:16,902:INFO - connection open
+2025-02-06 11:45:16,902:INFO - Client connected. Total clients: 1
+2025-02-06 11:45:16,902:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:16,902:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:17,337:INFO - Updated Gold Price => 1898.94
+2025-02-06 11:45:17,337:INFO - Updated Silver Price => 29.95
+2025-02-06 11:45:17,337:INFO - Updated Gold RSI Momentum => 9998.23
+2025-02-06 11:45:17,337:INFO - Updated Gold RSI Contrarian => 9998.23
+2025-02-06 11:45:17,338:INFO - Updated Silver RSI Momentum => 9995.24
+2025-02-06 11:45:17,338:INFO - Updated Silver RSI Contrarian => 9995.24
+2025-02-06 11:45:17,904:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:45:17,904:INFO - connection closed
+2025-02-06 11:45:17,905:INFO - connection open
+2025-02-06 11:45:17,905:INFO - Client connected. Total clients: 1
+2025-02-06 11:45:17,905:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:17,905:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:18,340:INFO - Updated Gold Price => 1898.46
+2025-02-06 11:45:18,348:INFO - Updated Silver Price => 29.88
+2025-02-06 11:45:18,349:INFO - Updated Gold RSI Momentum => 9997.47
+2025-02-06 11:45:18,349:INFO - Updated Gold RSI Contrarian => 9997.47
+2025-02-06 11:45:18,353:INFO - Updated Silver RSI Momentum => 9987.54
+2025-02-06 11:45:18,354:INFO - Updated Silver RSI Contrarian => 9987.54
+2025-02-06 11:45:18,908:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:45:18,909:INFO - connection closed
+2025-02-06 11:45:18,909:INFO - connection open
+2025-02-06 11:45:18,909:INFO - Client connected. Total clients: 1
+2025-02-06 11:45:18,910:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:18,910:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:19,355:INFO - Updated Gold Price => 1899.03
+2025-02-06 11:45:19,355:INFO - Updated Silver Price => 29.93
+2025-02-06 11:45:19,355:INFO - Updated Gold RSI Momentum => 9998.37
+2025-02-06 11:45:19,355:INFO - Updated Gold RSI Contrarian => 9998.37
+2025-02-06 11:45:19,355:INFO - Updated Silver RSI Momentum => 9993.42
+2025-02-06 11:45:19,355:INFO - Updated Silver RSI Contrarian => 9993.42
+2025-02-06 11:45:19,909:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:45:19,910:INFO - connection closed
+2025-02-06 11:45:19,910:INFO - connection open
+2025-02-06 11:45:19,910:INFO - Client connected. Total clients: 1
+2025-02-06 11:45:19,910:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:19,910:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:20,357:INFO - Updated Gold Price => 1900.14
+2025-02-06 11:45:20,357:INFO - Updated Silver Price => 29.93
+2025-02-06 11:45:20,358:INFO - Updated Gold RSI Momentum => 10000.14
+2025-02-06 11:45:20,358:INFO - Updated Gold RSI Contrarian => 10000.14
+2025-02-06 11:45:20,358:INFO - Updated Silver RSI Momentum => 9993.41
+2025-02-06 11:45:20,358:INFO - Updated Silver RSI Contrarian => 9993.41
+2025-02-06 11:45:20,915:INFO - connection open
+2025-02-06 11:45:20,915:INFO - Client connected. Total clients: 2
+2025-02-06 11:45:20,916:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:20,916:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:20,917:INFO - Client disconnected. Total clients: 1
+2025-02-06 11:45:20,917:INFO - connection closed
+2025-02-06 11:45:21,360:INFO - Updated Gold Price => 1899.35
+2025-02-06 11:45:21,360:INFO - Updated Silver Price => 30.02
+2025-02-06 11:45:21,360:INFO - Updated Gold RSI Momentum => 9998.88
+2025-02-06 11:45:21,360:INFO - Updated Gold RSI Contrarian => 9998.88
+2025-02-06 11:45:21,361:INFO - Updated Silver RSI Momentum => 10001.94
+2025-02-06 11:45:21,361:INFO - Updated Silver RSI Contrarian => 10001.94
+2025-02-06 11:45:21,919:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:45:21,919:INFO - connection closed
+2025-02-06 11:45:21,919:INFO - connection open
+2025-02-06 11:45:21,919:INFO - Client connected. Total clients: 1
+2025-02-06 11:45:21,920:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:21,920:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:22,363:INFO - Updated Gold Price => 1900.84
+2025-02-06 11:45:22,363:INFO - Updated Silver Price => 30.07
+2025-02-06 11:45:22,364:INFO - Updated Gold RSI Momentum => 10001.24
+2025-02-06 11:45:22,364:INFO - Updated Gold RSI Contrarian => 10001.24
+2025-02-06 11:45:22,365:INFO - Updated Silver RSI Momentum => 10007.27
+2025-02-06 11:45:22,366:INFO - Updated Silver RSI Contrarian => 10007.27
+2025-02-06 11:45:22,922:INFO - connection open
+2025-02-06 11:45:22,922:INFO - Client connected. Total clients: 2
+2025-02-06 11:45:22,922:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:22,923:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:22,923:INFO - Client disconnected. Total clients: 1
+2025-02-06 11:45:22,923:INFO - connection closed
+2025-02-06 11:45:23,368:INFO - Updated Gold Price => 1901.28
+2025-02-06 11:45:23,369:INFO - Updated Silver Price => 30.07
+2025-02-06 11:45:23,369:INFO - Updated Gold RSI Momentum => 10001.92
+2025-02-06 11:45:23,369:INFO - Updated Gold RSI Contrarian => 10001.92
+2025-02-06 11:45:23,370:INFO - Updated Silver RSI Momentum => 10006.53
+2025-02-06 11:45:23,370:INFO - Updated Silver RSI Contrarian => 10006.53
+2025-02-06 11:45:23,925:INFO - connection open
+2025-02-06 11:45:23,925:INFO - Client connected. Total clients: 2
+2025-02-06 11:45:23,925:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:23,926:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:23,926:INFO - Client disconnected. Total clients: 1
+2025-02-06 11:45:23,926:INFO - connection closed
+2025-02-06 11:45:24,371:INFO - Updated Gold Price => 1902.57
+2025-02-06 11:45:24,372:INFO - Updated Silver Price => 30.09
+2025-02-06 11:45:24,372:INFO - Updated Gold RSI Momentum => 10003.97
+2025-02-06 11:45:24,372:INFO - Updated Gold RSI Contrarian => 10003.97
+2025-02-06 11:45:24,372:INFO - Updated Silver RSI Momentum => 10008.70
+2025-02-06 11:45:24,372:INFO - Updated Silver RSI Contrarian => 10008.70
+2025-02-06 11:45:24,927:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:45:24,927:INFO - connection closed
+2025-02-06 11:45:24,928:INFO - connection open
+2025-02-06 11:45:24,928:INFO - Client connected. Total clients: 1
+2025-02-06 11:45:24,928:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:24,928:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:25,377:INFO - Updated Gold Price => 1903.75
+2025-02-06 11:45:25,377:INFO - Updated Silver Price => 30.15
+2025-02-06 11:45:25,378:INFO - Updated Gold RSI Momentum => 10005.83
+2025-02-06 11:45:25,378:INFO - Updated Gold RSI Contrarian => 10005.83
+2025-02-06 11:45:25,378:INFO - Updated Silver RSI Momentum => 10014.90
+2025-02-06 11:45:25,378:INFO - Updated Silver RSI Contrarian => 10014.90
+2025-02-06 11:45:25,928:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:45:25,929:INFO - connection closed
+2025-02-06 11:45:25,929:INFO - connection open
+2025-02-06 11:45:25,929:INFO - Client connected. Total clients: 1
+2025-02-06 11:45:25,929:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:25,929:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:26,380:INFO - Updated Gold Price => 1904.34
+2025-02-06 11:45:26,380:INFO - Updated Silver Price => 30.17
+2025-02-06 11:45:26,380:INFO - Updated Gold RSI Momentum => 10006.77
+2025-02-06 11:45:26,380:INFO - Updated Gold RSI Contrarian => 10006.77
+2025-02-06 11:45:26,380:INFO - Updated Silver RSI Momentum => 10016.60
+2025-02-06 11:45:26,380:INFO - Updated Silver RSI Contrarian => 10016.60
+2025-02-06 11:45:26,931:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:45:26,932:INFO - connection closed
+2025-02-06 11:45:26,932:INFO - connection open
+2025-02-06 11:45:26,932:INFO - Client connected. Total clients: 1
+2025-02-06 11:45:26,933:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:26,933:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:27,382:INFO - Updated Gold Price => 1904.95
+2025-02-06 11:45:27,383:INFO - Updated Silver Price => 30.15
+2025-02-06 11:45:27,383:INFO - Updated Gold RSI Momentum => 10007.72
+2025-02-06 11:45:27,384:INFO - Updated Gold RSI Contrarian => 10007.72
+2025-02-06 11:45:27,384:INFO - Updated Silver RSI Momentum => 10014.83
+2025-02-06 11:45:27,384:INFO - Updated Silver RSI Contrarian => 10014.83
+2025-02-06 11:45:27,935:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:45:27,935:INFO - connection closed
+2025-02-06 11:45:27,935:INFO - connection open
+2025-02-06 11:45:27,935:INFO - Client connected. Total clients: 1
+2025-02-06 11:45:27,936:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:27,936:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:28,386:INFO - Updated Gold Price => 1905.47
+2025-02-06 11:45:28,386:INFO - Updated Silver Price => 30.22
+2025-02-06 11:45:28,386:INFO - Updated Gold RSI Momentum => 10008.55
+2025-02-06 11:45:28,387:INFO - Updated Gold RSI Contrarian => 10008.55
+2025-02-06 11:45:28,387:INFO - Updated Silver RSI Momentum => 10021.60
+2025-02-06 11:45:28,387:INFO - Updated Silver RSI Contrarian => 10021.60
+2025-02-06 11:45:28,938:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:45:28,938:INFO - connection closed
+2025-02-06 11:45:28,940:INFO - connection open
+2025-02-06 11:45:28,940:INFO - Client connected. Total clients: 1
+2025-02-06 11:45:28,941:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:28,941:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:29,388:INFO - Updated Gold Price => 1903.95
+2025-02-06 11:45:29,389:INFO - Updated Silver Price => 30.19
+2025-02-06 11:45:29,389:INFO - Updated Gold RSI Momentum => 10006.14
+2025-02-06 11:45:29,389:INFO - Updated Gold RSI Contrarian => 10006.14
+2025-02-06 11:45:29,389:INFO - Updated Silver RSI Momentum => 10019.05
+2025-02-06 11:45:29,389:INFO - Updated Silver RSI Contrarian => 10019.05
+2025-02-06 11:45:29,944:INFO - connection open
+2025-02-06 11:45:29,944:INFO - Client connected. Total clients: 2
+2025-02-06 11:45:29,945:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:29,945:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:29,945:INFO - Client disconnected. Total clients: 1
+2025-02-06 11:45:29,945:INFO - connection closed
+2025-02-06 11:45:30,390:INFO - Updated Gold Price => 1905.09
+2025-02-06 11:45:30,390:INFO - Updated Silver Price => 30.22
+2025-02-06 11:45:30,390:INFO - Updated Gold RSI Momentum => 10007.95
+2025-02-06 11:45:30,391:INFO - Updated Gold RSI Contrarian => 10007.95
+2025-02-06 11:45:30,391:INFO - Updated Silver RSI Momentum => 10021.50
+2025-02-06 11:45:30,391:INFO - Updated Silver RSI Contrarian => 10021.50
+2025-02-06 11:45:30,943:INFO - connection open
+2025-02-06 11:45:30,944:INFO - Client connected. Total clients: 2
+2025-02-06 11:45:30,944:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:30,944:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:30,944:INFO - Client disconnected. Total clients: 1
+2025-02-06 11:45:30,945:INFO - connection closed
+2025-02-06 11:45:31,393:INFO - Updated Gold Price => 1904.33
+2025-02-06 11:45:31,394:INFO - Updated Silver Price => 30.24
+2025-02-06 11:45:31,394:INFO - Updated Gold RSI Momentum => 10006.74
+2025-02-06 11:45:31,394:INFO - Updated Gold RSI Contrarian => 10006.74
+2025-02-06 11:45:31,394:INFO - Updated Silver RSI Momentum => 10024.09
+2025-02-06 11:45:31,394:INFO - Updated Silver RSI Contrarian => 10024.09
+2025-02-06 11:45:31,944:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:45:31,944:INFO - connection closed
+2025-02-06 11:45:31,946:INFO - connection open
+2025-02-06 11:45:31,946:INFO - Client connected. Total clients: 1
+2025-02-06 11:45:31,946:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:31,946:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:32,396:INFO - Updated Gold Price => 1902.45
+2025-02-06 11:45:32,396:INFO - Updated Silver Price => 30.29
+2025-02-06 11:45:32,396:INFO - Updated Gold RSI Momentum => 10003.78
+2025-02-06 11:45:32,396:INFO - Updated Gold RSI Contrarian => 10003.78
+2025-02-06 11:45:32,397:INFO - Updated Silver RSI Momentum => 10029.02
+2025-02-06 11:45:32,397:INFO - Updated Silver RSI Contrarian => 10029.02
+2025-02-06 11:45:32,947:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:45:32,947:INFO - connection closed
+2025-02-06 11:45:32,948:INFO - connection open
+2025-02-06 11:45:32,948:INFO - Client connected. Total clients: 1
+2025-02-06 11:45:32,948:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:32,948:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:33,400:INFO - Updated Gold Price => 1903.22
+2025-02-06 11:45:33,401:INFO - Updated Silver Price => 30.36
+2025-02-06 11:45:33,401:INFO - Updated Gold RSI Momentum => 10005.00
+2025-02-06 11:45:33,401:INFO - Updated Gold RSI Contrarian => 10005.00
+2025-02-06 11:45:33,401:INFO - Updated Silver RSI Momentum => 10036.02
+2025-02-06 11:45:33,401:INFO - Updated Silver RSI Contrarian => 10036.02
+2025-02-06 11:45:33,951:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:45:33,951:INFO - connection closed
+2025-02-06 11:45:33,951:INFO - connection open
+2025-02-06 11:45:33,952:INFO - Client connected. Total clients: 1
+2025-02-06 11:45:33,952:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:33,952:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:34,403:INFO - Updated Gold Price => 1904.15
+2025-02-06 11:45:34,403:INFO - Updated Silver Price => 30.44
+2025-02-06 11:45:34,403:INFO - Updated Gold RSI Momentum => 10006.46
+2025-02-06 11:45:34,404:INFO - Updated Gold RSI Contrarian => 10006.46
+2025-02-06 11:45:34,404:INFO - Updated Silver RSI Momentum => 10044.09
+2025-02-06 11:45:34,404:INFO - Updated Silver RSI Contrarian => 10044.09
+2025-02-06 11:45:34,953:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:45:34,954:INFO - connection closed
+2025-02-06 11:45:34,954:INFO - connection open
+2025-02-06 11:45:34,955:INFO - Client connected. Total clients: 1
+2025-02-06 11:45:34,955:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:34,955:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:35,405:INFO - Updated Gold Price => 1903.76
+2025-02-06 11:45:35,405:INFO - Updated Silver Price => 30.46
+2025-02-06 11:45:35,406:INFO - Updated Gold RSI Momentum => 10005.85
+2025-02-06 11:45:35,406:INFO - Updated Gold RSI Contrarian => 10005.85
+2025-02-06 11:45:35,406:INFO - Updated Silver RSI Momentum => 10046.10
+2025-02-06 11:45:35,406:INFO - Updated Silver RSI Contrarian => 10046.10
+2025-02-06 11:45:35,956:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:45:35,957:INFO - connection closed
+2025-02-06 11:45:35,958:INFO - connection open
+2025-02-06 11:45:35,958:INFO - Client connected. Total clients: 1
+2025-02-06 11:45:35,958:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:35,958:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:36,408:INFO - Updated Gold Price => 1905.59
+2025-02-06 11:45:36,408:INFO - Updated Silver Price => 30.41
+2025-02-06 11:45:36,408:INFO - Updated Gold RSI Momentum => 10008.74
+2025-02-06 11:45:36,408:INFO - Updated Gold RSI Contrarian => 10008.74
+2025-02-06 11:45:36,409:INFO - Updated Silver RSI Momentum => 10041.13
+2025-02-06 11:45:36,409:INFO - Updated Silver RSI Contrarian => 10041.13
+2025-02-06 11:45:36,958:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:45:36,958:INFO - connection closed
+2025-02-06 11:45:36,959:INFO - connection open
+2025-02-06 11:45:36,959:INFO - Client connected. Total clients: 1
+2025-02-06 11:45:36,959:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:36,959:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:37,410:INFO - Updated Gold Price => 1904.59
+2025-02-06 11:45:37,410:INFO - Updated Silver Price => 30.36
+2025-02-06 11:45:37,411:INFO - Updated Gold RSI Momentum => 10007.15
+2025-02-06 11:45:37,411:INFO - Updated Gold RSI Contrarian => 10007.15
+2025-02-06 11:45:37,411:INFO - Updated Silver RSI Momentum => 10035.56
+2025-02-06 11:45:37,411:INFO - Updated Silver RSI Contrarian => 10035.56
+2025-02-06 11:45:37,962:INFO - connection open
+2025-02-06 11:45:37,962:INFO - Client connected. Total clients: 2
+2025-02-06 11:45:37,962:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:37,962:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:37,962:INFO - Client disconnected. Total clients: 1
+2025-02-06 11:45:37,963:INFO - connection closed
+2025-02-06 11:45:38,413:INFO - Updated Gold Price => 1906.18
+2025-02-06 11:45:38,416:INFO - Updated Silver Price => 30.29
+2025-02-06 11:45:38,416:INFO - Updated Gold RSI Momentum => 10009.67
+2025-02-06 11:45:38,417:INFO - Updated Gold RSI Contrarian => 10009.67
+2025-02-06 11:45:38,417:INFO - Updated Silver RSI Momentum => 10028.59
+2025-02-06 11:45:38,417:INFO - Updated Silver RSI Contrarian => 10028.59
+2025-02-06 11:45:38,966:INFO - connection open
+2025-02-06 11:45:38,967:INFO - Client connected. Total clients: 2
+2025-02-06 11:45:38,967:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:38,967:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:38,967:INFO - Client disconnected. Total clients: 1
+2025-02-06 11:45:38,967:INFO - connection closed
+2025-02-06 11:45:39,418:INFO - Updated Gold Price => 1905.74
+2025-02-06 11:45:39,419:INFO - Updated Silver Price => 30.32
+2025-02-06 11:45:39,419:INFO - Updated Gold RSI Momentum => 10008.97
+2025-02-06 11:45:39,419:INFO - Updated Gold RSI Contrarian => 10008.97
+2025-02-06 11:45:39,420:INFO - Updated Silver RSI Momentum => 10031.75
+2025-02-06 11:45:39,420:INFO - Updated Silver RSI Contrarian => 10031.75
+2025-02-06 11:45:39,967:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:45:39,967:INFO - connection closed
+2025-02-06 11:45:39,968:INFO - connection open
+2025-02-06 11:45:39,968:INFO - Client connected. Total clients: 1
+2025-02-06 11:45:39,968:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:39,968:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:40,422:INFO - Updated Gold Price => 1906.57
+2025-02-06 11:45:40,423:INFO - Updated Silver Price => 30.31
+2025-02-06 11:45:40,423:INFO - Updated Gold RSI Momentum => 10010.28
+2025-02-06 11:45:40,424:INFO - Updated Gold RSI Contrarian => 10010.28
+2025-02-06 11:45:40,424:INFO - Updated Silver RSI Momentum => 10031.26
+2025-02-06 11:45:40,424:INFO - Updated Silver RSI Contrarian => 10031.26
+2025-02-06 11:45:40,972:INFO - connection open
+2025-02-06 11:45:40,973:INFO - Client connected. Total clients: 2
+2025-02-06 11:45:40,973:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:40,973:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:40,974:INFO - Client disconnected. Total clients: 1
+2025-02-06 11:45:40,974:INFO - connection closed
+2025-02-06 11:45:41,426:INFO - Updated Gold Price => 1905.55
+2025-02-06 11:45:41,427:INFO - Updated Silver Price => 30.30
+2025-02-06 11:45:41,427:INFO - Updated Gold RSI Momentum => 10008.68
+2025-02-06 11:45:41,427:INFO - Updated Gold RSI Contrarian => 10008.68
+2025-02-06 11:45:41,427:INFO - Updated Silver RSI Momentum => 10030.00
+2025-02-06 11:45:41,428:INFO - Updated Silver RSI Contrarian => 10030.00
+2025-02-06 11:45:41,977:INFO - connection open
+2025-02-06 11:45:41,977:INFO - Client connected. Total clients: 2
+2025-02-06 11:45:41,977:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:41,978:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:41,978:INFO - Client disconnected. Total clients: 1
+2025-02-06 11:45:41,978:INFO - connection closed
+2025-02-06 11:45:42,430:INFO - Updated Gold Price => 1905.71
+2025-02-06 11:45:42,430:INFO - Updated Silver Price => 30.24
+2025-02-06 11:45:42,431:INFO - Updated Gold RSI Momentum => 10008.93
+2025-02-06 11:45:42,431:INFO - Updated Gold RSI Contrarian => 10008.93
+2025-02-06 11:45:42,431:INFO - Updated Silver RSI Momentum => 10023.56
+2025-02-06 11:45:42,432:INFO - Updated Silver RSI Contrarian => 10023.56
+2025-02-06 11:45:42,974:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:45:42,975:INFO - connection closed
+2025-02-06 11:45:42,975:INFO - connection open
+2025-02-06 11:45:42,975:INFO - Client connected. Total clients: 1
+2025-02-06 11:45:42,976:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:42,976:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:43,432:INFO - Updated Gold Price => 1906.75
+2025-02-06 11:45:43,433:INFO - Updated Silver Price => 30.19
+2025-02-06 11:45:43,433:INFO - Updated Gold RSI Momentum => 10010.56
+2025-02-06 11:45:43,433:INFO - Updated Gold RSI Contrarian => 10010.56
+2025-02-06 11:45:43,433:INFO - Updated Silver RSI Momentum => 10018.54
+2025-02-06 11:45:43,434:INFO - Updated Silver RSI Contrarian => 10018.54
+2025-02-06 11:45:43,976:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:45:43,976:INFO - connection closed
+2025-02-06 11:45:43,977:INFO - connection open
+2025-02-06 11:45:43,977:INFO - Client connected. Total clients: 1
+2025-02-06 11:45:43,977:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:43,977:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:44,436:INFO - Updated Gold Price => 1906.51
+2025-02-06 11:45:44,437:INFO - Updated Silver Price => 30.16
+2025-02-06 11:45:44,437:INFO - Updated Gold RSI Momentum => 10010.19
+2025-02-06 11:45:44,437:INFO - Updated Gold RSI Contrarian => 10010.19
+2025-02-06 11:45:44,438:INFO - Updated Silver RSI Momentum => 10015.65
+2025-02-06 11:45:44,438:INFO - Updated Silver RSI Contrarian => 10015.65
+2025-02-06 11:45:44,978:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:45:44,979:INFO - connection closed
+2025-02-06 11:45:44,979:INFO - connection open
+2025-02-06 11:45:44,979:INFO - Client connected. Total clients: 1
+2025-02-06 11:45:44,979:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:44,979:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:45,440:INFO - Updated Gold Price => 1907.29
+2025-02-06 11:45:45,440:INFO - Updated Silver Price => 30.13
+2025-02-06 11:45:45,440:INFO - Updated Gold RSI Momentum => 10011.42
+2025-02-06 11:45:45,440:INFO - Updated Gold RSI Contrarian => 10011.42
+2025-02-06 11:45:45,440:INFO - Updated Silver RSI Momentum => 10012.79
+2025-02-06 11:45:45,440:INFO - Updated Silver RSI Contrarian => 10012.79
+2025-02-06 11:45:45,981:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:45:45,981:INFO - connection closed
+2025-02-06 11:45:45,981:INFO - connection open
+2025-02-06 11:45:45,981:INFO - Client connected. Total clients: 1
+2025-02-06 11:45:45,982:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:45,982:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:46,442:INFO - Updated Gold Price => 1907.52
+2025-02-06 11:45:46,442:INFO - Updated Silver Price => 30.20
+2025-02-06 11:45:46,442:INFO - Updated Gold RSI Momentum => 10011.79
+2025-02-06 11:45:46,443:INFO - Updated Gold RSI Contrarian => 10011.79
+2025-02-06 11:45:46,443:INFO - Updated Silver RSI Momentum => 10020.29
+2025-02-06 11:45:46,443:INFO - Updated Silver RSI Contrarian => 10020.29
+2025-02-06 11:45:46,983:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:45:46,984:INFO - connection closed
+2025-02-06 11:45:46,984:INFO - connection open
+2025-02-06 11:45:46,984:INFO - Client connected. Total clients: 1
+2025-02-06 11:45:46,985:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:46,985:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:47,445:INFO - Updated Gold Price => 1908.90
+2025-02-06 11:45:47,445:INFO - Updated Silver Price => 30.16
+2025-02-06 11:45:47,445:INFO - Updated Gold RSI Momentum => 10013.96
+2025-02-06 11:45:47,445:INFO - Updated Gold RSI Contrarian => 10013.96
+2025-02-06 11:45:47,446:INFO - Updated Silver RSI Momentum => 10016.16
+2025-02-06 11:45:47,446:INFO - Updated Silver RSI Contrarian => 10016.16
+2025-02-06 11:45:47,987:INFO - connection open
+2025-02-06 11:45:47,988:INFO - Client connected. Total clients: 2
+2025-02-06 11:45:47,988:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:47,988:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:47,989:INFO - Client disconnected. Total clients: 1
+2025-02-06 11:45:47,989:INFO - connection closed
+2025-02-06 11:45:48,447:INFO - Updated Gold Price => 1907.33
+2025-02-06 11:45:48,448:INFO - Updated Silver Price => 30.12
+2025-02-06 11:45:48,448:INFO - Updated Gold RSI Momentum => 10011.49
+2025-02-06 11:45:48,448:INFO - Updated Gold RSI Contrarian => 10011.49
+2025-02-06 11:45:48,448:INFO - Updated Silver RSI Momentum => 10012.25
+2025-02-06 11:45:48,448:INFO - Updated Silver RSI Contrarian => 10012.25
+2025-02-06 11:45:48,988:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:45:48,988:INFO - connection closed
+2025-02-06 11:45:48,989:INFO - connection open
+2025-02-06 11:45:48,989:INFO - Client connected. Total clients: 1
+2025-02-06 11:45:48,990:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:48,991:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:49,450:INFO - Updated Gold Price => 1907.34
+2025-02-06 11:45:49,450:INFO - Updated Silver Price => 30.05
+2025-02-06 11:45:49,450:INFO - Updated Gold RSI Momentum => 10011.50
+2025-02-06 11:45:49,451:INFO - Updated Gold RSI Contrarian => 10011.50
+2025-02-06 11:45:49,451:INFO - Updated Silver RSI Momentum => 10004.62
+2025-02-06 11:45:49,451:INFO - Updated Silver RSI Contrarian => 10004.62
+2025-02-06 11:45:49,991:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:45:49,991:INFO - connection closed
+2025-02-06 11:45:49,992:INFO - connection open
+2025-02-06 11:45:49,993:INFO - Client connected. Total clients: 1
+2025-02-06 11:45:49,993:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:49,993:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:50,453:INFO - Updated Gold Price => 1908.23
+2025-02-06 11:45:50,453:INFO - Updated Silver Price => 29.98
+2025-02-06 11:45:50,454:INFO - Updated Gold RSI Momentum => 10012.90
+2025-02-06 11:45:50,454:INFO - Updated Gold RSI Contrarian => 10012.90
+2025-02-06 11:45:50,454:INFO - Updated Silver RSI Momentum => 9997.99
+2025-02-06 11:45:50,454:INFO - Updated Silver RSI Contrarian => 9997.99
+2025-02-06 11:45:50,993:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:45:50,994:INFO - connection closed
+2025-02-06 11:45:50,994:INFO - connection open
+2025-02-06 11:45:50,994:INFO - Client connected. Total clients: 1
+2025-02-06 11:45:50,994:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:50,995:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:51,456:INFO - Updated Gold Price => 1909.31
+2025-02-06 11:45:51,456:INFO - Updated Silver Price => 30.07
+2025-02-06 11:45:51,456:INFO - Updated Gold RSI Momentum => 10014.62
+2025-02-06 11:45:51,456:INFO - Updated Gold RSI Contrarian => 10014.62
+2025-02-06 11:45:51,456:INFO - Updated Silver RSI Momentum => 10006.95
+2025-02-06 11:45:51,456:INFO - Updated Silver RSI Contrarian => 10006.95
+2025-02-06 11:45:51,994:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:45:51,995:INFO - connection closed
+2025-02-06 11:45:51,995:INFO - connection open
+2025-02-06 11:45:51,995:INFO - Client connected. Total clients: 1
+2025-02-06 11:45:51,996:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:51,996:INFO - Sent initial positions snapshot to client
+2025-02-06 11:45:52,457:INFO - Updated Gold Price => 1909.68
+2025-02-06 11:45:52,458:INFO - Updated Silver Price => 30.08
+2025-02-06 11:45:52,458:INFO - Updated Gold RSI Momentum => 10015.19
+2025-02-06 11:45:52,458:INFO - Updated Gold RSI Contrarian => 10015.19
+2025-02-06 11:45:52,459:INFO - Updated Silver RSI Momentum => 10007.96
+2025-02-06 11:45:52,459:INFO - Updated Silver RSI Contrarian => 10007.96
+2025-02-06 11:45:52,996:INFO - Client disconnected. Total clients: 0
+2025-02-06 11:45:52,997:INFO - connection closed
+2025-02-06 11:45:52,997:INFO - connection open
+2025-02-06 11:45:52,997:INFO - Client connected. Total clients: 1
+2025-02-06 11:45:52,997:INFO - Sent initial price snapshot to client
+2025-02-06 11:45:52,997:INFO - Sent initial positions snapshot to client
