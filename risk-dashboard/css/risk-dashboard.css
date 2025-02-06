@@ -387,12 +387,6 @@ nav {
     gap: 0.5rem;
 }
 
-.metric-value.currency::before {
-    content: '$';
-    font-size: 1.2rem;
-    color: #95a5a6;
-}
-
 .metric-trend {
     font-size: 0.9rem;
     display: flex;
