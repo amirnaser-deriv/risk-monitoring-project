@@ -2,7 +2,7 @@
 
 This document provides an overview of the Real-Time Risk Monitoring System, a comprehensive solution designed to provide immediate insights into our trading positions, exposures, and associated risks related to gold and silver, including their derived indices. This system empowers proactive risk management and informed decision-making.
 
-## Business Overview (Page 1)
+## Business Overview
 
 The Real-Time Risk Monitoring System is a critical tool for managing our exposure to gold and silver markets. It consists of two primary interfaces:
 
@@ -75,10 +75,10 @@ The system simulates trading activity and market fluctuations. The core logic re
 
 2.  Set up Supabase tables and policies (refer to `setup/fix_positions_policies.sql` for the latest SQL setup).
 
-3.  Start the price feed engine:
+3.  Start the price feed engine and sites:
 
     ```bash
-    python feed-engine.py
+    python manage.py start
     ```
 
 4.  Open the trading site and risk dashboard in your browser:
