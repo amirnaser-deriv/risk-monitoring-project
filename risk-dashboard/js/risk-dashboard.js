@@ -566,24 +566,8 @@ const riskDashboard = {
     renderPositionCard(position) {
         try {
             // Get the appropriate price for the position
-            let currentPrice;
-            const normalizedId = position.index_id
-                .replace('RSI_', '')
-                .replace('_mtm', ' RSI Momentum')
-                .replace('_ctn', ' RSI Contrarian');
-            
-            // Normalize metal names
-            const normalizedMetalId = position.index_id
-                .replace('Gold', 'Gold Price')
-                .replace('Silver', 'Silver Price');
-            
-            if (normalizedId === 'Gold RSI Momentum' || normalizedId === 'Gold RSI Contrarian') {
-                currentPrice = window.PriceUpdates.getCurrentPrice('Gold Price');
-            } else if (normalizedId === 'Silver RSI Momentum' || normalizedId === 'Silver RSI Contrarian') {
-                currentPrice = window.PriceUpdates.getCurrentPrice('Silver Price');
-            } else {
-                currentPrice = window.PriceUpdates.getCurrentPrice(normalizedMetalId);
-            }
+            const currentPrice = window.PriceUpdates.getCurrentPrice(position.index_id);
+
             const pnl = window.RiskPositionManager.calculatePnL(position);
             const pnlClass = pnl >= 0 ? 'positive' : 'negative';
             const exposure = position.quantity * (currentPrice || position.entry_price);
