@@ -402,7 +402,7 @@ const riskDashboard = {
         // Update gold exposure display
         const goldExpElem = document.getElementById('total-gold-exposure');
         const goldExpTrendElem = document.getElementById('gold-exposure-trend');
-        
+
         if (netGoldUnits > 0) {
             goldExpElem.style.color = '#27ae60';
             goldExpElem.textContent = netGoldUnits.toFixed(2) + ' Gold Long';
@@ -445,10 +445,10 @@ const riskDashboard = {
             maximumFractionDigits: 0
         }).format(netSilverExposure);
 
-        // Calculate and update daily P&L with trend
-        const totalPnl = positions.reduce((sum, pos) => 
+        // Calculate and update unrealized P&L with trend
+        const totalPnl = positions.reduce((sum, pos) =>
             sum + window.RiskPositionManager.calculatePnL(pos), 0);
-        this.updateMetricWithTrend('daily-pnl',
+        this.updateMetricWithTrend('unrealized-pnl',
             totalPnl,
             this.previousMetrics.pnl,
             value => new Intl.NumberFormat('en-US', {
