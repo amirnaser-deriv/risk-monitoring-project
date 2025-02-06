@@ -218,7 +218,10 @@ window.RiskPositionManager = {
                 return 0;
             }
             
-            const multiplier = position.side === 'buy' ? 1 : -1;
+            // Company's P&L is inverse of client's P&L
+            // When client buys (goes long), company is short
+            // When client sells (goes short), company is long
+            const multiplier = position.side === 'buy' ? -1 : 1;
             return multiplier * position.quantity * (currentPrice - position.entry_price);
         } catch (error) {
             console.error('Error calculating PnL:', error);
