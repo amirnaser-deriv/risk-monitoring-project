@@ -14,8 +14,7 @@
             supabase: false,
             auth: false,
             price: false,
-            position: false,
-            goldPosition: false
+            position: false
         };
 
         function updateStatus(component, status, message) {
@@ -69,11 +68,6 @@
         window.addEventListener('positionUpdatesReady', () => {
             console.log('Position updates ready event received');
             updateStatus('position', 'done', '✅ Position Updates: Ready');
-        });
-
-        window.addEventListener('goldPositionUpdatesReady', () => {
-            console.log('Gold position updates ready event received');
-            updateStatus('goldPosition', 'done', '✅ Gold Position Updates: Ready');
         });
 
         window.addEventListener('error', (event) => {
@@ -146,7 +140,6 @@
         <div class="status-item pending" id="status-auth">⏳ Auth: Waiting...</div>
         <div class="status-item pending" id="status-price">⏳ Price Updates: Waiting...</div>
         <div class="status-item pending" id="status-position">⏳ Position Updates: Waiting...</div>
-        <div class="status-item pending" id="status-goldPosition">⏳ Gold Position Updates: Waiting...</div>
         <div class="status-item pending" id="status-app">⏳ App: Waiting...</div>
     </div>
 
@@ -156,7 +149,6 @@
     <script src="/shared/js/auth-modal.js"></script>
     <script src="/shared/js/price-updates.js"></script>
     <script src="/shared/js/position-updates.js"></script>
-    <script src="/shared/js/gold-position-updates.js"></script>
     <script src="/trading-site/js/trading-site.js"></script>
 </body>
 </html>

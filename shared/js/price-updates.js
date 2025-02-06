@@ -18,38 +18,55 @@ window.PriceUpdates = {
             console.log('Price Updates: Initializing...');
             updateStatus('price', 'pending', '⏳ Price Updates: Initializing...');
 
-            // Wait for Supabase client
-            if (!window.supabaseClient?.client) {
-                console.log('Price Updates: Waiting for Supabase client...');
-                await new Promise((resolve, reject) => {
-                    let attempts = 0;
-                    const maxAttempts = 50;
-                    
-                    const checkClient = setInterval(() => {
-                        attempts++;
-                        if (window.supabaseClient?.client) {
-                            clearInterval(checkClient);
-                            resolve();
-                        } else if (attempts >= maxAttempts) {
-                            clearInterval(checkClient);
-                            reject(new Error('Supabase client timeout'));
-                        }
-                    }, 100);
-
-                    window.addEventListener('supabaseReady', () => {
-                        clearInterval(checkClient);
-                        resolve();
-                    }, { once: true });
-                });
-            }
-
             // Try to connect to WebSocket server
             try {
                 await this.connectWebSocket();
             } catch (error) {
                 console.error('Failed to connect to WebSocket:', error);
-                // Continue without real-time updates
+                // Set default prices if websocket fails
+                const defaultPrices = {
+                    'Gold Price': 1900,
+                    'Silver Price': 30,
+                    'Gold RSI Momentum': 10000,
+                    'Gold RSI Contrarian': 10000,
+                    'Silver RSI Momentum': 10000,
+                    'Silver RSI Contrarian': 10000
+                };
+                
+                // Set prices and notify subscribers
+                Object.entries(defaultPrices).forEach(([index_id, price]) => {
+                    this.currentPrices.set(index_id, price);
+                    this.notifySubscribers({
+                        index_id,
+                        price,
+                        name: index_id
+                    });
+                });
+                
+                console.log('Using default prices:', this.currentPrices);
             }
+
+            // Wait for initial price snapshot
+            await new Promise((resolve, reject) => {
+                if (this.currentPrices.size > 0) {
+                    resolve();
+                } else {
+                    let attempts = 0;
+                    const maxAttempts = 50; // 5 seconds
+                    
+                    const checkPrices = setInterval(() => {
+                        attempts++;
+                        if (this.currentPrices.size > 0) {
+                            clearInterval(checkPrices);
+                            resolve();
+                        } else if (attempts >= maxAttempts) {
+                            clearInterval(checkPrices);
+                            console.warn('Timeout waiting for initial prices, continuing anyway');
+                            resolve(); // Continue anyway to not block the UI
+                        }
+                    }, 100);
+                }
+            });
 
             this.isInitialized = true;
             console.log('Price Updates: Initialized successfully');
@@ -78,6 +95,9 @@ window.PriceUpdates = {
                 this.reconnectAttempts = 0;
                 this.reconnectDelay = 1000;
                 updateStatus('price', 'done', '✅ Price Updates: Connected');
+
+                // Keep last known prices until we get new ones
+                console.log('Keeping last known prices until snapshot received:', this.currentPrices);
 
                 // Start ping-pong
                 pingInterval = setInterval(() => {
@@ -231,9 +251,7 @@ window.PriceUpdates = {
         // Return indices from WebSocket data
         return Array.from(this.currentPrices.keys()).map(id => ({
             id,
-            name: id.replace('RSI_Gold_mtm', 'Gold RSI Momentum')
-                  .replace('RSI_Gold_ctn', 'Gold RSI Contrarian')
-                  .replace('Gold', 'Gold Price')
+            name: id // No need to replace names since they're already in the correct format from feed-engine
         }));
     },
 

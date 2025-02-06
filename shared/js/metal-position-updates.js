@@ -1,5 +1,5 @@
-// Gold position updates management
-window.GoldPositionUpdates = {
+// Metal position updates management
+window.MetalPositionUpdates = {
     subscribers: [],
     currentPositions: new Map(),
     isInitialized: false,
@@ -10,12 +10,12 @@ window.GoldPositionUpdates = {
         }
 
         try {
-            console.log('Gold Position Updates: Initializing...');
-            updateStatus('goldPosition', 'pending', '⏳ Gold Position Updates: Initializing...');
+            console.log('Metal Position Updates: Initializing...');
+            updateStatus('metalPosition', 'pending', '⏳ Metal Position Updates: Initializing...');
 
             // Wait for Price Updates since we'll share the same websocket
             if (!window.PriceUpdates?.isInitialized) {
-                console.log('Gold Position Updates: Waiting for Price Updates...');
+                console.log('Metal Position Updates: Waiting for Price Updates...');
                 await new Promise((resolve) => {
                     window.addEventListener('priceUpdatesReady', resolve, { once: true });
                 });
@@ -28,21 +28,21 @@ window.GoldPositionUpdates = {
             this.setupWebSocketHandlers();
 
             this.isInitialized = true;
-            console.log('Gold Position Updates: Initialized successfully');
-            updateStatus('goldPosition', 'done', '✅ Gold Position Updates: Ready');
-            window.dispatchEvent(new Event('goldPositionUpdatesReady'));
+            console.log('Metal Position Updates: Initialized successfully');
+            updateStatus('metalPosition', 'done', '✅ Metal Position Updates: Ready');
+            window.dispatchEvent(new Event('metalPositionUpdatesReady'));
 
         } catch (error) {
-            console.error('Gold Position Updates initialization error:', error);
-            updateStatus('goldPosition', 'error', '❌ Gold Position Updates: Error');
+            console.error('Metal Position Updates initialization error:', error);
+            updateStatus('metalPosition', 'error', '❌ Metal Position Updates: Error');
             this.isInitialized = true;
-            window.dispatchEvent(new Event('goldPositionUpdatesReady'));
+            window.dispatchEvent(new Event('metalPositionUpdatesReady'));
         }
     },
 
     async waitForWebSocket() {
         if (!window.PriceUpdates?.ws) {
-            console.log('Gold Position Updates: Waiting for WebSocket...');
+            console.log('Metal Position Updates: Waiting for WebSocket...');
             await new Promise((resolve) => {
                 const checkWs = setInterval(() => {
                     if (window.PriceUpdates?.ws) {
@@ -52,7 +52,7 @@ window.GoldPositionUpdates = {
                 }, 100);
             });
         }
-        console.log('Gold Position Updates: WebSocket available');
+        console.log('Metal Position Updates: WebSocket available');
     },
 
     setupWebSocketHandlers() {
@@ -86,6 +86,7 @@ window.GoldPositionUpdates = {
                         
                         const position = {
                             gold_positions: data.gold_positions,
+                            silver_positions: data.silver_positions,
                             cash_balance: data.cash_balance
                         };
                         
@@ -100,20 +101,22 @@ window.GoldPositionUpdates = {
 
                     // Log final state after processing snapshot
                     console.log('Current positions after snapshot:', {
-                        mtm: this.currentPositions.get('RSI_Gold_mtm'),
-                        ctn: this.currentPositions.get('RSI_Gold_ctn')
+                        mtm: this.currentPositions.get('Gold RSI Momentum'),
+                        ctn: this.currentPositions.get('Gold RSI Contrarian')
                     });
                 } else if (message.type === 'position_update') {
                     // Handle individual position update
-                    const { index_id, gold_positions, cash_balance } = message.data;
+                    const { index_id, gold_positions, silver_positions, cash_balance } = message.data;
                     console.log(`Received position update for ${index_id}:`, { 
-                        gold_positions, 
+                        gold_positions,
+                        silver_positions,
                         cash_balance,
                         previous: this.currentPositions.get(index_id)
                     });
                     
                     const position = {
                         gold_positions,
+                        silver_positions,
                         cash_balance
                     };
                     
@@ -127,8 +130,8 @@ window.GoldPositionUpdates = {
 
                     // Log current state of all positions
                     console.log('Current positions after update:', {
-                        mtm: this.currentPositions.get('RSI_Gold_mtm'),
-                        ctn: this.currentPositions.get('RSI_Gold_ctn')
+                        mtm: this.currentPositions.get('Gold RSI Momentum'),
+                        ctn: this.currentPositions.get('Gold RSI Contrarian')
                     });
                 }
             } catch (error) {
@@ -148,6 +151,7 @@ window.GoldPositionUpdates = {
             callback({
                 index_id,
                 gold_positions: data.gold_positions,
+                silver_positions: data.silver_positions,
                 cash_balance: data.cash_balance
             });
         });
@@ -186,14 +190,14 @@ window.GoldPositionUpdates = {
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    window.GoldPositionUpdates.initialize().catch(error => {
-        console.error('Failed to initialize gold position updates:', error);
+    window.MetalPositionUpdates.initialize().catch(error => {
+        console.error('Failed to initialize metal position updates:', error);
     });
 });
 
 // Cleanup on page unload
 window.addEventListener('unload', () => {
-    window.GoldPositionUpdates.cleanup();
+    window.MetalPositionUpdates.cleanup();
 });
 
 // Helper function to update initialization status

@@ -92,11 +92,19 @@ const riskDashboard = {
 
             console.log('Access granted, proceeding with dashboard initialization');
 
-            // Wait for GoldPositionUpdates to be ready
-            if (!window.GoldPositionUpdates?.isInitialized) {
-                console.log('Waiting for GoldPositionUpdates...');
+            // Wait for PriceUpdates to be ready
+            if (!window.PriceUpdates?.isInitialized) {
+                console.log('Waiting for PriceUpdates...');
                 await new Promise((resolve) => {
-                    window.addEventListener('goldPositionUpdatesReady', resolve, { once: true });
+                    window.addEventListener('priceUpdatesReady', resolve, { once: true });
+                });
+            }
+
+            // Wait for MetalPositionUpdates to be ready
+            if (!window.MetalPositionUpdates?.isInitialized) {
+                console.log('Waiting for MetalPositionUpdates...');
+                await new Promise((resolve) => {
+                    window.addEventListener('metalPositionUpdatesReady', resolve, { once: true });
                 });
             }
 
@@ -124,6 +132,12 @@ const riskDashboard = {
             // Subscribe to price updates
             window.PriceUpdates.subscribe(update => {
                 this.handlePriceUpdate(update);
+            });
+
+            // Subscribe to metal position updates
+            window.MetalPositionUpdates.subscribe(update => {
+                console.log('Received metal position update:', update);
+                // The update will be used in updateMetrics() to calculate exposures
             });
 
             this.isInitialized = true;
@@ -160,10 +174,10 @@ const riskDashboard = {
         await window.PriceUpdates.initialize();
         console.log('Price Updates initialized');
 
-        // 4. Initialize Gold Position Updates after Price Updates
-        console.log('4. Initializing Gold Position Updates...');
-        await window.GoldPositionUpdates.initialize();
-        console.log('Gold Position Updates initialized');
+        // 4. Initialize Metal Position Updates after Price Updates
+        console.log('4. Initializing Metal Position Updates...');
+        await window.MetalPositionUpdates.initialize();
+        console.log('Metal Position Updates initialized');
 
         // 5. Initialize Risk Position Manager after Supabase
         console.log('5. Initializing Risk Position Manager...');
@@ -244,66 +258,106 @@ const riskDashboard = {
         );
         this.previousMetrics.positions = positionsCount;
 
-        // Get direct gold positions from feed engine
-        let netGoldUnits = 0;
-        const goldPrice = window.PriceUpdates.getCurrentPrice('Gold') || 1900;
+        // Get metal prices
+        const goldPrice = window.PriceUpdates.getCurrentPrice('Gold Price') || 1900;
+        const silverPrice = window.PriceUpdates.getCurrentPrice('Silver Price') || 30;
 
-        // Get current RSI gold positions
-        const mtmPosition = window.GoldPositionUpdates?.getCurrentPosition('RSI_Gold_mtm');
-        const ctnPosition = window.GoldPositionUpdates?.getCurrentPosition('RSI_Gold_ctn');
+        // Initialize net units
+        let netGoldUnits = 0;
+        let netSilverUnits = 0;
+
+        // Get current RSI positions
+        const goldMtmPosition = window.MetalPositionUpdates?.getCurrentPosition('Gold RSI Momentum');
+        const goldCtnPosition = window.MetalPositionUpdates?.getCurrentPosition('Gold RSI Contrarian');
+        const silverMtmPosition = window.MetalPositionUpdates?.getCurrentPosition('Silver RSI Momentum');
+        const silverCtnPosition = window.MetalPositionUpdates?.getCurrentPosition('Silver RSI Contrarian');
 
         // Log RSI states
         console.log('Current RSI states:', {
-            mtm: mtmPosition,
-            ctn: ctnPosition
+            goldMtm: goldMtmPosition,
+            goldCtn: goldCtnPosition,
+            silverMtm: silverMtmPosition,
+            silverCtn: silverCtnPosition
         });
 
         // Calculate exposure from positions in RSI indices
         positions.forEach(pos => {
-            if (pos.index_id === 'RSI_Gold_mtm' && mtmPosition) {
-                // If someone buys 1 lot of RSI_MTM and it has 2 lots of gold, their exposure is 2 lots
-                const effectiveGoldUnits = pos.quantity * mtmPosition.gold_positions;
+            // Gold RSI positions
+            if (pos.index_id === 'Gold RSI Momentum' && goldMtmPosition) {
+                const effectiveGoldUnits = pos.quantity * goldMtmPosition.gold_positions;
                 if (pos.side.toLowerCase() === 'buy') {
                     netGoldUnits += effectiveGoldUnits;
                 } else {
                     netGoldUnits -= effectiveGoldUnits;
                 }
-                console.log('Added RSI_Gold_mtm exposure:', {
+                console.log('Added Gold RSI Momentum exposure:', {
                     positionSize: pos.quantity,
-                    rsiGoldPosition: mtmPosition.gold_positions,
+                    rsiGoldPosition: goldMtmPosition.gold_positions,
                     effectiveGoldUnits,
                     side: pos.side,
                     newTotal: netGoldUnits
                 });
             }
-            else if (pos.index_id === 'RSI_Gold_ctn' && ctnPosition) {
-                const effectiveGoldUnits = pos.quantity * ctnPosition.gold_positions;
+            else if (pos.index_id === 'Gold RSI Contrarian' && goldCtnPosition) {
+                const effectiveGoldUnits = pos.quantity * goldCtnPosition.gold_positions;
                 if (pos.side.toLowerCase() === 'buy') {
                     netGoldUnits += effectiveGoldUnits;
                 } else {
                     netGoldUnits -= effectiveGoldUnits;
                 }
-                console.log('Added RSI_Gold_ctn exposure:', {
+                console.log('Added Gold RSI Contrarian exposure:', {
                     positionSize: pos.quantity,
-                    rsiGoldPosition: ctnPosition.gold_positions,
+                    rsiGoldPosition: goldCtnPosition.gold_positions,
                     effectiveGoldUnits,
                     side: pos.side,
                     newTotal: netGoldUnits
+                });
+            }
+            // Silver RSI positions
+            else if (pos.index_id === 'Silver RSI Momentum' && silverMtmPosition) {
+                const effectiveSilverUnits = pos.quantity * silverMtmPosition.silver_positions;
+                if (pos.side.toLowerCase() === 'buy') {
+                    netSilverUnits += effectiveSilverUnits;
+                } else {
+                    netSilverUnits -= effectiveSilverUnits;
+                }
+                console.log('Added Silver RSI Momentum exposure:', {
+                    positionSize: pos.quantity,
+                    rsiSilverPosition: silverMtmPosition.silver_positions,
+                    effectiveSilverUnits,
+                    side: pos.side,
+                    newTotal: netSilverUnits
+                });
+            }
+            else if (pos.index_id === 'Silver RSI Contrarian' && silverCtnPosition) {
+                const effectiveSilverUnits = pos.quantity * silverCtnPosition.silver_positions;
+                if (pos.side.toLowerCase() === 'buy') {
+                    netSilverUnits += effectiveSilverUnits;
+                } else {
+                    netSilverUnits -= effectiveSilverUnits;
+                }
+                console.log('Added Silver RSI Contrarian exposure:', {
+                    positionSize: pos.quantity,
+                    rsiSilverPosition: silverCtnPosition.silver_positions,
+                    effectiveSilverUnits,
+                    side: pos.side,
+                    newTotal: netSilverUnits
                 });
             }
         });
 
         // Log intermediate state after RSI positions
-        console.log('Gold exposure after RSI positions:', {
-            netGoldUnits,
-            value: netGoldUnits * goldPrice
+        console.log('Metal exposure after RSI positions:', {
+            gold: { units: netGoldUnits, value: netGoldUnits * goldPrice },
+            silver: { units: netSilverUnits, value: netSilverUnits * silverPrice }
         });
 
-        // Add any other gold positions from RiskPositionManager
-        console.log('Processing additional gold positions from RiskPositionManager:', positions);
+        // Add any other metal positions from RiskPositionManager
+        console.log('Processing additional metal positions from RiskPositionManager:', positions);
         positions.forEach(pos => {
+            // Direct gold positions
             if (pos.index_id.toLowerCase().includes('gold') && 
-                !['RSI_Gold_mtm', 'RSI_Gold_ctn'].includes(pos.index_id)) {
+                !['Gold RSI Momentum', 'Gold RSI Contrarian'].includes(pos.index_id)) {
                 const currentPrice = window.PriceUpdates.getCurrentPrice(pos.index_id) || pos.entry_price;
                 const effectiveUnits = (pos.quantity * currentPrice) / goldPrice;
                 if (pos.side.toLowerCase() === 'buy') {
@@ -320,40 +374,76 @@ const riskDashboard = {
                     newTotal: netGoldUnits
                 });
             }
+            // Direct silver positions
+            else if (pos.index_id.toLowerCase().includes('silver') && 
+                !['Silver RSI Momentum', 'Silver RSI Contrarian'].includes(pos.index_id)) {
+                const currentPrice = window.PriceUpdates.getCurrentPrice(pos.index_id) || pos.entry_price;
+                const effectiveUnits = (pos.quantity * currentPrice) / silverPrice;
+                if (pos.side.toLowerCase() === 'buy') {
+                    netSilverUnits += effectiveUnits;
+                } else {
+                    netSilverUnits -= effectiveUnits;
+                }
+                console.log('Added position to silver units:', {
+                    index: pos.index_id,
+                    side: pos.side,
+                    quantity: pos.quantity,
+                    currentPrice,
+                    effectiveUnits,
+                    newTotal: netSilverUnits
+                });
+            }
         });
 
+        // Calculate net exposures
         const netGoldExposure = netGoldUnits * goldPrice;
-        const goldUnits = netGoldUnits;
+        const netSilverExposure = netSilverUnits * silverPrice;
 
+        // Update gold exposure display
         const goldExpElem = document.getElementById('total-gold-exposure');
         const goldExpTrendElem = document.getElementById('gold-exposure-trend');
         
-        // Determine Long or Short label
-        if (goldUnits > 0) {
+        if (netGoldUnits > 0) {
             goldExpElem.style.color = '#27ae60';
-            goldExpElem.textContent = goldUnits.toFixed(2) + ' Gold Long';
-        } else if (goldUnits < 0) {
+            goldExpElem.textContent = netGoldUnits.toFixed(2) + ' Gold Long';
+        } else if (netGoldUnits < 0) {
             goldExpElem.style.color = '#e74c3c';
-            goldExpElem.textContent = Math.abs(goldUnits).toFixed(2) + ' Gold Short';
+            goldExpElem.textContent = Math.abs(netGoldUnits).toFixed(2) + ' Gold Short';
         } else {
             goldExpElem.style.color = '#7f8c8d';
             goldExpElem.textContent = '0 Gold';
         }
 
-        // Show net exposure in smaller text
         goldExpTrendElem.className = 'metric-trend';
-        if (netGoldExposure > 0) {
-            goldExpTrendElem.style.color = '#27ae60';
-        } else if (netGoldExposure < 0) {
-            goldExpTrendElem.style.color = '#e74c3c';
-        } else {
-            goldExpTrendElem.style.color = '#7f8c8d';
-        }
+        goldExpTrendElem.style.color = netGoldExposure > 0 ? '#27ae60' : netGoldExposure < 0 ? '#e74c3c' : '#7f8c8d';
         goldExpTrendElem.textContent = new Intl.NumberFormat('en-US', {
             style: 'currency',
             currency: 'USD',
             maximumFractionDigits: 0
         }).format(netGoldExposure);
+
+        // Update silver exposure display
+        const silverExpElem = document.getElementById('total-silver-exposure');
+        const silverExpTrendElem = document.getElementById('silver-exposure-trend');
+        
+        if (netSilverUnits > 0) {
+            silverExpElem.style.color = '#27ae60';
+            silverExpElem.textContent = netSilverUnits.toFixed(2) + ' Silver Long';
+        } else if (netSilverUnits < 0) {
+            silverExpElem.style.color = '#e74c3c';
+            silverExpElem.textContent = Math.abs(netSilverUnits).toFixed(2) + ' Silver Short';
+        } else {
+            silverExpElem.style.color = '#7f8c8d';
+            silverExpElem.textContent = '0 Silver';
+        }
+
+        silverExpTrendElem.className = 'metric-trend';
+        silverExpTrendElem.style.color = netSilverExposure > 0 ? '#27ae60' : netSilverExposure < 0 ? '#e74c3c' : '#7f8c8d';
+        silverExpTrendElem.textContent = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            maximumFractionDigits: 0
+        }).format(netSilverExposure);
 
         // Calculate and update daily P&L with trend
         const totalPnl = positions.reduce((sum, pos) => 
@@ -475,7 +565,25 @@ const riskDashboard = {
 
     renderPositionCard(position) {
         try {
-            const currentPrice = window.PriceUpdates.getCurrentPrice(position.index_id);
+            // Get the appropriate price for the position
+            let currentPrice;
+            const normalizedId = position.index_id
+                .replace('RSI_', '')
+                .replace('_mtm', ' RSI Momentum')
+                .replace('_ctn', ' RSI Contrarian');
+            
+            // Normalize metal names
+            const normalizedMetalId = position.index_id
+                .replace('Gold', 'Gold Price')
+                .replace('Silver', 'Silver Price');
+            
+            if (normalizedId === 'Gold RSI Momentum' || normalizedId === 'Gold RSI Contrarian') {
+                currentPrice = window.PriceUpdates.getCurrentPrice('Gold Price');
+            } else if (normalizedId === 'Silver RSI Momentum' || normalizedId === 'Silver RSI Contrarian') {
+                currentPrice = window.PriceUpdates.getCurrentPrice('Silver Price');
+            } else {
+                currentPrice = window.PriceUpdates.getCurrentPrice(normalizedMetalId);
+            }
             const pnl = window.RiskPositionManager.calculatePnL(position);
             const pnlClass = pnl >= 0 ? 'positive' : 'negative';
             const exposure = position.quantity * (currentPrice || position.entry_price);
@@ -565,7 +673,24 @@ const riskDashboard = {
 
         // Calculate total exposure and P&L
         const totalExposure = positions.reduce((sum, pos) => {
-            const currentPrice = window.PriceUpdates.getCurrentPrice(pos.index_id);
+            // Normalize RSI index names and metal names
+            const normalizedId = pos.index_id
+                .replace('RSI_', '')
+                .replace('_mtm', ' RSI Momentum')
+                .replace('_ctn', ' RSI Contrarian');
+            
+            const normalizedMetalId = pos.index_id
+                .replace('Gold', 'Gold Price')
+                .replace('Silver', 'Silver Price');
+            
+            let currentPrice;
+            if (normalizedId === 'Gold RSI Momentum' || normalizedId === 'Gold RSI Contrarian') {
+                currentPrice = window.PriceUpdates.getCurrentPrice('Gold Price');
+            } else if (normalizedId === 'Silver RSI Momentum' || normalizedId === 'Silver RSI Contrarian') {
+                currentPrice = window.PriceUpdates.getCurrentPrice('Silver Price');
+            } else {
+                currentPrice = window.PriceUpdates.getCurrentPrice(normalizedMetalId);
+            }
             return sum + (pos.quantity * (currentPrice || pos.entry_price));
         }, 0);
 

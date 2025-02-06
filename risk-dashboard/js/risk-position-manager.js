@@ -182,20 +182,57 @@ window.RiskPositionManager = {
     updatePositionPrices(index_id, price) {
         let hasMatchingPositions = false;
         this.positions.forEach(position => {
-            if (position.index_id === index_id) {
+            // Normalize the position's index ID
+            const normalizedId = position.index_id
+                .replace('RSI_', '')
+                .replace('_mtm', ' RSI Momentum')
+                .replace('_ctn', ' RSI Contrarian');
+            
+            // Normalize metal names
+            const normalizedMetalId = position.index_id
+                .replace('Gold', 'Gold Price')
+                .replace('Silver', 'Silver Price');
+
+            // Check if this position should update based on the price update
+            if (normalizedMetalId === index_id || 
+                (normalizedId === 'Gold RSI Momentum' && index_id === 'Gold Price') ||
+                (normalizedId === 'Gold RSI Contrarian' && index_id === 'Gold Price') ||
+                (normalizedId === 'Silver RSI Momentum' && index_id === 'Silver Price') ||
+                (normalizedId === 'Silver RSI Contrarian' && index_id === 'Silver Price')) {
                 hasMatchingPositions = true;
             }
         });
 
         if (hasMatchingPositions) {
+            console.log(`Updating positions for price update: ${index_id} = ${price}`);
             this.notifySubscribers();
         }
     },
 
     calculatePnL(position) {
         try {
-            const currentPrice = window.PriceUpdates.getCurrentPrice(position.index_id);
+            // Normalize RSI index names to match feed-engine format
+            const normalizedId = position.index_id
+                .replace('RSI_', '')
+                .replace('_mtm', ' RSI Momentum')
+                .replace('_ctn', ' RSI Contrarian');
+            
+            let currentPrice;
+            // Normalize metal names
+            const normalizedMetalId = position.index_id
+                .replace('Gold', 'Gold Price')
+                .replace('Silver', 'Silver Price');
+                
+            if (normalizedId === 'Gold RSI Momentum' || normalizedId === 'Gold RSI Contrarian') {
+                currentPrice = window.PriceUpdates.getCurrentPrice('Gold Price');
+            } else if (normalizedId === 'Silver RSI Momentum' || normalizedId === 'Silver RSI Contrarian') {
+                currentPrice = window.PriceUpdates.getCurrentPrice('Silver Price');
+            } else {
+                currentPrice = window.PriceUpdates.getCurrentPrice(normalizedMetalId);
+            }
+
             if (!currentPrice) {
+                console.warn(`No current price for ${position.index_id} (normalized: ${normalizedId})`);
                 return 0;
             }
             
