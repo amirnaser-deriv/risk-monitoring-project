@@ -211,28 +211,10 @@ window.RiskPositionManager = {
 
     calculatePnL(position) {
         try {
-            // Normalize RSI index names to match feed-engine format
-            const normalizedId = position.index_id
-                .replace('RSI_', '')
-                .replace('_mtm', ' RSI Momentum')
-                .replace('_ctn', ' RSI Contrarian');
-            
-            let currentPrice;
-            // Normalize metal names
-            const normalizedMetalId = position.index_id
-                .replace('Gold', 'Gold Price')
-                .replace('Silver', 'Silver Price');
-                
-            if (normalizedId === 'Gold RSI Momentum' || normalizedId === 'Gold RSI Contrarian') {
-                currentPrice = window.PriceUpdates.getCurrentPrice('Gold Price');
-            } else if (normalizedId === 'Silver RSI Momentum' || normalizedId === 'Silver RSI Contrarian') {
-                currentPrice = window.PriceUpdates.getCurrentPrice('Silver Price');
-            } else {
-                currentPrice = window.PriceUpdates.getCurrentPrice(normalizedMetalId);
-            }
+            const currentPrice = window.PriceUpdates.getCurrentPrice(position.index_id);
 
             if (!currentPrice) {
-                console.warn(`No current price for ${position.index_id} (normalized: ${normalizedId})`);
+                console.warn(`No current price for ${position.index_id}`);
                 return 0;
             }
             
