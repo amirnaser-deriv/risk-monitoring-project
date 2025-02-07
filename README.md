@@ -36,11 +36,18 @@ The trading site allows simulated trades on these indices, and the risk dashboar
 
 #### Risk Dashboard
 
-*   Real-time position monitoring.
+*   Real-time position monitoring, including:
+    *   Total Positions: The total number of open positions.
+    *   Gold Positions: The number of open positions in gold.
+    *   Silver Positions: The number of open positions in silver.
+    *   Gold Exposure: The net exposure in gold, displayed in lots and USD.
+    *   Silver Exposure: The net exposure in silver, displayed in lots and USD.
 *   Key metrics with trend indicators:
     *   Total positions and distribution.
     *   Total exposure with percentage changes.
     *   Unrealized P&L tracking.
+    *   Overall Position Distribution: A chart showing the distribution of positions.
+    *   Gold and Silver Position Distribution: Charts showing the distribution of gold and silver positions separately.
     *   Dynamic risk level assessment.
 *   Visual analytics:
     *   Position distribution charts.
@@ -117,4 +124,3 @@ Risk scores are calculated based on:
 *   Row Level Security in Supabase.
 *   Secure WebSocket connections.
 *   Authentication required for all operations.
-
