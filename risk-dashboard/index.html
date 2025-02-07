@@ -93,7 +93,20 @@
         <section class="metrics-overview">
             <div class="metric-card">
                 <h3>Total Positions</h3>
-                <div id="total-positions" class="metric-value">0</div>
+                <div class="position-breakdown">
+                    <div>
+                        <span>Total:</span>
+                        <div id="total-positions" class="metric-value">0</div>
+                    </div>
+                    <div>
+                        <span>Gold:</span>
+                        <div id="gold-positions" class="metric-value">0</div>
+                    </div>
+                    <div>
+                        <span>Silver:</span>
+                        <div id="silver-positions" class="metric-value">0</div>
+                    </div>
+                </div>
                 <div id="positions-trend" class="metric-trend"></div>
             </div>
             <div class="metric-card">
@@ -111,29 +124,20 @@
                 <div id="unrealized-pnl" class="metric-value currency">0.00</div>
                 <div id="pnl-trend" class="metric-trend"></div>
             </div>
-            <div class="metric-card">
-                <h3>Risk Level</h3>
-                <div id="risk-level" class="metric-value low">LOW</div>
-                <div id="risk-trend" class="metric-trend">Stable</div>
-            </div>
         </section>
 
         <section class="charts-grid">
             <div class="chart-card">
-                <h3>Position Distribution</h3>
+                <h3>Overall Position Distribution</h3>
                 <canvas id="position-distribution"></canvas>
             </div>
             <div class="chart-card">
-                <h3>Risk Exposure</h3>
-                <canvas id="risk-exposure"></canvas>
+                <h3>Gold Position Distribution</h3>
+                <canvas id="gold-position-distribution"></canvas>
             </div>
             <div class="chart-card">
-                <h3>P&L Trend</h3>
-                <canvas id="pnl-trend"></canvas>
-            </div>
-            <div class="chart-card">
-                <h3>Trading Volume</h3>
-                <canvas id="trading-volume"></canvas>
+                <h3>Silver Position Distribution</h3>
+                <canvas id="silver-position-distribution"></canvas>
             </div>
         </section>
 

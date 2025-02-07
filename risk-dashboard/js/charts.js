@@ -14,9 +14,8 @@ window.dashboardCharts = {
 
             this.charts = {
                 positionDistribution: this.createPositionDistributionChart(),
-                riskExposure: this.createRiskExposureChart(),
-                pnlTrend: this.createPnLTrendChart(),
-                tradingVolume: this.createTradingVolumeChart()
+                goldPositionDistribution: this.createGoldPositionDistributionChart(),
+                silverPositionDistribution: this.createSilverPositionDistributionChart()
             };
 
             this.isInitialized = true;
@@ -39,16 +38,20 @@ window.dashboardCharts = {
         return new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: ['Buy', 'Sell'],
+                labels: ['Gold Buy', 'Gold Sell', 'Silver Buy', 'Silver Sell'],
                 datasets: [{
-                    data: [0, 0],
+                    data: [0, 0, 0, 0],
                     backgroundColor: [
-                        'rgba(46, 204, 113, 0.8)',  // Green for Buy
-                        'rgba(231, 76, 60, 0.8)'    // Red for Sell
+                        'rgba(255, 215, 0, 0.8)',   // Gold color for Buy
+                        'rgba(218, 165, 32, 0.8)',  // Darker gold for Sell
+                        'rgba(192, 192, 192, 0.8)', // Silver color for Buy
+                        'rgba(169, 169, 169, 0.8)'  // Darker silver for Sell
                     ],
                     borderColor: [
-                        'rgba(46, 204, 113, 1)',
-                        'rgba(231, 76, 60, 1)'
+                        'rgba(255, 215, 0, 1)',
+                        'rgba(218, 165, 32, 1)',
+                        'rgba(192, 192, 192, 1)',
+                        'rgba(169, 169, 169, 1)'
                     ],
                     borderWidth: 1
                 }]
@@ -61,155 +64,85 @@ window.dashboardCharts = {
                     },
                     title: {
                         display: true,
-                        text: 'Exposure Distribution by Side'
+                        text: 'Overall Position Distribution'
                     }
                 }
             }
         });
     },
 
-    createRiskExposureChart() {
-        const ctx = document.getElementById('risk-exposure');
+    createGoldPositionDistributionChart() {
+        const ctx = document.getElementById('gold-position-distribution');
         if (!ctx) return null;
 
         return new Chart(ctx, {
-            type: 'bar',
+            type: 'doughnut',
             data: {
-                labels: ['Low', 'Medium', 'High'],
+                labels: ['Buy', 'Sell'],
                 datasets: [{
-                    label: 'Positions by Risk Level',
-                    data: [0, 0, 0],
+                    data: [0, 0],
                     backgroundColor: [
-                        'rgba(46, 204, 113, 0.8)',  // Green for Low
-                        'rgba(241, 196, 15, 0.8)',  // Yellow for Medium
-                        'rgba(231, 76, 60, 0.8)'    // Red for High
+                        'rgba(255, 215, 0, 0.8)',   // Gold color for Buy
+                        'rgba(218, 165, 32, 0.8)'   // Darker gold for Sell
                     ],
                     borderColor: [
-                        'rgba(46, 204, 113, 1)',
-                        'rgba(241, 196, 15, 1)',
-                        'rgba(231, 76, 60, 1)'
+                        'rgba(255, 215, 0, 1)',
+                        'rgba(218, 165, 32, 1)'
                     ],
                     borderWidth: 1
                 }]
             },
             options: {
                 responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return new Intl.NumberFormat('en-US', {
-                                    style: 'currency',
-                                    currency: 'USD',
-                                    notation: 'compact'
-                                }).format(value);
-                            }
-                        }
-                    }
-                },
                 plugins: {
                     legend: {
-                        display: false
+                        position: 'bottom'
                     },
                     title: {
                         display: true,
-                        text: 'Risk Level Exposure Distribution'
+                        text: 'Gold Position Distribution'
                     }
                 }
             }
         });
     },
 
-    createPnLTrendChart() {
-        const ctx = document.getElementById('pnl-trend');
+    createSilverPositionDistributionChart() {
+        const ctx = document.getElementById('silver-position-distribution');
         if (!ctx) return null;
 
         return new Chart(ctx, {
-            type: 'line',
+            type: 'doughnut',
             data: {
-                labels: [],
+                labels: ['Buy', 'Sell'],
                 datasets: [{
-                    label: 'P&L',
-                    data: [],
-                    borderColor: 'rgba(52, 152, 219, 1)',
-                    backgroundColor: 'rgba(52, 152, 219, 0.1)',
-                    borderWidth: 2,
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        ticks: {
-                            callback: function(value) {
-                                return new Intl.NumberFormat('en-US', {
-                                    style: 'currency',
-                                    currency: 'USD'
-                                }).format(value);
-                            }
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    title: {
-                        display: true,
-                        text: 'P&L Trend'
-                    }
-                }
-            }
-        });
-    },
-
-    createTradingVolumeChart() {
-        const ctx = document.getElementById('trading-volume');
-        if (!ctx) return null;
-
-        return new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: [],
-                datasets: [{
-                    label: 'Volume',
-                    data: [],
-                    backgroundColor: 'rgba(155, 89, 182, 0.8)',
-                    borderColor: 'rgba(155, 89, 182, 1)',
+                    data: [0, 0],
+                    backgroundColor: [
+                        'rgba(192, 192, 192, 0.8)', // Silver color for Buy
+                        'rgba(169, 169, 169, 0.8)'  // Darker silver for Sell
+                    ],
+                    borderColor: [
+                        'rgba(192, 192, 192, 1)',
+                        'rgba(169, 169, 169, 1)'
+                    ],
                     borderWidth: 1
                 }]
             },
             options: {
                 responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return new Intl.NumberFormat('en-US', {
-                                    style: 'currency',
-                                    currency: 'USD',
-                                    notation: 'compact'
-                                }).format(value);
-                            }
-                        }
-                    }
-                },
                 plugins: {
                     legend: {
-                        display: false
+                        position: 'bottom'
                     },
                     title: {
                         display: true,
-                        text: 'Exposure by Index'
+                        text: 'Silver Position Distribution'
                     }
                 }
             }
         });
     },
+
 
     updateCharts(positions) {
         if (!this.isInitialized || !this.charts) {
@@ -224,22 +157,46 @@ window.dashboardCharts = {
                 return sum + (pos.quantity * currentPrice);
             }, 0);
 
-            // Update Position Distribution Chart (now showing exposure by side)
+            // Separate gold and silver positions
+            const goldPositions = positions.filter(p => p.index_id.toLowerCase().includes('gold'));
+            const silverPositions = positions.filter(p => p.index_id.toLowerCase().includes('silver'));
+
+            // Calculate exposures for gold
+            const goldBuyExposure = goldPositions
+                .filter(p => p.side === 'buy')
+                .reduce((sum, p) => {
+                    const currentPrice = window.PriceUpdates.getCurrentPrice(p.index_id) || p.entry_price;
+                    return sum + (p.quantity * currentPrice);
+                }, 0);
+            const goldSellExposure = goldPositions
+                .filter(p => p.side === 'sell')
+                .reduce((sum, p) => {
+                    const currentPrice = window.PriceUpdates.getCurrentPrice(p.index_id) || p.entry_price;
+                    return sum + (p.quantity * currentPrice);
+                }, 0);
+
+            // Calculate exposures for silver
+            const silverBuyExposure = silverPositions
+                .filter(p => p.side === 'buy')
+                .reduce((sum, p) => {
+                    const currentPrice = window.PriceUpdates.getCurrentPrice(p.index_id) || p.entry_price;
+                    return sum + (p.quantity * currentPrice);
+                }, 0);
+            const silverSellExposure = silverPositions
+                .filter(p => p.side === 'sell')
+                .reduce((sum, p) => {
+                    const currentPrice = window.PriceUpdates.getCurrentPrice(p.index_id) || p.entry_price;
+                    return sum + (p.quantity * currentPrice);
+                }, 0);
+
+            // Update Overall Position Distribution Chart
             if (this.charts.positionDistribution) {
-                const buyExposure = positions
-                    .filter(p => p.side === 'buy')
-                    .reduce((sum, p) => {
-                        const currentPrice = window.PriceUpdates.getCurrentPrice(p.index_id) || p.entry_price;
-                        return sum + (p.quantity * currentPrice);
-                    }, 0);
-                const sellExposure = positions
-                    .filter(p => p.side === 'sell')
-                    .reduce((sum, p) => {
-                        const currentPrice = window.PriceUpdates.getCurrentPrice(p.index_id) || p.entry_price;
-                        return sum + (p.quantity * currentPrice);
-                    }, 0);
-                
-                this.charts.positionDistribution.data.datasets[0].data = [buyExposure, sellExposure];
+                this.charts.positionDistribution.data.datasets[0].data = [
+                    goldBuyExposure,
+                    goldSellExposure,
+                    silverBuyExposure,
+                    silverSellExposure
+                ];
                 this.charts.positionDistribution.options.plugins.tooltip = {
                     callbacks: {
                         label: function(context) {
@@ -256,39 +213,18 @@ window.dashboardCharts = {
                 this.charts.positionDistribution.update();
             }
 
-            // Update Risk Exposure Chart (now showing exposure amounts)
-            if (this.charts.riskExposure) {
-                const riskLevels = {
-                    low: positions
-                        .filter(p => {
-                            const exposure = p.quantity * (window.PriceUpdates.getCurrentPrice(p.index_id) || p.entry_price);
-                            return exposure <= 500000;
-                        })
-                        .reduce((sum, p) => sum + (p.quantity * (window.PriceUpdates.getCurrentPrice(p.index_id) || p.entry_price)), 0),
-                    medium: positions
-                        .filter(p => {
-                            const exposure = p.quantity * (window.PriceUpdates.getCurrentPrice(p.index_id) || p.entry_price);
-                            return exposure > 500000 && exposure <= 1000000;
-                        })
-                        .reduce((sum, p) => sum + (p.quantity * (window.PriceUpdates.getCurrentPrice(p.index_id) || p.entry_price)), 0),
-                    high: positions
-                        .filter(p => {
-                            const exposure = p.quantity * (window.PriceUpdates.getCurrentPrice(p.index_id) || p.entry_price);
-                            return exposure > 1000000;
-                        })
-                        .reduce((sum, p) => sum + (p.quantity * (window.PriceUpdates.getCurrentPrice(p.index_id) || p.entry_price)), 0)
-                };
-
-                this.charts.riskExposure.data.datasets[0].data = [
-                    riskLevels.low,
-                    riskLevels.medium,
-                    riskLevels.high
+            // Update Gold Position Distribution Chart
+            if (this.charts.goldPositionDistribution) {
+                this.charts.goldPositionDistribution.data.datasets[0].data = [
+                    goldBuyExposure,
+                    goldSellExposure
                 ];
-                this.charts.riskExposure.options.plugins.tooltip = {
+                const goldTotal = goldBuyExposure + goldSellExposure;
+                this.charts.goldPositionDistribution.options.plugins.tooltip = {
                     callbacks: {
                         label: function(context) {
                             const value = context.raw;
-                            const percentage = ((value / totalExposure) * 100).toFixed(1);
+                            const percentage = ((value / goldTotal) * 100).toFixed(1);
                             return `${context.label}: ${new Intl.NumberFormat('en-US', {
                                 style: 'currency',
                                 currency: 'USD',
@@ -297,55 +233,22 @@ window.dashboardCharts = {
                         }
                     }
                 };
-                this.charts.riskExposure.update();
+                this.charts.goldPositionDistribution.update();
             }
 
-            // Update P&L Trend Chart
-            if (this.charts.pnlTrend) {
-                const totalPnl = positions.reduce((sum, pos) => 
-                    sum + window.RiskPositionManager.calculatePnL(pos), 0);
-                
-                // Add new data point with current timestamp
-                const now = new Date();
-                this.charts.pnlTrend.data.labels.push(
-                    now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                );
-                this.charts.pnlTrend.data.datasets[0].data.push(totalPnl);
-
-                // Keep only last 20 data points
-                if (this.charts.pnlTrend.data.labels.length > 20) {
-                    this.charts.pnlTrend.data.labels.shift();
-                    this.charts.pnlTrend.data.datasets[0].data.shift();
-                }
-
-                this.charts.pnlTrend.update();
-            }
-
-            // Update Trading Volume Chart (now showing exposure by index)
-            if (this.charts.tradingVolume) {
-                const exposureByIndex = positions.reduce((acc, pos) => {
-                    const exposure = pos.quantity * (window.PriceUpdates.getCurrentPrice(pos.index_id) || pos.entry_price);
-                    acc[pos.index_id] = (acc[pos.index_id] || 0) + exposure;
-                    return acc;
-                }, {});
-
-                // Sort by exposure amount
-                const sortedIndices = Object.entries(exposureByIndex)
-                    .sort(([,a], [,b]) => b - a)
-                    .reduce((acc, [key, value]) => {
-                        acc.labels.push(key);
-                        acc.data.push(value);
-                        return acc;
-                    }, { labels: [], data: [] });
-
-                this.charts.tradingVolume.data.labels = sortedIndices.labels;
-                this.charts.tradingVolume.data.datasets[0].data = sortedIndices.data;
-                this.charts.tradingVolume.options.plugins.tooltip = {
+            // Update Silver Position Distribution Chart
+            if (this.charts.silverPositionDistribution) {
+                this.charts.silverPositionDistribution.data.datasets[0].data = [
+                    silverBuyExposure,
+                    silverSellExposure
+                ];
+                const silverTotal = silverBuyExposure + silverSellExposure;
+                this.charts.silverPositionDistribution.options.plugins.tooltip = {
                     callbacks: {
                         label: function(context) {
                             const value = context.raw;
-                            const percentage = ((value / totalExposure) * 100).toFixed(1);
-                            return `Exposure: ${new Intl.NumberFormat('en-US', {
+                            const percentage = ((value / silverTotal) * 100).toFixed(1);
+                            return `${context.label}: ${new Intl.NumberFormat('en-US', {
                                 style: 'currency',
                                 currency: 'USD',
                                 maximumFractionDigits: 0
@@ -353,8 +256,9 @@ window.dashboardCharts = {
                         }
                     }
                 };
-                this.charts.tradingVolume.update();
+                this.charts.silverPositionDistribution.update();
             }
+
 
         } catch (error) {
             console.error('Error updating charts:', error);
