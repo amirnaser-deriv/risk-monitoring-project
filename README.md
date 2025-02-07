@@ -16,15 +16,14 @@ The Real-Time Risk Monitoring System is a critical tool for managing our exposur
 *   **Proactive Risk Management:** Early warning system for potential risks.
 *   **Informed Decision-Making:** Data-driven insights to support strategic trading decisions.
 *   **Improved Operational Efficiency:** Streamlined trading and risk management processes.
-*   **Enhanced Security:** Role-based access control and secure data handling.
 
 **System Functionality (High-Level):**
 
-The system simulates trading activity and market fluctuations. The core logic resides in a Python-based "feed engine" that updates prices and calculates derived indices (RSI Momentum and Contrarian) for both gold and silver. These indices represent different trading strategies. The trading site allows simulated trades on these indices, and the risk dashboard aggregates this data to present a consolidated view of our risk exposure.
+The trading site allows simulated trades on these indices, and the risk dashboard aggregates this data to present a consolidated view of our risk exposure.
 
 ---
 
-## Technical Overview (Page 2 Onwards)
+## Technical Overview 
 
 ### Features
 
@@ -73,15 +72,13 @@ The system simulates trading activity and market fluctuations. The core logic re
     pip install -r requirements.txt
     ```
 
-2.  Set up Supabase tables and policies (refer to `setup/fix_positions_policies.sql` for the latest SQL setup).
-
-3.  Start the price feed engine and sites:
+2.  Start the price feed engine and sites:
 
     ```bash
     python manage.py start
     ```
 
-4.  Open the trading site and risk dashboard in your browser:
+3.  Open the trading site and risk dashboard in your browser:
 
     *   Trading Site: `/trading-site/index.html`
     *   Risk Dashboard: `/risk-dashboard/index.html`
@@ -108,21 +105,11 @@ The system simulates trading activity and market fluctuations. The core logic re
 
 #### Risk Levels
 
-*   **High:** Score > 2.5
-*   **Medium:** Score > 1.5
-*   **Low:** Score ≤ 1.5
-
 Risk scores are calculated based on:
 
 *   Total exposure relative to thresholds.
 *   P&L performance.
 *   Position concentration.
-
-#### Alert Thresholds
-
-*   High Exposure: > $1,000,000
-*   Significant Loss: < -$50,000
-*   Position Concentration: > 20 open positions
 
 ### Security
 
@@ -131,10 +118,3 @@ Risk scores are calculated based on:
 *   Secure WebSocket connections.
 *   Authentication required for all operations.
 
-### Contributing
-
-1.  Fork the repository.
-2.  Create a feature branch.
-3.  Commit your changes.
-4.  Push to the branch.
-5.  Create a Pull Request.
