@@ -1,0 +1,22 @@
+# Environment variables and configuration
+.env
+.env.local
+.env.*.local
+shared/js/config.js
+
+# Logs
+logs/
+*.log
+
+# Dependencies
+node_modules/
+myenv/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

@@ -1,8 +1,15 @@
 // Singleton Supabase client
 let supabaseInstance = null;
 
-const supabaseUrl = 'https://jnnybkqyodxofussidmx.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impubnlia3F5b2R4b2Z1c3NpZG14Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU3MTM5MjAsImV4cCI6MjA1MTI4OTkyMH0.pqr5IZgiKfS9pSv7uRI32pf8PicJ6M9R8jOg8p9WimY';
+// Import configuration
+import config from './config.js';
+
+const supabaseUrl = config.SUPABASE_URL;
+const supabaseAnonKey = config.SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseAnonKey) {
+    throw new Error('Missing required configuration values SUPABASE_URL and/or SUPABASE_ANON_KEY in config.js');
+}
 
 const supabaseClient = {
     client: null,
